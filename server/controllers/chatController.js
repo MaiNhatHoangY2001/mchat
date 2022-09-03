@@ -27,7 +27,7 @@ const chatController = {
 	//GET A CHAT
 	getAChat: async (req, res) => {
 		try {
-			const chat = await Chat.findById(req.params.id).populate('author');
+			const chat = await Chat.findById(req.params.id).populate('user');
 			res.status(200).json(chat);
 		} catch (error) {
 			res.status(500).json(error);
