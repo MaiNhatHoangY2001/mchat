@@ -8,13 +8,13 @@ router.post("/", chatController.addChat);
 //GET ALL CHAT
 router.get("/", chatController.getAllChat);
 
-//GET A BOOK
+//GET A CHAT
 router.get("/:id", chatController.getAChat);
 
-//UPDATE A BOOK
+//UPDATE A CHAT
 router.put("/:id", chatController.updateChat);
 
-//DELETE A BOOK
+//DELETE A CHAT
 router.delete("/:id", chatController.deleteChat);
 
 
