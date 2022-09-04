@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 
 const userRoute = require("./routes/user");
 const chatRoute = require("./routes/chat");
@@ -21,7 +22,8 @@ mongoose.connect((process.env.MONGODB_URL), () => {
 })
 
 
-app.use(bodyParser.json({limit:"50mb"}));
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(cors());
 app.use(morgan("common"));
 
