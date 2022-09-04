@@ -36,13 +36,13 @@ const authController = {
 			const user = await User.findOne({ userName: req.body.userName });
 
 			if (!user) {
-				res.status(404).json('Wrong username');
+				return res.status(404).json('Wrong username');
 			}
 
 			const validPassword = await bcrypt.compare(req.body.password, user.password);
 
 			if (!validPassword) {
-				res.status(404).json('Password incorrect');
+				return res.status(404).json('Password incorrect');
 			}
 
 			if (user && validPassword) {
