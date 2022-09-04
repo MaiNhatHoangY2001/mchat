@@ -8,6 +8,7 @@ const dotenv = require("dotenv");
 
 const userRoute = require("./routes/user");
 const chatRoute = require("./routes/chat");
+const authRoute = require("./routes/auth");
 
 dotenv.config();
 //CONNECT DATABASE
@@ -23,7 +24,10 @@ app.use(morgan("common"));
 //ROUTERS
 app.use("/api/user", userRoute);
 app.use("/api/chat", chatRoute);
+app.use("/", authRoute);
 
 app.listen(8000, () =>{
     console.log("server is running...");
 })
+
+//JSON WEB TOKEN
