@@ -8,6 +8,10 @@ const dotenv = require("dotenv");
 
 const userRoute = require("./routes/user");
 const chatRoute = require("./routes/chat");
+const chatHistoryRoute = require("./routes/chatHistory");
+const individualChatRoute = require("./routes/individualChat");
+const groupChatRoute = require("./routes/groupChat");
+const messageRoute = require("./routes/message");
 
 dotenv.config();
 //CONNECT DATABASE
@@ -23,6 +27,10 @@ app.use(morgan("common"));
 //ROUTERS
 app.use("/api/user", userRoute);
 app.use("/api/chat", chatRoute);
+app.use("/api/chatHistory", chatHistoryRoute);
+app.use("/api/individualChat", individualChatRoute);
+app.use("/api/groupChat", groupChatRoute);
+app.use("/api/message", messageRoute);
 
 app.listen(8000, () =>{
     console.log("server is running...");
