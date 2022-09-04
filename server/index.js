@@ -30,7 +30,7 @@ app.use(morgan("common"));
 //ROUTERS
 app.use("/api/user", userRoute);
 app.use("/api/chat", chatRoute);
-app.use("/", authRoute);
+app.use("/api", authRoute);
 app.use("/api/chatHistory", chatHistoryRoute);
 app.use("/api/individualChat", individualChatRoute);
 app.use("/api/groupChat", groupChatRoute);
