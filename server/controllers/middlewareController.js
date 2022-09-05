@@ -13,18 +13,18 @@ const middlewareController = {
 				req.user = user;
 				next();
 			});
-		} else {
+		} else{
 			return res.status(401).json("You're not authenticated");
 		}
 	},
 
     verifyTokenAndAdminAuth: (req, res, next) => {
-        middlewareController.verifyToken(req, req, ()=> {
+        middlewareController.verifyToken(req, res, ()=> {
             if(req.user.id == req.params.id || req.user.admin){
                 next();
             }
             else{
-                return res.status(403).json("You're not authenticated");
+                return res.status(401).json("You're not authenticated");
             }
         });
     }
