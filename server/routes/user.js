@@ -6,9 +6,9 @@ const router = require('express').Router();
 router.post('/', userController.addUser);
 
 //GET ALL USER
-router.get('/', middlewareController.verifyToken, userController.getAllUsers);
+router.get('/', middlewareController.verifyTokenAndAdminAuth, userController.getAllUsers);
 
 //DELETE A USER
-router.delete("/:id", middlewareController.verifyTokenAndAdminAuth, userController.deleteUser);
+router.delete('/:id', middlewareController.verifyTokenAndAdminAuth, userController.deleteUser);
 
 module.exports = router;
