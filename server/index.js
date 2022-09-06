@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
+const socket = require("socket.io");
 
 const userRoute = require("./routes/user");
 const chatRoute = require("./routes/chat");
@@ -36,8 +37,28 @@ app.use("/api/individualChat", individualChatRoute);
 app.use("/api/groupChat", groupChatRoute);
 app.use("/api/message", messageRoute);
 
-app.listen(8000, () =>{
+const server = app.listen(8000, () =>{
     console.log("server is running...");
 })
 
-//JSON WEB TOKEN
+//io socket
+
+const io = socket(server, {
+    cors:{
+        origin:"http://localhost:3000",
+        credentials: true,
+    }
+});
+
+io.on('connection', (socket) => {
+	console.log('user connected');
+	socket.on('on-chat', (data) => {
+		io.emit('user-chat', data);
+	});
+});
+
+
+
+
+
+
