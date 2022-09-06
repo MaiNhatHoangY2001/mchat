@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 const cx = classNames.bind(styles);
 
 function Login() {
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -20,11 +21,12 @@ function Login() {
             userName: userName,
             password: password,
         };
-        loginUser(newUser, dispatch, navigate);
+        loginUser(newUser, dispatch, navigate, setIsLoading);
     };
 
     return (
         <section className={cx('login-container')}>
+             
             <div className={cx('login-title')}> Log in</div>
             <form onSubmit={handleLogin}>
                 <label>USERNAME</label>
@@ -43,7 +45,8 @@ function Login() {
                         setPassword(e.target.value);
                     }}
                 />
-                <button type="submit"> Continue </button>
+                {isLoading ? <p>currently loading</p> : <button type="submit"> Continue </button>}
+                
             </form>
             <div className={cx('login-register')}> Don't have an account yet? </div>
             <Link className={cx('login-register-link')} to="/register">

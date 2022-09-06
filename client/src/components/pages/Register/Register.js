@@ -8,6 +8,7 @@ import { registerUser } from '../../../redux/apiRequest';
 const cx = classNames.bind(styles);
 
 function Register() {
+    const [isLoading, setIsLoading] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -21,7 +22,7 @@ function Register() {
             firstName: firstName,
             password: password,
         };
-        registerUser(newUser, dispatch, navigate);
+        registerUser(newUser, dispatch, navigate, setIsLoading);
     };
 
     return (
@@ -38,7 +39,8 @@ function Register() {
                     placeholder="Enter your password"
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button type="submit"> Create account </button>
+                 {isLoading ? <p>currently loading</p> :  <button type="submit"> Create account </button>}
+               
             </form>
         </section>
     );
