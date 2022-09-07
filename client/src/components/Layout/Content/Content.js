@@ -35,7 +35,7 @@ function Content() {
         if (!user) {
             navigate('/login');
         } else if (user?.accessToken) {
-            socket.current = io('http://localhost:8000/');
+            socket.current = io('https://realtime-chat-server.onrender.com/');
 
             const messengers = document.querySelector('#messengers');
 
