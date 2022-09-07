@@ -1,3 +1,67 @@
-.red-line{
-    font-size: 120%;
+.container-left {
+    width: 25%;
+}
+
+hr {
+    margin: 0;
+}
+
+.avata {
+    width: 30%;
+    border-radius: 50%;
+    margin: 10px 0px;
+}
+
+.input-search, .item {
+    display: flex;
+    padding: 10px;
+}
+
+.btn, .search {
+    margin: 0;
+    padding: 6px 10px;
+}
+
+.btn {
+    width: 20%;
+    margin-right: 10px;
+}
+
+.search {
+    width: 80%;
+    border: 1px solid black;
+}
+
+.list-item {
+    height: 74%;
+    overflow-y: scroll;
+}
+
+.item img {
+    object-fit: cover;
+    width: 16%;
+    height: 16%;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.item .content-item {
+    width: 79%;
+    text-align: left;
+}
+
+.item:hover {
+    background-color: azure;
+    cursor: pointer;
+}
+
+.content-item p {
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+}
+
+.content-item span {
+    font-size: smaller;
+    color: rgb(97, 97, 97);
 }
