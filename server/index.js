@@ -45,7 +45,7 @@ const server = app.listen(8000, () =>{
 
 const io = socket(server, {
     cors:{
-        origin:"http://localhost:3000",
+        origin:"https://realtime-chat-server.onrender.com",
         credentials: true,
     }
 });
