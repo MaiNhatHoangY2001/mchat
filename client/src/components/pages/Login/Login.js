@@ -1,13 +1,14 @@
 import styles from './Login.module.scss';
 import classNames from 'classnames/bind';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { loginUser } from '../../../redux/apiRequest';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function Login() {
+    const user = useSelector((state) => state.auth.login?.currentUser);
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -23,6 +24,12 @@ function Login() {
         };
         loginUser(newUser, dispatch, navigate, setIsLoading);
     };
+
+    useEffect(() => {
+        if(user){
+            navigate("/");
+        }
+    })
 
     return (
         <section className={cx('login-container')}>

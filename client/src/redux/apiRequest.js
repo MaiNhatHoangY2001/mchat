@@ -29,6 +29,7 @@ export const loginUser = async (user, dispatch, navigate, setIsLoading) => {
         navigate('/');
     } catch (error) {
         dispatch(loginFailed());
+        setIsLoading(false);
     }
 };
 
@@ -42,6 +43,7 @@ export const registerUser = async (user, dispatch, navigate, setIsLoading) => {
         navigate('/login');
     } catch (error) {
         dispatch(registerFailed());
+        setIsLoading(false);
     }
 };
 
