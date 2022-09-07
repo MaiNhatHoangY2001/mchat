@@ -35,7 +35,9 @@ function Content() {
         if (!user) {
             navigate('/login');
         } else if (user?.accessToken) {
-            socket.current = io('https://realtime-chat-server.onrender.com/');
+            socket.current = io('https://real-time-chat-server-123.herokuapp.com', {
+                'Access-Control-Allow-Credentials': true,
+            });
 
             const messengers = document.querySelector('#messengers');
 
@@ -49,7 +51,7 @@ function Content() {
 
     return (
         <div>
-            <Link to="/logout" className="navbar-logout" onClick={() => handleLogout()}>
+            <Link to="/login" className="navbar-logout" onClick={() => handleLogout()}>
                 {' '}
                 Log out
             </Link>

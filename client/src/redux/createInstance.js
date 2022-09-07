@@ -4,7 +4,7 @@ import jwtDecode from "jwt-decode";
 
 const refreshToken = async () => {
     try {
-      const res = await axios.post("https://realtime-chat-server.onrender.com/api/refresh", {
+      const res = await axios.post("https://real-time-chat-server-123.herokuapp.com/api/refresh", {
         withCredentials: true,
       });
       return res.data;
