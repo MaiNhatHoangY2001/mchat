@@ -51,10 +51,10 @@ function Content() {
 
     return (
         <div>
-            <Link to="/login" className="navbar-logout" onClick={() => handleLogout()}>
+            <button className="navbar-logout" onClick={() => handleLogout()}>
                 {' '}
                 Log out
-            </Link>
+            </button>
 
             <ul id="messengers"></ul>
             <form onSubmit={handleSubmit}>

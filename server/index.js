@@ -17,6 +17,7 @@ const groupChatRoute = require('./routes/groupChat');
 const messageRoute = require('./routes/message');
 
 const port = process.env.PORT || 8000;
+const origin = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://localhost:3000';
 
 dotenv.config();
 //CONNECT DATABASE
@@ -26,7 +27,12 @@ mongoose.connect(process.env.MONGODB_URL, () => {
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+	cors({
+		credentials: true,
+		origin,
+	})
+);
 app.use(morgan('common'));
 
 //ROUTERS
@@ -47,7 +53,7 @@ const server = app.listen(port, () => {
 const io = socket(server, {
 	cors: {
 		origin: 'http://localhost:3000',
-        credential: true,
+		credential: true,
 	},
 });
 
