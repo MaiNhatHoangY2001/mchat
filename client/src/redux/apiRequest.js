@@ -23,7 +23,7 @@ export const loginUser = async (user, dispatch, navigate, setIsLoading) => {
     dispatch(loginStart());
     try {
         setIsLoading(true);
-        const res = await axios.post('http://localhost:8000/api/login', user, { withCredentials: true });
+        const res = await axios.post('https://real-time-chat-server-123.herokuapp.com/api/login', user, { withCredentials: true });
         dispatch(loginSuccess(res.data));
         setIsLoading(false);
         navigate('/');
