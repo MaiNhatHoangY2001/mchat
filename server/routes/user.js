@@ -11,4 +11,7 @@ router.get('/', middlewareController.verifyTokenAndAdminAuth, userController.get
 //DELETE A USER
 router.delete('/:id', middlewareController.verifyTokenAndAdminAuth, userController.deleteUser);
 
+//SEARCH USER
+router.get('/search',userController.searchUser);
+
 module.exports = router;

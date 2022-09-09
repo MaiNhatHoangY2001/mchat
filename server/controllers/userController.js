@@ -1,8 +1,7 @@
-const {User} = require("../model");
-
+const { User } = require('../model');
 
 const userController = {
-    //ADD USER
+	//ADD USER
 	addUser: async (req, res) => {
 		try {
 			const newUser = new User(req.body);
@@ -12,7 +11,7 @@ const userController = {
 			res.status(500).json(error);
 		}
 	},
-    //GET ALL USERS
+	//GET ALL USERS
 	getAllUsers: async (_req, res) => {
 		try {
 			const users = await User.find();
@@ -31,7 +30,55 @@ const userController = {
 		}
 	},
 
-}
-
+	searchUser: async (req, res) => {
+		try {
+			let result = await User.aggregate([
+				{
+					$search: {
+						compound: {
+							should: [
+								{
+									autocomplete: {
+										query: `${req.query.term}`,
+										path: 'userName',
+										fuzzy: {
+											prefixLength: 3,
+										},
+									},
+								},
+								{
+									autocomplete: {
+										query: `${req.query.term}`,
+										path: 'phoneNumber',
+										fuzzy: {
+											prefixLength: 3,
+										},
+									},
+								},
+							],
+						},
+					},
+				},
+				{
+					$limit: 5,
+				},
+				{
+					$project: {
+						_id: 0,
+						password: 0,
+						emailID: 0,
+						status: 0,
+						chats: 0,
+						admin: 0,
+						__v: 0,
+					},
+				},
+			]);
+			res.send(result);
+		} catch (e) {
+			res.status(500).send({ message: e.message });
+		}
+	},
+};
 
 module.exports = userController;

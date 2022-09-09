@@ -5,6 +5,7 @@ const publicRoutes = [
     { path: '/Register', component: Register },
     { path: '/login', component: Login },
     { path: '/forgotPass', component: ForgotPass },
+    
 ];
 
 const privateRoutes = [];
