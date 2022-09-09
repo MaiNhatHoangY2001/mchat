@@ -1,12 +1,12 @@
 import styles from './LeftBar.module.scss';
 import classNames from 'classnames/bind';
-import { useState } from 'react';
-import { AutoCompleteComponent } from '@syncfusion/ej2-react-dropdowns';
-import { Query, DataManager, Predicate } from '@syncfusion/ej2-data';
+import { useEffect, useState } from 'react';
+import ComboBox from './AutoComplete';
 
 const cx = classNames.bind(styles);
 
 function LeftBar() {
+    var h1 = <h1 className={cx('red-line')}>LeftBar</h1>;
     return (
         <div className={cx('container-left')}>
             <img
@@ -16,9 +16,9 @@ function LeftBar() {
             ></img>
             <div className={cx('input-search')}>
                 <button className={cx('btn')}>btn</button>
-                <AutoCompleteComponent dataSource={data}>
-                    
-                </AutoCompleteComponent>
+
+                <ComboBox data={data} setTextSearchUSer={setTextSearchUSer} />
+
                 <input className={cx('search')} id="searchUser" placeholder="Search" />
             </div>
 
