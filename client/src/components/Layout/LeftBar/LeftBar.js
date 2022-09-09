@@ -6,7 +6,6 @@ import ComboBox from './AutoComplete';
 const cx = classNames.bind(styles);
 
 function LeftBar() {
-    var h1 = <h1 className={cx('red-line')}>LeftBar</h1>;
     return (
         <div className={cx('container-left')}>
             <img
