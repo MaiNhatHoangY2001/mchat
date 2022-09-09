@@ -9,6 +9,7 @@ function LeftBar() {
 
 
     const data = ["test1", "test1", "test1"];
+    const [textSearchUser,setTextSearchUser] = useState("");
 
     return (
         <div className={cx('container-left')}>
@@ -20,7 +21,7 @@ function LeftBar() {
             <div className={cx('input-search')}>
                 <button className={cx('btn')}>btn</button>
 
-                <ComboBox data={data} setTextSearchUSer={setTextSearchUSer} />
+                <ComboBox data={data} setTextSearchUSer={setTextSearchUser} />
 
             </div>
 
