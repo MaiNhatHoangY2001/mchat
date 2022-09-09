@@ -7,6 +7,7 @@ import { Query, DataManager, Predicate } from '@syncfusion/ej2-data';
 const cx = classNames.bind(styles);
 
 function LeftBar() {
+    
     const data = ['test1', 'test2', 'test3'];
 
     
