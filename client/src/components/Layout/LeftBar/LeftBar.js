@@ -22,7 +22,6 @@ function LeftBar() {
 
                 <ComboBox data={data} setTextSearchUSer={setTextSearchUSer} />
 
-                <input className={cx('search')} id="searchUser" placeholder="Search" />
             </div>
 
             <hr />
