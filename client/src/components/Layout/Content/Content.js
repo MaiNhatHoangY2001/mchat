@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logOut } from '../../../redux/apiRequest';
 import { createAxios } from '../../../redux/createInstance';
 import { logoutSuccess } from '../../../redux/authSlice';
+import { RightBar } from '../../Layout';
 
 const cx = classNames.bind(styles);
 
@@ -160,7 +161,7 @@ function Content() {
                 </div>
             </div>
 
-            <div className={cx('main-right')}></div>
+            <RightBar />
 
             {/*           
             <ul id="messengers"></ul> */}
