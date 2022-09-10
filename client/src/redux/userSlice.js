@@ -6,8 +6,7 @@ const userSlice = createSlice({
     initialState:{
         sender:{
             user:null,
-        }
-        ,
+        },
         users:{
             allUsers: null,
             isFetching:false,

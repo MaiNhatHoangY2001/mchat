@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../../../redux/apiRequest';
+import { registerUser } from '../../../redux/apiRequest/authApiRequest';
 
 const cx = classNames.bind(styles);
 

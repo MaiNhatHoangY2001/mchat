@@ -2,7 +2,7 @@ import styles from './Login.module.scss';
 import classNames from 'classnames/bind';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { loginUser } from '../../../redux/apiRequest';
+import { loginUser } from '../../../redux/apiRequest/authApiRequest';
 import { useDispatch, useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);

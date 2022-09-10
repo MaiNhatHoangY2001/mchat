@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { logOut } from '../../../redux/apiRequest';
+import { logOut } from '../../../redux/apiRequest/authApiRequest';
 import { createAxios } from '../../../redux/createInstance';
 import { logoutSuccess } from '../../../redux/authSlice';
 
@@ -24,8 +24,9 @@ function Content() {
     let axiosJWT = createAxios(user, dispatch, logoutSuccess);
 
     const sendData = [
-        { mess: 'test', time: new Date(2022, 3, 25, 5, 4, 4, 2), id: 0 },
-        { mess: 'test', time: new Date(2022, 3, 26, 5, 4, 4, 2), id: 1 },
+        { mess: 'test1', time: new Date(2022, 3, 25, 5, 4, 4, 2), id: 0 },
+        { mess: 'test2', time: new Date(2022, 3, 23, 5, 4, 4, 2), id: 1 },
+        { mess: 'hello test', time: new Date(2022, 3, 27, 5, 4, 4, 2), id: 0 },
     ];
 
     const handleLogout = () => {
@@ -41,16 +42,20 @@ function Content() {
     useEffect(() => {
         if (!user) {
             navigate('/login');
-        } else if (user?.accessToken) {
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (user?.accessToken) {
             socket.current = io('https://real-time-chat-server-123.herokuapp.com', {
                 'Access-Control-Allow-Credentials': true,
             });
 
-            socket.current.on('user-chat', (message) => {
-                console.log(message);
+            socket.current.on('user-chat', (mess) => {
+                console.log(mess);
             });
         }
-    }, []);
+    });
 
     return (
         <div className={cx('flex-row', 'container-center')}>
@@ -97,7 +102,7 @@ function Content() {
 
                             {sendData
                                 .sort(function (a, b) {
-                                    return new Date(b.time) - new Date(a.time);
+                                    return new Date(a.time) - new Date(b.time);
                                 })
                                 .map((mess, index) => {
                                     return (
@@ -113,7 +118,6 @@ function Content() {
                                             <div className={cx('box-text-chat')}>
                                                 <p className={cx('text-chat')}>{mess.mess}</p>
                                             </div>
-                                            <div className={cx('space-height')}></div>
                                         </div>
                                     );
                                 })}
