@@ -20,6 +20,8 @@
 /* Main Content */
 .container-center {
     flex: 75%;
+    max-width: 920px;
+    min-width: 200px;
 }
 /* Main Chat */
 .container-center .main-center {
