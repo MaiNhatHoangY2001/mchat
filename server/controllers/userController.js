@@ -64,7 +64,7 @@ const userController = {
 				},
 				{
 					$project: {
-						_id: 0,
+						_id: 1,
 						password: 0,
 						emailID: 0,
 						status: 0,
