@@ -12,6 +12,8 @@ const cx = classNames.bind(styles);
 
 function Content() {
     const user = useSelector((state) => state.auth.login?.currentUser);
+    const sender = useSelector((state) => state.user.sender?.user);
+
     const socket = useRef();
     const [message, setMessage] = useState('');
     const [name, setName] = useState('');
@@ -62,6 +64,7 @@ function Content() {
                 <input type="text" placeholder="chat" onChange={(e) => setMessage(e.target.value)} />
                 <button id="send-chat">Gửi</button>
             </form>
+            <p>{sender?.userName}</p>
         </div>
     );
 }

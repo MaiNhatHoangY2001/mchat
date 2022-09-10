@@ -4,6 +4,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
     name:"user",
     initialState:{
+        sender:{
+            user:null,
+        }
+        ,
         users:{
             allUsers: null,
             isFetching:false,
@@ -35,6 +39,10 @@ const userSlice = createSlice({
             state.users.error = true;
             state.msg = action.payload;
         },
+
+        setSender: (state, action)=>{
+            state.sender.user = action.payload;
+        }
     }
 })
 
@@ -44,7 +52,8 @@ export const {
     getUsersFailed,
     deleteUsersFailed,
     deleteUsersStart,
-    deleteUsersSuccess
+    deleteUsersSuccess,
+    setSender
 } = userSlice.actions;
 
 export default userSlice.reducer;

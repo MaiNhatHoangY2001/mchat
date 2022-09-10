@@ -3,10 +3,12 @@ import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import AutoComplete from './AutoComplete';
 import TextField from '@mui/material/TextField';
+import { useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function LeftBar() {
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
 
@@ -16,7 +18,7 @@ function LeftBar() {
                 (textSearchUser === '' ? '@' : textSearchUser),
         )
             .then((response) => response.json())
-            .then((data) => setUsersSearch(data));
+            .then((users) => setUsersSearch(users.filter((user) => user.userName !== currentUser.userName)));
     }, [textSearchUser]);
 
     return (
