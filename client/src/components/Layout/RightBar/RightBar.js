@@ -37,7 +37,7 @@ function RightBar() {
                     Link
                 </button>
             </div>
-            <div className={cx('flex-column', 'contain-all-file', 'scroller-column')}>{renderSwitch()}</div>
+            {renderSwitch()}
         </div>
     );
 }
