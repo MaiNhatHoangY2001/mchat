@@ -1,15 +1,23 @@
 import styles from './LeftBar.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-import ComboBox from './AutoComplete';
+import AutoComplete from './AutoComplete';
+import TextField from '@mui/material/TextField';
 
 const cx = classNames.bind(styles);
 
 function LeftBar() {
+    const [usersSearch, setUsersSearch] = useState([]);
+    const [textSearchUser, setTextSearchUser] = useState('');
 
-
-    const data = ["test1", "test1", "test1"];
-    const [textSearchUser,setTextSearchUser] = useState("");
+    useEffect(() => {
+        fetch(
+            'https://real-time-chat-server-123.herokuapp.com/api/user/search?term=' +
+                (textSearchUser === '' ? '@' : textSearchUser),
+        )
+            .then((response) => response.json())
+            .then((data) => setUsersSearch(data));
+    }, [textSearchUser]);
 
     return (
         <div className={cx('container-left')}>
@@ -20,9 +28,22 @@ function LeftBar() {
             ></img>
             <div className={cx('input-search')}>
                 <button className={cx('btn')}>btn</button>
-
-                <ComboBox data={data} setTextSearchUSer={setTextSearchUser} />
-
+                <AutoComplete
+                    users={usersSearch}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Search input"
+                            InputProps={{
+                                ...params.InputProps,
+                                type: 'search',
+                                onChange: (e) => {
+                                    setTextSearchUser(e.target.value);
+                                },
+                            }}
+                        />
+                    )}
+                />
             </div>
 
             <hr />

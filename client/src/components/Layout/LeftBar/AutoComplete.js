@@ -1,19 +1,17 @@
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Stack from '@mui/material/Stack';
 
-
-export default function ComboBox({data, setTextSearchUser}) {
+export default function ComboBox({ users, renderInput }) {
     return (
-      <Autocomplete
-
-        disablePortal
-        id="combo-box-demo"
-        options={data}
-        sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Search user" />}
-        onChange={(e) => setTextSearchUser(e.target.value)}
-      />
+        <Stack spacing={2} sx={{ width: 300 }}>
+            <Autocomplete
+                freeSolo
+                id="free-solo-2-demo"
+                disableClearable
+                options={users === [] ? [""] : users.map((user) => user.userName)}
+                renderInput={renderInput}
+            />
+        </Stack>
     );
 }
-
-
