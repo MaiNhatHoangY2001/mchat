@@ -68,6 +68,15 @@ function LeftBar() {
                         <span>Nothing</span>
                     </div>
                 </div>
+                <div className={cx('flex-row', 'item')}>
+                    <img 
+                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} 
+                        alt={'avata'} />
+                    <div className={cx('flex-column', 'content-item')}>
+                        <p>Mai Ngoc Long</p>
+                        <span>Nothing</span>
+                    </div>
+                </div>
             </div>
         </div>
     );
