@@ -5,7 +5,7 @@ import {
     getUsersFailed,
     getUsersStart,
     getUsersSuccess,
-} from './userSlice';
+} from '../userSlice';
 
 
 

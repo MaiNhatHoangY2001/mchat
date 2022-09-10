@@ -11,7 +11,7 @@ import {
     addMessageFailed,
     addMessageStart,
     addMessageSuccess,
-} from './chatSlice';
+} from '../chatSlice';
 
 export const addChat = async (accessToken, dispatch, axiosJWT) => {
     dispatch(addChatStart());

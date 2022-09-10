@@ -11,7 +11,7 @@ import {
     registerFailed,
     registerStart,
     registerSuccess,
-} from './authSlice';
+} from '../authSlice';
 
 
 export const loginUser = async (user, dispatch, navigate, setIsLoading) => {
