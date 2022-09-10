@@ -8,6 +8,7 @@ import { logOut } from '../../../redux/apiRequest';
 import { createAxios } from '../../../redux/createInstance';
 import { logoutSuccess } from '../../../redux/authSlice';
 import { RightBar } from '../../Layout';
+import { RightBar } from '../../Layout';
 
 const cx = classNames.bind(styles);
 
@@ -161,7 +162,7 @@ function Content() {
                 </div>
             </div>
 
-            <RightBar/>
+            <RightBar />
 
             {/*           
             <ul id="messengers"></ul> */}
