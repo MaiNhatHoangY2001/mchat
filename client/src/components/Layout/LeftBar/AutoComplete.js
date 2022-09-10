@@ -5,7 +5,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 export default function ComboBox({data, setTextSearchUser}) {
     return (
       <Autocomplete
-
         disablePortal
         id="combo-box-demo"
         options={data}
