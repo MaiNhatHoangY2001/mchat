@@ -16,12 +16,17 @@ function Content() {
 
     const socket = useRef();
     const [message, setMessage] = useState('');
-    const [name, setName] = useState('');
+    const [sendMessage, setSendMessage] = useState([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const id = user?._id;
     const accessToken = user?.accessToken;
     let axiosJWT = createAxios(user, dispatch, logoutSuccess);
+
+    const sendData = [
+        { mess: 'test', time: new Date(2022, 3, 25, 5, 4, 4, 2), id: 0 },
+        { mess: 'test', time: new Date(2022, 3, 26, 5, 4, 4, 2), id: 1 },
+    ];
 
     const handleLogout = () => {
         logOut(dispatch, navigate, id, accessToken, axiosJWT);
@@ -29,7 +34,7 @@ function Content() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        socket.current.emit('on-chat', { name, message });
+        socket.current.emit('on-chat', { id: user?._id, message });
         setMessage('');
     };
 
@@ -41,12 +46,8 @@ function Content() {
                 'Access-Control-Allow-Credentials': true,
             });
 
-            const messengers = document.querySelector('#messengers');
-
             socket.current.on('user-chat', (message) => {
-                const chatItem = document.createElement('li');
-                chatItem.textContent = `${message.name}: ${message.message}`;
-                messengers.appendChild(chatItem);
+                console.log(message);
             });
         }
     }, []);
@@ -56,11 +57,12 @@ function Content() {
             <div className={cx('flex-column', 'main-center')}>
                 <div className={cx('flex-row', 'header-center')}>
                     <div className={cx('flex-row', 'info-friend')}>
-                        <img 
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} 
-                            alt="avata" />
+                        <img
+                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                            alt="avata"
+                        />
                         <div className={cx('flex-column', 'info-content')}>
-                            <p>Mai Ngoc Long</p>
+                            <p>{sender?.firstName}</p>
                             <span>Active</span>
                         </div>
                     </div>
@@ -68,6 +70,10 @@ function Content() {
                     <div className={cx('flex-row', 'btn-event')}>
                         <button>Call</button>
                         <button>Video</button>
+                        <button className="navbar-logout" onClick={() => handleLogout()}>
+                            {' '}
+                            Log out
+                        </button>
                     </div>
                 </div>
 
@@ -75,10 +81,11 @@ function Content() {
                     <div className={cx('flex-column', 'scroller-column', 'screen-chat')}>
                         <div className={cx('space-height')}></div>
                         <div className={cx('flex-column', 'info-friend-chat')}>
-                            <img 
+                            <img
                                 src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                alt="avata" />
-                            <p>Mai Long Long</p>
+                                alt="avata"
+                            />
+                            <p>{sender?.firstName}</p>
                             <span>Hãy nói gì đó với tôi</span>
                         </div>
                         <div className={cx('space-height')}></div>
@@ -87,11 +94,36 @@ function Content() {
                                 <span className={cx('time')}>11:20,</span>
                                 <span className={cx('date')}>03/08/2000</span>
                             </div>
-                            <div className={cx('flex-row', 'friend-send')}>
-                                <img 
-                                    className={cx('img-chat')} 
-                                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} 
-                                    alt="avata" />
+
+                            {sendData
+                                .sort(function (a, b) {
+                                    return new Date(b.time) - new Date(a.time);
+                                })
+                                .map((mess, index) => {
+                                    return (
+                                        <div
+                                            key={index}
+                                            className={cx('flex-row', mess.id === 1 ? 'friend-send' : 'user-send')}
+                                        >
+                                            <img
+                                                className={cx('img-chat')}
+                                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                                alt="avata"
+                                            />
+                                            <div className={cx('box-text-chat')}>
+                                                <p className={cx('text-chat')}>{mess.mess}</p>
+                                            </div>
+                                            <div className={cx('space-height')}></div>
+                                        </div>
+                                    );
+                                })}
+
+                            {/* <div className={cx('flex-row', 'friend-send')}>
+                                <img
+                                    className={cx('img-chat')}
+                                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                    alt="avata"
+                                />
                                 <div className={cx('box-text-chat')}>
                                     <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
                                 </div>
@@ -101,41 +133,42 @@ function Content() {
                                 <div className={cx('box-text-chat')}>
                                     <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
                                 </div>
-                                <img 
+                                <img
                                     className={cx('img-chat')}
                                     src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                    alt="avata" />
+                                    alt="avata"
+                                />
                             </div>
-                            <div className={cx('space-height')}></div>
+                            <div className={cx('space-height')}></div> */}
                         </div>
                     </div>
 
-                    <div className={cx('flex-row', 'input-chat')}>
+                    <form onSubmit={handleSubmit} className={cx('flex-row', 'input-chat')}>
                         <button className={cx('btn-chat', 'file')}>File</button>
                         <div className={cx('input-text')}>
-                            <input type="text" placeholder="Input chat ...." />
+                            <input
+                                type="text"
+                                placeholder="Input chat ...."
+                                onChange={(e) => setMessage(e.target.value)}
+                            />
                         </div>
-                        <button className={cx('btn-chat', 'send')}>Send</button>
-                    </div>
+
+                        <button type="submit" className={cx('btn-chat', 'send')}>
+                            Gửi
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <div className={cx('main-right')}>
+            <div className={cx('main-right')}></div>
 
-            </div>
-            {/* 
-            <button className="navbar-logout" onClick={() => handleLogout()}>
-                {' '}
-                Log out
-            </button>
-            <ul id="messengers"></ul>
-            <form onSubmit={handleSubmit}>
+            {/*           
+            <ul id="messengers"></ul> */}
+            {/* <form onSubmit={handleSubmit}>
                 <input type="text" placeholder="name" onChange={(e) => setName(e.target.value)} />
-                <input type="text" placeholder="chat" onChange={(e) => setMessage(e.target.value)} />
-                <button id="send-chat">Gửi</button>
-            </form>
-            <p>{sender?.userName}</p>
-             */}
+
+            </form> */}
+            {/* <p>{sender?.userName}</p> */}
         </div>
     );
 }

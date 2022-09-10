@@ -58,7 +58,6 @@ const io = socket(server, {
 });
 
 io.on('connection', (socket) => {
-	console.log('user connected');
 	socket.on('on-chat', (data) => {
 		io.emit('user-chat', data);
 	});
