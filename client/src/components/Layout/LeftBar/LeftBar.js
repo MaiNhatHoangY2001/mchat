@@ -20,100 +20,48 @@ function LeftBar() {
     }, [textSearchUser]);
 
     return (
-        <div className={cx('container-left')}>
-            <img
-                className={cx('avata')}
-                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                alt={'avata'}
-            ></img>
-            <div className={cx('input-search')}>
-                <button className={cx('btn')}>btn</button>
-                <AutoComplete
-                    users={usersSearch}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Search input"
-                            InputProps={{
-                                ...params.InputProps,
-                                type: 'search',
-                                onChange: (e) => {
-                                    setTextSearchUser(e.target.value);
-                                },
-                            }}
+        <div className={cx('flex-column', 'container-left')}>
+            <div className={cx('flex-column', 'avata-search')}>
+                <div className={cx('avata')}>
+                    <img
+                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                        alt={'avata'}
+                    ></img>
+                </div>
+                
+                <div className={cx('flex-row', 'input-search')}>
+                    <button className={cx('btn')}>
+                        <img className={cx('btn-img')}
+                            src="https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/list.png" 
+                            alt="menu" />
+                    </button>
+                    <div className={cx('search')}>
+                        <AutoComplete
+                            users={usersSearch}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Search input"
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                        onChange: (e) => {
+                                            setTextSearchUser(e.target.value);
+                                        },
+                                    }}
+                                />
+                            )}
                         />
-                    )}
-                />
+                    </div>
+                </div>
             </div>
 
-            <hr />
-            <div className={cx('list-item')}>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
-                        <p>Mai Ngoc Long</p>
-                        <span>Nothing</span>
-                    </div>
-                </div>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
-                        <p>Mai Ngoc Long</p>
-                        <span>Nothing</span>
-                    </div>
-                </div>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
-                        <p>Mai Ngoc Long</p>
-                        <span>Nothing</span>
-                    </div>
-                </div>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
-                        <p>Mai Ngoc Long</p>
-                        <span>Nothing</span>
-                    </div>
-                </div>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
-                        <p>Mai Ngoc Long</p>
-                        <span>Nothing</span>
-                    </div>
-                </div>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
-                        <p>Mai Ngoc Long</p>
-                        <span>Nothing</span>
-                    </div>
-                </div>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
-                        <p>Mai Ngoc Long</p>
-                        <span>Nothing</span>
-                    </div>
-                </div>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
-                        <p>Mai Ngoc Long</p>
-                        <span>Nothing</span>
-                    </div>
-                </div>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
-                        <p>Mai Ngoc Long</p>
-                        <span>Nothing</span>
-                    </div>
-                </div>
-                <div className={cx('item')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt={'avata'} />
-                    <div className={cx('content-item')}>
+            <div className={cx('flex-column', 'scroller-column', 'list-item')}>
+                <div className={cx('flex-row', 'item')}>
+                    <img 
+                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} 
+                        alt={'avata'} />
+                    <div className={cx('flex-column', 'content-item')}>
                         <p>Mai Ngoc Long</p>
                         <span>Nothing</span>
                     </div>

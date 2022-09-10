@@ -6,6 +6,11 @@
     --primary: #0d6efd;
 }
 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 html {
     font-size: 100%;
 }
@@ -13,9 +18,6 @@ body {
     font-family: 'DM Sans';
     line-height: 1.5;
     text-rendering: optimizeSpeed;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
 }
 img {
     width: 100%;

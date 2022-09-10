@@ -6,11 +6,10 @@ const cx = classNames.bind(styles);
 
 function Home() {
     return (
-        <div className={cx("main")}>
+        <main className={cx("flex-row")}>
             <LeftBar />
             <Content />
-            <RightBar />
-        </div>
+        </main>
     );
 }
 

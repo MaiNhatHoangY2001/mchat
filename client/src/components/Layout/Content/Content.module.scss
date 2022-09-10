@@ -1,3 +1,155 @@
-.red-line{
-    font-size: 120%;
+/* Create Space height 10px */
+.space-height {
+    height: 10px;
+    display: block;
+    width: 100%;
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+.scroller-column {
+    overflow-y: scroll;
+}
+
+
+/* Main Content */
+.container-center {
+    flex: 75%;
+}
+/* Main Chat */
+.container-center .main-center {
+    flex: 70%;
+}
+/* Header Chat */
+.main-center .header-center {
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+/* Info Friend Chat */
+.header-center .info-friend {
+    flex-grow: 9;
+    justify-content: left;
+    align-items: center;
+}
+.info-friend img {
+    max-width: 46px;
+    max-height: 46px;
+    object-fit: cover;
+}
+.info-friend .info-content {
+    text-align: left;
+    width: 100%;
+    margin-left: 10px;
+}
+.info-content p {
+    font-size: 18px;
+    font-weight: bold;
+}
+.info-content span {
+    font-size: x-small;
+    color: rgb(11, 207, 11);
+}
+/* Button: Call, Video Call */
+.header-center .btn-event {
+    flex-grow: 1;
+    justify-content: space-evenly;
+}
+.btn-event button {
+    padding: 10px;
+    margin: 0;
+}
+
+
+/* Body Chat */
+.main-center .body-center {
+    overflow: auto;
+}
+/* Screen Text Chat */
+/* contain */
+.body-center .screen-chat {
+    height: 100vh;
+    flex-wrap: wrap;
+    border-bottom: 1px solid black;
+}
+/* Real Time chat */
+.screen-chat .real-time  {
+    padding: 10px;
+    text-align: center;
+    font-size: x-small;
+    color: rgb(154, 154, 154);
+}
+/* Info Friend Header Screen Chat */
+.screen-chat .info-friend-chat {
+    align-content: center;
+    align-items: center;
+}
+.info-friend-chat img {
+    max-width: 100px;
+}
+.info-friend-chat p {
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 24px;
+}
+.info-friend-chat span {
+    font-size: small;
+    color: rgb(154, 154, 154);
+}
+/* Friend Chat */
+.screen-chat .friend-send {
+    align-items: flex-end;
+}
+/* User Chat */
+.screen-chat .user-send {
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+/* Content chat */
+.img-chat {
+    max-width: 30px;
+    margin: 0 10px;
+}
+.box-text-chat {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 350px;
+    border: 1px solid rgb(168, 168, 168);
+}
+.screen-chat .contain-chat {
+    flex: auto;
+    justify-content: flex-end;
+}
+
+
+/* Input Chat */
+/* Contain */
+.input-chat {
+    padding: 10px;
+}
+/* Input Text */
+.input-chat .input-text {
+    flex: auto;
+}
+/* Button Send */
+.input-chat .btn-chat {
+    padding: 4px 10px;
+    cursor: pointer;
+}
+.input-text input {
+    padding: 4px 10px;
+    width: 100%;
+    margin: 0 10px;
+}
+
+
+/* Container File */
+.main-right {
+    flex: 30%;
+    border-left: 1px solid black;
 }
