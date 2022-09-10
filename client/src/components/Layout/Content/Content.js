@@ -8,7 +8,6 @@ import { logOut } from '../../../redux/apiRequest';
 import { createAxios } from '../../../redux/createInstance';
 import { logoutSuccess } from '../../../redux/authSlice';
 import { RightBar } from '../../Layout';
-import { RightBar } from '../../Layout';
 
 const cx = classNames.bind(styles);
 
@@ -103,17 +102,19 @@ function Content() {
                                 })
                                 .map((mess, index) => {
                                     return (
-                                        <div
-                                            key={index}
-                                            className={cx('flex-row', mess.id === 1 ? 'friend-send' : 'user-send')}
-                                        >
-                                            <img
-                                                className={cx('img-chat')}
-                                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                                alt="avata"
-                                            />
-                                            <div className={cx('box-text-chat')}>
-                                                <p className={cx('text-chat')}>{mess.mess}</p>
+                                        <div className={cx('flex-column')}>
+                                            <div
+                                                key={index}
+                                                className={cx('flex-row', mess.id === 1 ? 'friend-send' : 'user-send')}>
+                                                <img
+                                                    className={cx('img-chat')}
+                                                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                                    alt="avata"
+                                                />
+                                                <div className={cx('box-text-chat', 'tooltip')}>
+                                                    <p className={cx('text-chat')}>{mess.mess}</p>
+                                                    <span className={ cx('box-tooltip', mess.id === 1 ? 'tooltiptextFriend' : 'tooltiptextUser')}>11:16, 9 tháng 10, 2022</span>
+                                                </div>
                                             </div>
                                             <div className={cx('space-height')}></div>
                                         </div>

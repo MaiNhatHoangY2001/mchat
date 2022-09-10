@@ -16,11 +16,10 @@
     overflow-y: scroll;
 }
 
-
 /* Main Content */
 .container-center {
     flex: 75%;
-   
+
     min-width: 200px;
 }
 /* Main Chat */
@@ -66,7 +65,6 @@
     margin: 0;
 }
 
-
 /* Body Chat */
 .main-center .body-center {
     overflow: auto;
@@ -79,7 +77,7 @@
     border-bottom: 1px solid black;
 }
 /* Real Time chat */
-.screen-chat .real-time  {
+.screen-chat .real-time {
     padding: 10px;
     text-align: center;
     font-size: x-small;
@@ -110,7 +108,8 @@
 /* User Chat */
 .screen-chat .user-send {
     align-items: flex-end;
-    justify-content: flex-end;
+    flex-direction: row-reverse;
+    justify-content: end;
 }
 /* Content chat */
 .img-chat {
@@ -128,11 +127,11 @@
     justify-content: flex-end;
 }
 
-
 /* Input Chat */
 /* Contain */
 .input-chat {
     padding: 10px;
+    flex-direction: row;
 }
 /* Input Text */
 .input-chat .input-text {
@@ -151,6 +150,38 @@
     margin: 0;
 }
 
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+.box-tooltip {
+    visibility: hidden;
+    width: 250px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 3;
+    top: 10px;
+}
+.tooltip .tooltiptextUser {
+    right: 105%;
+}
+.tooltip .tooltiptextFriend {
+    left: 105%;
+}
+.tooltip:hover .box-tooltip {
+    visibility: visible;
+}
+
+.tooltip:hover {
+    cursor: pointer;
+    background-color: aliceblue;
+}
 
 /* Container File */
 .main-right {

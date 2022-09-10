@@ -68,6 +68,7 @@ function LeftBar() {
                         <span>Nothing</span>
                     </div>
                 </div>
+                
             </div>
         </div>
     );
