@@ -1,4 +1,4 @@
-const { GroupChat } = require ('../model');
+const { GroupChat, User } = require ('../model');
 
 const groupChatController = {
     //ADD GROUP CHAT
@@ -6,6 +6,10 @@ const groupChatController = {
 		try {
 			const newGroup = new GroupChat(req.body);
 			const saveGroup = await newGroup.save();
+			if (req.body.user) {
+				const user = User.findById(req.body.user);
+				await user.updateOne({ $push: { groupChats: saveGroup._id } });
+			}
 			res.status(200).json(saveGroup);
 		} catch (error) {
 			res.status(500).json(error);
@@ -23,7 +27,7 @@ const groupChatController = {
 	//GET A GROUP CHAT
 	getGroupChat: async (req, res) => {
 		try {
-			const group = await GroupChat.findById(req.params.id);
+			const group = await GroupChat.findById(req.params.id).populate('chatHistory');
 			res.status(200).json(group);
 		} catch (error) {
 			res.status(500).json(error);

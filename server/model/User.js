@@ -38,10 +38,20 @@ const userSchema = new mongoose.Schema({
 	phoneNumber: {
 		type: String,
 	},
-	chat: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Chat',
-	},
+	
+	individualChats: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'IndividualChat',
+		},
+	],
+	groupChats: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'GroupChat',
+		},
+	],
+
 	admin: {
 		type: Boolean,
 		default: false,

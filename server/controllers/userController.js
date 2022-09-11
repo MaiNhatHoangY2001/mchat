@@ -11,6 +11,17 @@ const userController = {
 			res.status(500).json(error);
 		}
 	},
+	
+	//GET A USERS
+	getAUsers: async (req, res) => {
+		try {
+			const user = await User.findById(req.params.id).populate('individualChats').populate('groupChats');
+			res.status(200).json(user);
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
+
 	//GET ALL USERS
 	getAllUsers: async (_req, res) => {
 		try {

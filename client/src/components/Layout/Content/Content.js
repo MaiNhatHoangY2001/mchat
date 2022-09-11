@@ -107,9 +107,9 @@ function Content() {
                                 })
                                 .map((mess, index) => {
                                     return (
-                                        <div className={cx('flex-column')}>
+                                        <div key={index} className={cx('flex-column')}>
                                             <div
-                                                key={index}
+                                                
                                                 className={cx('flex-row', mess.id === 1 ? 'friend-send' : 'user-send')}>
                                                 <img
                                                     className={cx('img-chat')}

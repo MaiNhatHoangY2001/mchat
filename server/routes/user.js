@@ -5,6 +5,9 @@ const router = require('express').Router();
 //ADD USER
 router.post('/', userController.addUser);
 
+//GET A USER
+router.get('/', middlewareController.verifyTokenAndAdminAuth, userController.getAUsers);
+
 //GET ALL USER
 router.get('/', middlewareController.verifyTokenAndAdminAuth, userController.getAllUsers);
 

@@ -11,16 +11,19 @@ const groupChatSchema = new mongoose.Schema({
     groupName: {
         type: String,
     },
-    chat: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Chat',
-    },
-    chatHistory: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'ChatHistory',
-        },
-    ],
+    chatStatus: {
+		type: Number,
+	},
+    user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+	},
+    message: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Message',
+		},
+	],
 });
 
 module.exports =  mongoose.model('GroupChat', groupChatSchema);;

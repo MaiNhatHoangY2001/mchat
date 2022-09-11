@@ -6,6 +6,6 @@ const router = require("express").Router();
 router.post("/", messageController.addMessage);
 
 //GET ALL MESSAGE
-router.get("/", middlewareController.verifyTokenAndAdminAuth, messageController.getAllMessage);
+router.get("/:sender", middlewareController.verifyTokenAndAdminAuth, messageController.getAllMessage);
 
 module.exports = router;
