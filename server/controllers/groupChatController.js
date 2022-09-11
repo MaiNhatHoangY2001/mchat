@@ -27,7 +27,7 @@ const groupChatController = {
 	//GET A GROUP CHAT
 	getGroupChat: async (req, res) => {
 		try {
-			const group = await GroupChat.findById(req.params.id).populate('chatHistory');
+			const group = await GroupChat.findById(req.params.id).populate('message');
 			res.status(200).json(group);
 		} catch (error) {
 			res.status(500).json(error);

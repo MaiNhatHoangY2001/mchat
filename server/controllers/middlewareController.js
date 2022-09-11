@@ -27,6 +27,16 @@ const middlewareController = {
                 return res.status(401).json("You're not authenticated");
             }
         });
+    },
+	verifyTokenAndUserAuth: (req, res, next) => {
+        middlewareController.verifyToken(req, res, ()=> {
+            if(!req.user.admin){
+                next();
+            }
+            else{
+                return res.status(401).json("You're not authenticated");
+            }
+        });
     }
 };
 

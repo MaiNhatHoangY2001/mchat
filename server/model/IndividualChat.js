@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
 const individualChatSchema = new mongoose.Schema({
-	peerId: {
+	sender: {
 		type: String,
+		unique: true, 
+		required: true,
 	},
 	status: {
 		type: String,

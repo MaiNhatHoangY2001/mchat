@@ -1,11 +1,11 @@
-const messageController = require("../controllers/messageController");
-const middlewareController = require("../controllers/middlewareController");
-const router = require("express").Router();
+const messageController = require('../controllers/messageController');
+const middlewareController = require('../controllers/middlewareController');
+const router = require('express').Router();
 
 //ADD MESSAGE
-router.post("/", messageController.addMessage);
+router.post('/', middlewareController.verifyTokenAndUserAuth, messageController.addMessage);
 
 //GET ALL MESSAGE
-router.get("/:sender", middlewareController.verifyTokenAndAdminAuth, messageController.getAllMessage);
+router.get('/:sender', middlewareController.verifyTokenAndUserAuth, messageController.getAllMsgOnePerson);
 
 module.exports = router;

@@ -22,10 +22,10 @@ const messageController = {
 	},
 
 	//GET All MESSAGE WITH SENDER
-	getAllMessage: async (_req, res) => {
+	getAllMsgOnePerson: async (req, res) => {
 		try {
 			
-			const messages = await Message.find({sender: req.params.sender});
+			const messages = await Message.find({sender:req.params.sender});
 			res.status(200).json(messages);
 		} catch (error) {
 			res.status(500).json(error);

@@ -17,7 +17,7 @@ function Content() {
 
     const socket = useRef();
     const [message, setMessage] = useState('');
-    const [sendMessage, setSendMessage] = useState([]);
+    const [sendMessage, setSendMessage] = useState({});
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const id = user?._id;
@@ -47,16 +47,21 @@ function Content() {
     }, [user]);
 
     useEffect(() => {
+        
+    },[])
+
+    //SOCKET CHAT
+    useEffect(() => {
         if (user?.accessToken) {
             socket.current = io('https://real-time-chat-server-123.herokuapp.com', {
                 'Access-Control-Allow-Credentials': true,
             });
 
             socket.current.on('user-chat', (mess) => {
-                console.log(mess);
+                setSendMessage(mess);
             });
         }
-    });
+    }, [sendMessage]);
 
     return (
         <div className={cx('flex-row', 'container-center')}>
