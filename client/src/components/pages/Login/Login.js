@@ -33,26 +33,6 @@ function Login() {
         if(user){
             navigate("/");
         }
-
-        const link1 = document.createElement("link");
-        link1.src = "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css";
-        link1.async = "true";
-        document.body.appendChild(link1);
-
-        const script1 = document.createElement("script"),
-              script2 = document.createElement("script"),
-              script3 = document.createElement("script");
-
-        script1.src = "https://code.jquery.com/jquery-3.4.1.slim.min.js";
-        script1.async = true;
-        script2.src = "https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js";
-        script2.async = true;
-        script3.src = "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js";
-        script3.async = true;
-
-        document.body.appendChild(script1);
-        document.body.appendChild(script2);
-        document.body.appendChild(script3);
     })
 
     const a = styled.a`
@@ -125,13 +105,13 @@ function Login() {
                                     }}
                             />
                         </div>
-                        </form>
                         <div className={cx("rowQuenMK")}>
                             <a href="../ForgotPass/ForgotPass"><b>Quên mật khẩu?</b></a>
                         </div>
                         <div className={cx("rowBtnDN")}>
                             {isLoading ? <p>currently loading</p> : <button type="submit"><b>ĐĂNG NHẬP</b></button>}
                         </div>
+                        </form>
                         <div className={cx("rowChuaCoTK")}><span>Bạn chưa có tài khoản?</span></div>
                         <div className={cx("rowDKNgay")}>
                             <a href="../Register/Register" className={cx("labelDKNgay")}><b>Đăng ký ngay</b></a>
