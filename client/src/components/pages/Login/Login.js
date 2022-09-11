@@ -108,19 +108,29 @@ function Login() {
                     <div className={cx("row-top")}
                          style={{marginTop: "10%"}}>
                         <h1>THÔNG TIN NHẬP</h1>
+                        <form onSubmit={handleLogin}>
                         <div className={cx("rowTenTK")}>
                             <span>Tên tài khoản:</span>
-                            <input type="text" placeholder="Nhập tên tài khoản" className={cx("inputUser")} />
+                            <input type="text" placeholder="Nhập tên tài khoản" className={cx("inputUser")} 
+                                    onChange={(e) => {
+                                        setUserName(e.target.value);
+                                    }}
+                            />
                         </div>
                         <div className={cx("rowMK")}>
                             <span>Mật khẩu:</span>
-                            <input type="password" placeholder="Nhập mật khẩu" className={cx("inputPW")} />
+                            <input type="password" placeholder="Nhập mật khẩu" className={cx("inputPW")} 
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                    }}
+                            />
                         </div>
+                        </form>
                         <div className={cx("rowQuenMK")}>
                             <a href="../ForgotPass/ForgotPass"><b>Quên mật khẩu?</b></a>
                         </div>
                         <div className={cx("rowBtnDN")}>
-                            <button type="submit"><b>ĐĂNG NHẬP</b></button>
+                            {isLoading ? <p>currently loading</p> : <button type="submit"><b>ĐĂNG NHẬP</b></button>}
                         </div>
                         <div className={cx("rowChuaCoTK")}><span>Bạn chưa có tài khoản?</span></div>
                         <div className={cx("rowDKNgay")}>
