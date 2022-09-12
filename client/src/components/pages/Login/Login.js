@@ -44,18 +44,20 @@ function Login() {
                     </div>
                 </div>
                     <div className={cx('login-title')}>Đăng nhập tài khoản MLine</div>
-                    <form onSubmit={handleLogin}>
+                    <form className={cx('formLogin')} onSubmit={handleLogin}>
                             <div className='col-lg-10'>
-                                <label>Tài khoản:</label>
+                                <label className={cx('lblTK')}>Tài khoản:</label>
                                 <input
+                                    className={cx('inputTK')}
                                     type="text"
                                     placeholder="Nhập tên tài khoản"
                                     onChange={(e) => {
                                         setUserName(e.target.value);
                                     }}
                                 /><br/>
-                                <label>Mật khẩu:</label>
+                                <label className={cx('lblMK')}>Mật khẩu:</label>
                                 <input
+                                    className={cx('inputMK')}
                                     type="password"
                                     placeholder="Nhập mật khẩu"
                                     onChange={(e) => {
