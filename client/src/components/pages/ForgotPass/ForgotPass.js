@@ -50,7 +50,7 @@ function ForgotPass() {
                             Bạn quên mật khẩu?{' '}
                         </Link> */}
                     </div>
-                    {/* {isLoading ? <p><i>Đang đăng nhập...</i></p> : */} <button type="submit">LẤY LẠI MẬT KHẨU</button>
+                    {/* {isLoading ? <p><i>Đang đăng nhập...</i></p> : */} <button className={cx('btnNewPW')} type="submit">LẤY LẠI MẬT KHẨU</button>
                     <Link className={cx('comback-login')} to="/login">
                         ◀ Quay lại{' '}
                     </Link>

@@ -80,7 +80,7 @@
     margin-top: 8%;
 }
 
-button[type='submit'] {
+.btnNewPW {
     align-self: center;
     margin-top: 5%;
     font-size: 1rem;
@@ -92,13 +92,12 @@ button[type='submit'] {
     background-color: #D57AD4;
 }
 
-button[type='submit']:hover {
+.btnNewPW:hover {
     background-color: #fff;
     border: 1px solid rgb(250, 139, 158);
     color: rgb(250, 139, 158);
 }
 
-p,
 .comback-login {
     text-decoration: none;
     margin-top: 1rem;
