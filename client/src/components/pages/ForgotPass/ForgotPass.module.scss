@@ -1,4 +1,4 @@
-body {
+.bodyForgotPW {
     background: url(https://data-mline-congnghemoi.s3.ap-southeast-1.amazonaws.com/bgcolor.png) no-repeat;
     background-size: cover;
     width: 100%;
@@ -45,6 +45,9 @@ body {
     justify-content: center;
     align-items: center;
     width: 48%;
+    background-color: #fff;
+    box-shadow: 1px 1px 20px 5px lightgray;
+    padding-bottom: 2%;
 }
 
 .lblTkForgotPW,
@@ -64,6 +67,7 @@ body {
     width: 60% !important;
     margin-top: 1.7% !important;
     float: right !important;
+    border-bottom: 1px solid lightgray !important;
 }
 
 label,
@@ -95,10 +99,10 @@ p,
 .comback-login {
     text-decoration: none;
     margin-top: 1rem;
-    color: #fff;
+    color: #D57AD4;
     font-weight: 700;
 }
 
 .comback-login:hover {
-    color: #D57AD4;
+    color: rgb(250, 139, 158);
 }

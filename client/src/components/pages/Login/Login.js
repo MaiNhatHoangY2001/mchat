@@ -35,7 +35,7 @@ function Login() {
     })
 
     return (
-        <body>
+        <div className={cx('bodyLogin')}>
             <section className={cx('login-container')}>
                 <div className='row'>
                     <div className={cx('logo')}>
@@ -69,13 +69,13 @@ function Login() {
                                 </Link>
                             </div>
                         {isLoading ? <p><i>Đang đăng nhập...</i></p> : <button type="submit">ĐĂNG NHẬP</button>}
+                        <div className={cx('login-register')}>Bạn chưa có tài khoản?</div>
+                        <Link className={cx('login-register-link')} to="/register">
+                            Đăng ký ngay{' '}
+                        </Link>
                     </form>
-                    <div className={cx('login-register')}>Bạn chưa có tài khoản?</div>
-                    <Link className={cx('login-register-link')} to="/register">
-                        Đăng ký ngay{' '}
-                    </Link>
             </section>
-        </body>
+        </div>
     );
 }
 
