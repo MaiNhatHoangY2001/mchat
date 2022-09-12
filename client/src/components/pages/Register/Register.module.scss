@@ -1,13 +1,13 @@
-body {
-    background: url(https://data-mline-congnghemoi.s3.ap-southeast-1.amazonaws.com/bgcolor.png) no-repeat;
-    background-size: cover;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: fixed;
-    margin: 0;
-    padding: 0;
-}
+// .register-container-page{
+//     background: url(https://data-mline-congnghemoi.s3.ap-southeast-1.amazonaws.com/bgcolor.png) no-repeat;
+//     background-size: cover;
+//     width: 100%;
+//     height: 100%;
+//     overflow: hidden;
+//     position: fixed;
+//     margin: 0;
+//     padding: 0;
+// }
 .register-container {
     display: flex;
     flex-direction: column;
@@ -18,7 +18,7 @@ body {
     width: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-form {
+.register-form{
     display: flex;
     margin-top: 1rem;
     font-size: 2.0vh;
@@ -30,10 +30,10 @@ form {
 //    margin: 0.75rem;
     height: 80%;
 }
-.mainput{
+.margininput{
     margin: 0.75rem;
 }
-.mabutton{
+.magrinbutton{
     margin: 1rem;
 }
 .login-link:hover{
