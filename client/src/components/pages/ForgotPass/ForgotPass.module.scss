@@ -20,54 +20,46 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.logo {
+    width: 12%;
+}
+
 .logo img {
     width: 12vw;
 }
 
 #line {
+    text-align: center;
     font-size: 6vh;
     font-weight: 900;
     color: rgb(250, 139, 158);
-}
-
-.login-title {
-    font-weight: 700;
-    font-size: 4vh;
-    margin-top: 2%;
+    margin-top: -12%;
 }
 
 .formForgotPW {
     display: flex;
-    margin-top: 1rem;
+    margin-top: 2rem;
     font-size: 2.5vh;
     font-weight: 600;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 48%;
+    width: 30%;
+    height: 80%;
     background-color: #fff;
-    box-shadow: 1px 1px 20px 5px lightgray;
+    box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
     padding-bottom: 2%;
-}
-
-.lblTkForgotPW,
-.lblMKMoi,
-.lblXacNhanMK {
-    float: left;
 }
 
 .txtTkForgotPW,
 .txtNewPW,
 .txtConfirmNewPW {
-    border: none !important;
-    padding: 0.35rem !important;
-    font-family: "Inter", sans-serif !important;
-    margin: 0.75rem 0 !important;
-    border-radius: 4px !important;
-    width: 60% !important;
-    margin-top: 1.7% !important;
-    float: right !important;
-    border-bottom: 1px solid lightgray !important;
+    border: none;
+    padding: 0.35rem;
+    font-family: "Inter", sans-serif;
+    border-radius: 4px;
+    width: 84%;
+    border-bottom: 1px solid lightgray;
 }
 
 .lblTkForgotPW,
@@ -82,10 +74,10 @@
 
 .btnNewPW {
     align-self: center;
-    margin-top: 5%;
+    margin-top: 10%;
     font-size: 1rem;
     padding: 3%;
-    width: 35%;
+    width: 45%;
     border: 1px solid #D57AD4;
     border-radius: 10%;
     color: white;
