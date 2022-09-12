@@ -37,18 +37,16 @@ function Login() {
     return (
         <div className={cx('bodyLogin')}>
             <section className={cx('login-container')}>
-                <div className='row'>
                     <div className={cx('logo')}>
                         <img src={'https://data-mline-congnghemoi.s3.ap-southeast-1.amazonaws.com/logo-no-bg.png'} alt={"logo=MLine"} />
-                        <span id={cx("line")}>LINE</span>
+                        <div id={cx("line")}>LINE</div>
                     </div>
-                </div>
                     <div className={cx('login-title')}>Đăng nhập tài khoản MLine</div>
                     <form className={cx('formLogin')} onSubmit={handleLogin}>
                             <div className='col-lg-10'>
                                 <label className={cx('lblTK')}>Tài khoản:</label>
                                 <input
-                                    className={cx('inputTK')}
+                                    className={cx('txtTK')}
                                     type="text"
                                     placeholder="Nhập tên tài khoản"
                                     onChange={(e) => {
@@ -57,7 +55,7 @@ function Login() {
                                 /><br/>
                                 <label className={cx('lblMK')}>Mật khẩu:</label>
                                 <input
-                                    className={cx('inputMK')}
+                                    className={cx('txtMK')}
                                     type="password"
                                     placeholder="Nhập mật khẩu"
                                     onChange={(e) => {
@@ -68,7 +66,7 @@ function Login() {
                                     Bạn quên mật khẩu?{' '}
                                 </Link>
                             </div>
-                        {isLoading ? <p><i>Đang đăng nhập...</i></p> : <button type="submit">ĐĂNG NHẬP</button>}
+                        {isLoading ? <p className={cx('currentLogin')}><i>Đang đăng nhập...</i></p> : <button className={cx('btnLogin')} type="submit">ĐĂNG NHẬP</button>}
                         <div className={cx('login-register')}>Bạn chưa có tài khoản?</div>
                         <Link className={cx('login-register-link')} to="/register">
                             Đăng ký ngay{' '}
