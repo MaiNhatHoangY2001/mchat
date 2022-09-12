@@ -28,6 +28,7 @@ function Content() {
     let axiosJWT = createAxios(user, dispatch, logoutSuccess);
 
     
+    
     const callPopupFunction = () =>{
         var popup;
         popup = window.open("https://www.youtube.com/", "My Popup", "height = 650,width=500")

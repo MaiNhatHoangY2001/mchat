@@ -16,10 +16,15 @@ const individualChatController = {
 			res.status(500).json(error);
 		}
 	},
-	getListChat: async(req, res) => {
-		const listInvidualChat = await IndividualChat.find();
-		const listGroupChat = await GroupChat.find(); 
-		const listChat = listGroupChat.concat(listGroupChat);
+	getListChat: async (req, res) => {
+		try {
+			const listInvidualChat = await IndividualChat.find().populate("message");
+			const listGroupChat = await GroupChat.find().populate("message");
+			const listChat = listGroupChat.concat(listInvidualChat);
+			res.status(200).json(listChat);
+		} catch (error) {
+			res.status(500).json(error);
+		}
 	},
 	//GET CHAT WITH USER ID AND SENDER
 	getListIndividualChat: async (req, res) => {
@@ -58,7 +63,7 @@ const individualChatController = {
 					$project: {
 						'message.content': 1,
 						'message.time': 1,
-						'sender':1,
+						sender: 1,
 						_id: 0,
 					},
 				},

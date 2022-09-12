@@ -5,7 +5,10 @@ const router = require('express').Router();
 // ADD INDIVIDUAL CHAT
 router.post('/', middlewareController.verifyTokenAndUserAuth, individualChatController.addIndividualChat);
 
-// GET ALL INDIVIDUAL CHAT
+// GET MESSAGE
 router.get('/', middlewareController.verifyTokenAndUserAuth, individualChatController.getListIndividualChat);
+
+// GET
+
 
 module.exports = router;
