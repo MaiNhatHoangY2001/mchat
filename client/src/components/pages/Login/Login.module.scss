@@ -20,11 +20,17 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.logo {
+    border: 1px solid black;
+    width: 12%;
+}
+
 .logo img {
     width: 12vw;
 }
 
 #line {
+    margin: 0 auto;
     font-size: 6vh;
     font-weight: 900;
     color: rgb(250, 139, 158);
@@ -51,8 +57,8 @@
     padding-bottom: 2%;
 }
 
-input[type='text'],
-input[type='password'] {
+.txtTK,
+.txtMK {
     border: none;
     padding: 0.35rem;
     font-family: "Inter", sans-serif;
@@ -63,14 +69,16 @@ input[type='password'] {
     border-bottom: 1px solid lightgray;
 }
 
-label,
-input,
-button,
-p {
+.lblTK,
+.lblMK,
+.txtTK,
+.txtMK,
+.btnLogin,
+.currentLogin {
     margin-top: 8%;
 }
 
-button[type='submit'] {
+.btnLogin {
     align-self: center;
     margin-top: 10% !important;
     font-size: 1rem;
@@ -82,7 +90,7 @@ button[type='submit'] {
     background-color: #D57AD4;
 }
 
-button[type='submit']:hover {
+.btnLogin:hover {
     background-color: #fff;
     border: 1px solid rgb(250, 139, 158);
     color: rgb(250, 139, 158);
@@ -93,7 +101,7 @@ button[type='submit']:hover {
     font-size: 1rem;
 }
 
-p,
+.currentLogin,
 .login-register-link,
 .forgotpw-link {
     text-decoration: none;
