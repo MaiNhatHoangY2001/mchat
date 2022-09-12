@@ -32,12 +32,23 @@ const chatSlice = createSlice({
         addMessageStart: (state) => {
             state.message.isFetching = true;
         },
-        addMessageSuccess: (state, action) => {
+        addMessageSuccess: (state) => {
             state.message.isFetching = false;
             state.message.success = true;
-            state.message.sender = action.payload;
         },
         addMessageFailed: (state) => {
+            state.message.isFetching = false;
+            state.message.error = true;
+        },
+        getMessagesStart: (state) => {
+            state.message.isFetching = true;
+        },
+        getMessagesSuccess: (state, action) => {
+            state.message.isFetching = false;
+            state.message.success = true;
+            state.message.content = action.payload;
+        },
+        getMessagesFailed: (state) => {
             state.message.isFetching = false;
             state.message.error = true;
         },
@@ -51,6 +62,9 @@ export const {
     addMessageFailed,
     addMessageStart,
     addMessageSuccess,
+    getMessagesFailed,
+    getMessagesStart,
+    getMessagesSuccess
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

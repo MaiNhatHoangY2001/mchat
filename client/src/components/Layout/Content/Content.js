@@ -8,12 +8,14 @@ import { logOut } from '../../../redux/apiRequest/authApiRequest';
 import { createAxios } from '../../../redux/createInstance';
 import { logoutSuccess } from '../../../redux/authSlice';
 import { RightBar } from '../../Layout';
+import { getMsgs } from '../../../redux/apiRequest/chatApiRequest';
 
 const cx = classNames.bind(styles);
 
 function Content() {
     const user = useSelector((state) => state.auth.login?.currentUser);
     const sender = useSelector((state) => state.user.sender?.user);
+    const chat = useSelector((state) => state.chat.message?.content);
 
     const socket = useRef();
     const [message, setMessage] = useState('');
@@ -24,11 +26,15 @@ function Content() {
     const accessToken = user?.accessToken;
     let axiosJWT = createAxios(user, dispatch, logoutSuccess);
 
-    const sendData = [
-        { mess: 'test1', time: new Date(2022, 3, 25, 5, 4, 4, 2), id: 0 },
-        { mess: 'test2', time: new Date(2022, 3, 23, 5, 4, 4, 2), id: 1 },
-        { mess: 'hello test', time: new Date(2022, 3, 27, 5, 4, 4, 2), id: 0 },
-    ];
+    const [sendData, setSendData] = useState([
+        {
+            sender: null,
+            message: {
+                content: null,
+                time: null,
+            },
+        },
+    ]);
 
     const handleLogout = () => {
         logOut(dispatch, navigate, id, accessToken, axiosJWT);
@@ -36,9 +42,21 @@ function Content() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        socket.current.emit('on-chat', { id: user?._id, message });
-        setMessage('');
+        if (message !== '') {
+            socket.current.emit('on-chat', {
+                sender: sender?._id,
+                message: {
+                    content: message,
+                    time: Date.now,
+                },
+            });
+            setMessage('');
+        }
     };
+
+    useEffect(() => {
+        setSendData(chat);
+    }, [chat]);
 
     useEffect(() => {
         if (!user) {
@@ -47,8 +65,12 @@ function Content() {
     }, [user]);
 
     useEffect(() => {
-        
-    },[])
+        const id = {
+            sender: sender?._id,
+            user: user?._id,
+        };
+        getMsgs(accessToken, dispatch, id, axiosJWT);
+    }, [sender]);
 
     //SOCKET CHAT
     useEffect(() => {
@@ -58,7 +80,7 @@ function Content() {
             });
 
             socket.current.on('user-chat', (mess) => {
-                setSendMessage(mess);
+                console.log(mess);
             });
         }
     }, [sendMessage]);
@@ -106,29 +128,32 @@ function Content() {
                                 <span className={cx('date')}>03/08/2000</span>
                             </div>
 
-                            {sendData
-                                .sort(function (a, b) {
-                                    return new Date(a.time) - new Date(b.time);
-                                })
-                                .map((mess, index) => {
-                                    return (
-                                        <div key={index} className={cx('flex-column')}>
-                                            <div
-                                                
-                                                className={cx('flex-row', mess.id === 1 ? 'friend-send' : 'user-send')}>
-                                                <img
-                                                    className={cx('img-chat')}
-                                                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                                    alt="avata"
-                                                />
-                                                <div className={cx('box-text-chat', 'tooltip')}>
-                                                    <p className={cx('text-chat')}>{mess.mess}</p>
-                                                    <span className={ cx('box-tooltip', mess.id === 1 ? 'tooltiptextFriend' : 'tooltiptextUser')}>11:16, 9 tháng 10, 2022</span>
-                                                </div>
+                            {sendData.map((mess, index) => {
+                                return (
+                                    <div key={index} className={cx('flex-column')}>
+                                        <div
+                                            className={cx('flex-row', mess.sender === id ? 'friend-send' : 'user-send')}
+                                        >
+                                            <img
+                                                className={cx('img-chat')}
+                                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                                alt="avata"
+                                            />
+                                            <div className={cx('box-text-chat', 'tooltip')}>
+                                                <p className={cx('text-chat')}>{mess.message.content}</p>
+                                                <span
+                                                    className={cx(
+                                                        'box-tooltip',
+                                                        mess.id === 1 ? 'tooltiptextFriend' : 'tooltiptextUser',
+                                                    )}
+                                                >
+                                                    {mess.message.time}
+                                                </span>
                                             </div>
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                );
+                            })}
 
                             {/* <div className={cx('flex-row', 'friend-send')}>
                                 <img

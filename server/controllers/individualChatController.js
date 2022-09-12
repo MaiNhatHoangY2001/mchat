@@ -19,8 +19,8 @@ const individualChatController = {
 	//GET CHAT WITH USER ID AND SENDER
 	getListIndividualChat: async (req, res) => {
 		try {
-			const idSender = mongoose.Types.ObjectId(req.body.sender);
-			const idUser = mongoose.Types.ObjectId(req.body.user);
+			const idSender = mongoose.Types.ObjectId(req.query.sender);
+			const idUser = mongoose.Types.ObjectId(req.query.user);
 
 			const listIndi = await IndividualChat.aggregate([
 				{
@@ -35,11 +35,11 @@ const individualChatController = {
 					$match: {
 						$or: [
 							{
-								sender: req.body.sender,
+								sender: req.query.sender,
 								user: idUser,
 							},
 							{
-								sender: req.body.user,
+								sender: req.query.user,
 								user: idSender,
 							},
 						],

@@ -8,7 +8,6 @@ export default function ComboBox({ users, renderInput }) {
 
     const handleGetUser = (user) => {
         dispatch(setSender(user));
-        window.location.reload();
     };
 
     return (

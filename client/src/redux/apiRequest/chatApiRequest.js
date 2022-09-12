@@ -5,6 +5,9 @@ import {
     addMessageFailed,
     addMessageStart,
     addMessageSuccess,
+    getMessagesFailed,
+    getMessagesStart,
+    getMessagesSuccess,
 } from '../chatSlice';
 
 export const addIndividualChat = async (accessToken, dispatch, axiosJWT) => {
@@ -54,5 +57,17 @@ export const addMessage = async (message, accessToken, dispatch, axiosJWT, newCh
         dispatch(addMessageSuccess(mess.data));
     } catch (error) {
         dispatch(addMessageFailed());
+    }
+};
+export const getMsgs = async (accessToken, dispatch, sender, axiosJWT) => {
+    dispatch(getMessagesStart());
+    try {
+        const res = await axiosJWT.get('https://real-time-chat-server-123.herokuapp.com/api/individualChat/', {
+            headers: { token: `Bearer ${accessToken}` },
+            params: sender
+        });
+        dispatch(getMessagesSuccess(res.data));
+    } catch (error) {
+        dispatch(getMessagesFailed());
     }
 };
