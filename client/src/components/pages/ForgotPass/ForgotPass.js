@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 
 function ForgotPass() {
     return (
-        <body>
+        <div className={cx('bodyForgotPW')}>
             <section className={cx('forgotpw-container')}>
                 <div className='row'>
                     <div className={cx('logo')}>
@@ -51,12 +51,12 @@ function ForgotPass() {
                         </Link> */}
                     </div>
                     {/* {isLoading ? <p><i>Đang đăng nhập...</i></p> : */} <button type="submit">LẤY LẠI MẬT KHẨU</button>
+                    <Link className={cx('comback-login')} to="/login">
+                        ◀ Quay lại{' '}
+                    </Link>
                 </form>
-                <Link className={cx('comback-login')} to="/login">
-                    ◀ Quay lại{' '}
-                </Link>
             </section>
-        </body>
+        </div>
     );
 }
 

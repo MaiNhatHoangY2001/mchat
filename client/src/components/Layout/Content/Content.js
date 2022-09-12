@@ -128,7 +128,7 @@ function Content() {
                                 <span className={cx('date')}>03/08/2000</span>
                             </div>
 
-                            {sendData.map((mess, index) => {
+                            {sendData?.map((mess, index) => {
                                 return (
                                     <div key={index} className={cx('flex-column')}>
                                         <div
@@ -144,7 +144,7 @@ function Content() {
                                                 <span
                                                     className={cx(
                                                         'box-tooltip',
-                                                        mess.id === 1 ? 'tooltiptextFriend' : 'tooltiptextUser',
+                                                        mess.sender === id ? 'tooltiptextFriend' : 'tooltiptextUser',
                                                     )}
                                                 >
                                                     {mess.message.time}
