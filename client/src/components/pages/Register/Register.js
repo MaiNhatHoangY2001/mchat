@@ -2,7 +2,7 @@ import styles from './Register.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { registerUser } from '../../../redux/apiRequest/authApiRequest';
 
 const cx = classNames.bind(styles);
@@ -12,6 +12,10 @@ function Register() {
 
     const [isLoading, setIsLoading] = useState(false);
     const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [emailID, setEmailID] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [date, setDate] = useState('');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
@@ -21,8 +25,12 @@ function Register() {
         e.preventDefault();
         const newUser = {
             userName: userName,
-            firstName: firstName,
             password: password,
+            firstName: firstName,
+            lastName: lastName,
+            date: date,
+            emailID: emailID,
+            phoneNumber: phoneNumber,
         };
         registerUser(newUser, dispatch, navigate, setIsLoading);
     };
@@ -34,23 +42,95 @@ function Register() {
     })
 
     return (
-        <section className={cx('register-container')}>
-            <div className={cx('register-title')}> Sign up </div>
-            <form onSubmit={handleRegister}>
-                <label>FIRST NAME</label>
-                <input type="text" placeholder="Enter firstName" onChange={(e) => setFirstName(e.target.value)} />
-                <label>USERNAME</label>
-                <input type="text" placeholder="Enter your username" onChange={(e) => setUserName(e.target.value)} />
-                <label>PASSWORD</label>
-                <input
-                    type="password"
-                    placeholder="Enter your password"
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                 {isLoading ? <p>currently loading</p> :  <button type="submit"> Create account </button>}
-               
-            </form>
-        </section>
+        <body>
+            <section className={cx('register-container')}>
+                <form onSubmit={handleRegister}>
+                    <h2> THÔNG TIN ĐĂNG KÝ </h2>
+                    <div className='col-lg-8'>
+                        
+                            <label className={cx('mainput')}>Tài khoản:</label>
+                            <input type="text" placeholder="Nhập tên tài khoản" 
+                               
+                                onChange={(e) => setUserName(e.target.value)} />                           
+                        
+
+                        {/* <div className={cx('row-register')}> */}
+                            <label className={cx('mainput')}>Mật khẩu:</label>  
+                            <input
+                                type="password"
+                                placeholder="Nhập mật khẩu"
+                                // className={cx('mainput')}
+                                onChange={(e) => setPassword(e.target.value)} />
+                        {/* </div> */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            <label className={cx('mainput')}>Xác nhận:</label> 
+                            <input
+                                type="password"
+                                placeholder="Nhập lại mật khẩu"
+                                //className={cx('input-register')}
+                                onChange={(e) => setPassword(e.target.value)}
+                                />
+                            <br/>
+                        {/* </div> */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            <label className={cx('mainput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tên:</label> 
+                             <input 
+                                type="text" 
+                                placeholder="Nhập tên" 
+ //                               className={cx('input-register')}
+                                onChange={(e) => setFirstName(e.target.value)} />
+                            <br/>
+                        {/* </div> */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            <label className={cx('mainput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Họ:</label>
+                            <input 
+                                type="text" 
+                                placeholder="Nhập Họ" 
+                                // className={cx('input-register')}
+                                onChange={(e) => setLastName(e.target.value)}/>
+                        {/* </div> */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            <label className={cx('mainput')}>Năm sinh:</label>
+                            <input 
+                                type="text" 
+                                placeholder="dd/mm/yyyy" 
+  //                              className={cx('input-register')}
+                                onChange={(e) => setDate(e.target.value)}/>
+                        {/* </div> */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            <label className={cx('mainput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email:</label>
+                            <input 
+                                type="text" 
+                                placeholder="Nhập email" 
+                                // className={cx('input-register')}
+                                onChange={(e) => setEmailID(e.target.value)}/>   
+                        {/* </div> */}
+                        {/* <div className={cx('row-register')}> */}
+                            <label className={cx('mainput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SĐT:</label>
+                            <input 
+                                type="text" 
+                                placeholder="Nhập số điện thoại" 
+                                // className={cx('input-register')}
+                                onChange={(e) => setPhoneNumber(e.target.value)}/>
+                        {/* </div>  */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            <label className={cx('mabutton')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bạn đã có tài khoản?..  </label>      
+                            <Link to="/login" className={cx('login-link')}>
+                                <label>Đăng nhập ngay</label>
+                            </Link>
+                        {/* </div> */}
+                    </div>     
+                            {isLoading ? <p>currently loading</p> :  <button type="submit"> Đăng ký </button>}
+                      
+                </form>
+            </section>
+        </body>
     );
 }
 
