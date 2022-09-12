@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { IndividualChat, User } = require('../model');
+const { IndividualChat, User, GroupChat } = require('../model');
 
 const individualChatController = {
 	//ADD INDIVIDUAL CHAT
@@ -15,6 +15,11 @@ const individualChatController = {
 		} catch (error) {
 			res.status(500).json(error);
 		}
+	},
+	getListChat: async(req, res) => {
+		const listInvidualChat = await IndividualChat.find();
+		const listGroupChat = await GroupChat.find(); 
+		const listChat = listGroupChat.concat(listGroupChat);
 	},
 	//GET CHAT WITH USER ID AND SENDER
 	getListIndividualChat: async (req, res) => {

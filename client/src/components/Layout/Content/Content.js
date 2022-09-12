@@ -42,12 +42,13 @@ function Content() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const time = new Date();
         if (message !== '') {
             socket.current.emit('on-chat', {
                 sender: sender?._id,
                 message: {
                     content: message,
-                    time: Date.now,
+                    time: time,
                 },
             });
             setMessage('');
@@ -74,16 +75,21 @@ function Content() {
 
     //SOCKET CHAT
     useEffect(() => {
+        const handler = (chatMessage) => {
+            setSendData((prev) => {
+                return [...prev, chatMessage];
+            });
+        };
         if (user?.accessToken) {
             socket.current = io('https://real-time-chat-server-123.herokuapp.com', {
                 'Access-Control-Allow-Credentials': true,
             });
 
-            socket.current.on('user-chat', (mess) => {
-                console.log(mess);
-            });
+            socket.current.on('user-chat', handler);
+
+            return () => socket.current.off('user-chat', handler);
         }
-    }, [sendMessage]);
+    }, [sendData]);
 
     return (
         <div className={cx('flex-row', 'container-center')}>
