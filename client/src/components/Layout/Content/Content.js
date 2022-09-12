@@ -9,6 +9,7 @@ import { createAxios } from '../../../redux/createInstance';
 import { logoutSuccess } from '../../../redux/authSlice';
 import { RightBar } from '../../Layout';
 import { getMsgs } from '../../../redux/apiRequest/chatApiRequest';
+import { height } from '@mui/system';
 
 const cx = classNames.bind(styles);
 
@@ -25,6 +26,12 @@ function Content() {
     const id = user?._id;
     const accessToken = user?.accessToken;
     let axiosJWT = createAxios(user, dispatch, logoutSuccess);
+
+    
+    const callPopupFunction = () =>{
+        var popup;
+        popup = window.open("https://www.youtube.com/", "My Popup", "height = 650,width=500")
+    };
 
     const [sendData, setSendData] = useState([
         {
@@ -101,7 +108,7 @@ function Content() {
                     </div>
 
                     <div className={cx('flex-row', 'btn-event')}>
-                        <button>Call</button>
+                        <button onClick={() => callPopupFunction() }>Call</button>
                         <button>Video</button>
                         <button className="navbar-logout" onClick={() => handleLogout()}>
                             {' '}
