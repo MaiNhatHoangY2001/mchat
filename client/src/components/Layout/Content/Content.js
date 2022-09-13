@@ -162,7 +162,7 @@ function Content() {
                                 );
                             })}
 
-                            {/* <div className={cx('flex-row', 'friend-send')}>
+                            <div className={cx('flex-row', 'friend-send')}>
                                 <img
                                     className={cx('img-chat')}
                                     src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
@@ -183,7 +183,7 @@ function Content() {
                                     alt="avata"
                                 />
                             </div>
-                            <div className={cx('space-height')}></div> */}
+                            <div className={cx('space-height')}></div>
                         </div>
                     </div>
 
