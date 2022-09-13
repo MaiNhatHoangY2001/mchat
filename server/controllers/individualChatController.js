@@ -16,18 +16,23 @@ const individualChatController = {
 			res.status(500).json(error);
 		}
 	},
-	getListChat: async (req, res) => {
+	getListIndividualChat: async (req, res) => {
 		try {
-			const listInvidualChat = await IndividualChat.find().populate("message");
-			const listGroupChat = await GroupChat.find().populate("message");
+			const idUser = mongoose.Types.ObjectId(req.params.id);
+
+			const listInvidualChat = await IndividualChat.find({ user: idUser }).populate('message');
+			const listGroupChat = await GroupChat.find({ user: idUser }).populate('message');
 			const listChat = listGroupChat.concat(listInvidualChat);
-			res.status(200).json(listChat);
+			const listSort = listChat.sort(function (a, b) {
+				return new Date(b.message[0].time) - new Date(a.message[0].time);
+			});
+			res.status(200).json(listSort);
 		} catch (error) {
 			res.status(500).json(error);
 		}
 	},
 	//GET CHAT WITH USER ID AND SENDER
-	getListIndividualChat: async (req, res) => {
+	getListChat: async (req, res) => {
 		try {
 			const idSender = mongoose.Types.ObjectId(req.query.sender);
 			const idUser = mongoose.Types.ObjectId(req.query.user);
