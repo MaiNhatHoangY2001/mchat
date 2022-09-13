@@ -8,6 +8,7 @@ const chatSlice = createSlice({
             idChat: null,
             success: false,
             error: false,
+            actor: null,
         },
         message: {
             content: null,
@@ -26,6 +27,18 @@ const chatSlice = createSlice({
             state.individualChat.success = true;
         },
         addIndividualChatFailed: (state) => {
+            state.individualChat.isFetching = false;
+            state.individualChat.error = true;
+        },
+        getIndividualChatStart: (state) => {
+            state.individualChat.isFetching = true;
+        },
+        getIndividualChatSuccess: (state, action) => {
+            state.individualChat.isFetching = false;
+            state.individualChat.actor = action.payload;
+            state.individualChat.success = true;
+        },
+        getIndividualChatFailed: (state) => {
             state.individualChat.isFetching = false;
             state.individualChat.error = true;
         },
@@ -64,7 +77,10 @@ export const {
     addMessageSuccess,
     getMessagesFailed,
     getMessagesStart,
-    getMessagesSuccess
+    getMessagesSuccess,
+    getIndividualChatFailed,
+    getIndividualChatStart,
+    getIndividualChatSuccess
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

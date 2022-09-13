@@ -10,6 +10,7 @@ import { logoutSuccess } from '../../../redux/authSlice';
 import { RightBar } from '../../Layout';
 import { getMsgs } from '../../../redux/apiRequest/chatApiRequest';
 import { height } from '@mui/system';
+import { popupCenter } from './PopupCenter';
 
 const cx = classNames.bind(styles);
 
@@ -27,32 +28,8 @@ function Content() {
     const accessToken = user?.accessToken;
     let axiosJWT = createAxios(user, dispatch, logoutSuccess);
 
-    const popupCenter = ({url, title, w, h}) => {
-        // Fixes dual-screen position                             Most browsers      Firefox
-        const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
-        const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
-    
-        const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : Screen.width;
-        const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : Screen.height;
-    
-        const systemZoom = width / window.screen.availWidth;
-        const left = (width - w) / 2 / systemZoom + dualScreenLeft
-        const top = (height - h) / 2 / systemZoom + dualScreenTop
-        const newWindow = window.open(url, title, 
-          `
-          scrollbars=yes,
-          width=${w / systemZoom}, 
-          height=${h / systemZoom}, 
-          top=${top}, 
-          left=${left}
-          `
-        )
-    
-        if (window.focus) newWindow.focus();
-    }
-   
-    const callPopupFunction = () =>{
-        popupCenter({url: '../call', title: 'xtf', w: 500, h: 650});  
+    const callPopupFunction = () => {
+        popupCenter({ url: '../call', title: 'xtf', w: 500, h: 650 });
     };
 
     const [sendData, setSendData] = useState([
@@ -136,7 +113,7 @@ function Content() {
                     </div>
 
                     <div className={cx('flex-row', 'btn-event')}>
-                        <button onClick={() => callPopupFunction() }>Call</button>
+                        <button onClick={() => callPopupFunction()}>Call</button>
                         <button>Video</button>
                         <button className="navbar-logout" onClick={() => handleLogout()}>
                             {' '}

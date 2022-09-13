@@ -8,11 +8,11 @@ const messageController = {
 			const saveMes = await newMes.save();
 			if (req.body.individualChat) {
 				const individualChat = IndividualChat.findById(req.body.individualChat);
-				await individualChat.updateOne({ $push: { message: saveMes._id } });
+				await individualChat.updateOne({ $push: { message: { $each: [saveMes._id], $position: 0 } } });
 			}
 			if (req.body.groupChat) {
 				const groupChat = GroupChat.findById(req.body.groupChat);
-				await groupChat.updateOne({ $push: { message: saveMes._id } });
+				await groupChat.updateOne({ $push: { message: { $each: [saveMes._id], $position: 0 } } });
 			}
 
 			res.status(200).json(saveMes);
@@ -24,8 +24,7 @@ const messageController = {
 	//GET All MESSAGE WITH SENDER
 	getAllMsgOnePerson: async (req, res) => {
 		try {
-			
-			const messages = await Message.find({sender:req.params.sender});
+			const messages = await Message.find({ sender: req.params.sender });
 			res.status(200).json(messages);
 		} catch (error) {
 			res.status(500).json(error);

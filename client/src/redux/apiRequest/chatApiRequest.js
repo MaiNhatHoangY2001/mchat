@@ -5,6 +5,9 @@ import {
     addMessageFailed,
     addMessageStart,
     addMessageSuccess,
+    getIndividualChatFailed,
+    getIndividualChatStart,
+    getIndividualChatSuccess,
     getMessagesFailed,
     getMessagesStart,
     getMessagesSuccess,
@@ -64,10 +67,22 @@ export const getMsgs = async (accessToken, dispatch, sender, axiosJWT) => {
     try {
         const res = await axiosJWT.get('https://real-time-chat-server-123.herokuapp.com/api/individualChat/', {
             headers: { token: `Bearer ${accessToken}` },
-            params: sender
+            params: sender,
         });
         dispatch(getMessagesSuccess(res.data));
     } catch (error) {
         dispatch(getMessagesFailed());
+    }
+};
+
+export const getIndividualChat = async (accessToken, userId, dispatch, axiosJWT) => {
+    dispatch(getIndividualChatStart());
+    try {
+        const res = await axiosJWT.get('https://real-time-chat-server-123.herokuapp.com/api/individualChat/' + userId, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(getIndividualChatSuccess(res.data));
+    } catch (error) {
+        dispatch(getIndividualChatFailed());
     }
 };
