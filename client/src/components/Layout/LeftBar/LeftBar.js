@@ -6,9 +6,9 @@ import TextField from '@mui/material/TextField';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIndividualChat } from '../../../redux/apiRequest/chatApiRequest';
 import { createAxios } from '../../../redux/createInstance';
-import { getIndividualChatSuccess } from '../../../redux/chatSlice';
+import { addIndividualChatSuccess, getIndividualChatSuccess } from '../../../redux/chatSlice';
 import { searchUser } from '../../../redux/apiRequest/userApiRequest';
-import { getSearchSuccess, getUsersSuccess } from '../../../redux/userSlice';
+import { getSearchSuccess, getUsersSuccess, setSender } from '../../../redux/userSlice';
 
 const cx = classNames.bind(styles);
 
@@ -23,21 +23,24 @@ function LeftBar() {
 
     const dispatch = useDispatch();
 
-    const id = currentUser?._id;
     const accessToken = currentUser?.accessToken;
 
-    let axiosJWTChats = createAxios(currentUser, dispatch, getIndividualChatSuccess);
+    
     let axiosJWTSearch = createAxios(currentUser, dispatch, getUsersSuccess);
 
-    useEffect(() => {
-        getIndividualChat(accessToken, id, dispatch, axiosJWTChats);
-        setChatActors(currentChat);
-    }, [chatActors]);
-    const [isActive, setIsActive] = useState(false);
 
-    const handleClick = () => {
-        setIsActive(current => !current);
-      };
+    const handleClick = (idChat, sender) => {
+        setIsActive((current) => !current);
+        dispatch(addIndividualChatSuccess(idChat));
+        dispatch(setSender(sender));
+    };
+
+    
+    useEffect(() => {
+        setChatActors(currentChat);
+    }, [currentChat]);
+    
+    const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
         const search = textSearchUser === '' ? '@' : textSearchUser;
@@ -88,12 +91,15 @@ function LeftBar() {
             {chatActors?.map((actor, index) => {
                 return (
                     <div key={index} className={cx('flex-column', 'scroller-column', 'list-item')}>
-                        <button id='button-item' className={cx('flex-row', 'item')} 
-                     style={{
-                        backgroundColor: isActive ? 'salmon' : '',
-                        color: isActive ? 'white' : '',
-                      }}
-                      onClick={handleClick}>
+                        <button
+                            id="button-item"
+                            className={cx('flex-row', 'item')}
+                            style={{
+                                backgroundColor: isActive ? 'salmon' : '',
+                                color: isActive ? 'white' : '',
+                            }}
+                            onClick={() => handleClick(actor._id, actor?.sender)}
+                        >
                             <img
                                 src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                                 alt={'avata'}

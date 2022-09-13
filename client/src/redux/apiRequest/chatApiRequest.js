@@ -13,10 +13,12 @@ import {
     getMessagesSuccess,
 } from '../chatSlice';
 
+import {url} from './authApiRequest';
+
 export const addIndividualChat = async (accessToken, dispatch, axiosJWT) => {
     dispatch(addIndividualChatStart());
     try {
-        await axiosJWT.post('https://real-time-chat-server-123.herokuapp.com/api/individualChat/', {
+        await axiosJWT.post(`${url}/api/individualChat/`, {
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(addIndividualChatSuccess());
@@ -28,7 +30,7 @@ export const addIndividualChat = async (accessToken, dispatch, axiosJWT) => {
 export const addGroupChat = async (accessToken, dispatch, idIndividualChat, axiosJWT) => {
     dispatch(addIndividualChatStart());
     try {
-        await axiosJWT.post('https://real-time-chat-server-123.herokuapp.com/api/groupChat/', {
+        await axiosJWT.post(`${url}/api/groupChat/`, {
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(addIndividualChatSuccess());
@@ -42,18 +44,15 @@ export const addMessage = async (message, accessToken, dispatch, axiosJWT, newCh
     try {
         let msg = message;
         if (newChat) {
-            const newIndiChat = await axiosJWT.post(
-                'https://real-time-chat-server-123.herokuapp.com/api/individualChat/',
-                {
-                    headers: { token: `Bearer ${accessToken}` },
-                },
-            );
+            const newIndiChat = await axiosJWT.post(`${url}/api/individualChat/`, {
+                headers: { token: `Bearer ${accessToken}` },
+            });
             msg = {
                 ...message,
                 individualChat: newIndiChat._id,
             };
         }
-        const mess = await axiosJWT.post('https://real-time-chat-server-123.herokuapp.com/api/message/', msg, {
+        const mess = await axiosJWT.post(`${url}/api/message/`, msg, {
             headers: { token: `Bearer ${accessToken}` },
         });
 
@@ -65,7 +64,7 @@ export const addMessage = async (message, accessToken, dispatch, axiosJWT, newCh
 export const getMsgs = async (accessToken, dispatch, sender, axiosJWT) => {
     dispatch(getMessagesStart());
     try {
-        const res = await axiosJWT.get('https://real-time-chat-server-123.herokuapp.com/api/individualChat/', {
+        const res = await axiosJWT.get(`${url}/api/individualChat/`, {
             headers: { token: `Bearer ${accessToken}` },
             params: sender,
         });
@@ -78,7 +77,7 @@ export const getMsgs = async (accessToken, dispatch, sender, axiosJWT) => {
 export const getIndividualChat = async (accessToken, userId, dispatch, axiosJWT) => {
     dispatch(getIndividualChatStart());
     try {
-        const res = await axiosJWT.get('https://real-time-chat-server-123.herokuapp.com/api/individualChat/' + userId, {
+        const res = await axiosJWT.get(`${url}/api/individualChat/` + userId, {
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(getIndividualChatSuccess(res.data));

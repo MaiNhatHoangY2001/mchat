@@ -1,10 +1,12 @@
 import { getUsersFailed, getUsersStart, getUsersSuccess } from '../userSlice';
 
+import {url} from './authApiRequest';
+
 export const searchUser = async (accessToken, dispatch, search, axiosJWT) => {
     dispatch(getUsersStart());
     try {
         const res = await axiosJWT.get(
-            'https://real-time-chat-server-123.herokuapp.com/api/user/search?term=' + search,
+            `${url}/api/user/search?term=` + search,
             {
                 headers: { token: `Bearer ${accessToken}` },
             },

@@ -54,11 +54,11 @@ const individualChatController = {
 					$match: {
 						$or: [
 							{
-								sender: req.query.sender,
+								sender: idSender,
 								user: idUser,
 							},
 							{
-								sender: req.query.user,
+								sender: idUser,
 								user: idSender,
 							},
 						],

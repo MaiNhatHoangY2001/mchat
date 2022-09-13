@@ -65,6 +65,10 @@ const chatSlice = createSlice({
             state.message.isFetching = false;
             state.message.error = true;
         },
+        clearActor: (state) => {
+            state.individualChat.idChat = null;
+            state.individualChat.actor = null;
+        }
     },
 });
 
@@ -80,7 +84,8 @@ export const {
     getMessagesSuccess,
     getIndividualChatFailed,
     getIndividualChatStart,
-    getIndividualChatSuccess
+    getIndividualChatSuccess,
+    clearActor
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
