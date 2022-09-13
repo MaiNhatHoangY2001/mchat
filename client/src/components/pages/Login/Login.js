@@ -7,7 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import 'w3-css/w3.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { IconContext } from 'react-icons/lib';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 
 const cx = classNames.bind(styles);
@@ -23,10 +25,12 @@ function Login() {
 
     const handleLogin = (e) => {
         e.preventDefault();
+
         const newUser = {
             userName: userName,
             password: password,
         };
+
         loginUser(newUser, dispatch, navigate, setIsLoading);
     };
 
@@ -39,26 +43,13 @@ function Login() {
     //show-hide-pw
     const [passwordType, setPasswordType] = useState("password");
     const [passwordInput, setPasswordInput] = useState("");
-    // const handlePasswordChange =(evnt)=>{
-    //     setPasswordInput(evnt.target.value);
-    // }
     const togglePassword =()=>{
-      if(passwordType==="password")
-      {
-       setPasswordType("text")
-       return;
+      if(passwordType==="password") {
+        setPasswordType("text")
+        return;
       }
       setPasswordType("password")
     }
-
-    // let params = {
-    //     iconName: eye,
-    //     prefix: fas
-    //     // other entries as needed
-    // };
-    // if (!findIconDefinition(params)) {
-        
-    // }
 
     return (
         <div className={cx('bodyLogin')}>
@@ -88,9 +79,11 @@ function Login() {
                                     value={passwordInput}
                                     name="password"
                                 />
-                                <span className="fa">
+                                <span className={cx('eyeLogin')}>
                                     <div className="btn btn-outline-primary" onClick={togglePassword}>
-                                        {passwordType === "password" ? <i><FontAwesomeIcon icon={["fas", "eye-slash"]}/></i> : <i><FontAwesomeIcon icon={["fas", "eye"]}/>👁</i>}
+                                        <IconContext.Provider value={{ color: '#D57AD4'}}>
+                                            {passwordType === "password" ? <i><FaEyeSlash/></i> : <i><FaEye/></i>}
+                                        </IconContext.Provider>
                                     </div>
                                 </span>
                                 <Link className={cx('forgotpw-link')} to="/forgotpass">

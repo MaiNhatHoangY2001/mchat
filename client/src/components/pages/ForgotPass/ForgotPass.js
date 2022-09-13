@@ -5,17 +5,17 @@ import { useState } from 'react';
 
 import 'w3-css/w3.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { IconContext } from 'react-icons/lib';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const cx = classNames.bind(styles);
 
 function ForgotPass() {
     //show-hide-pw
     const [passwordType, setPasswordType] = useState("password");
-    const [passwordInput, setPasswordInput] = useState("");
-    // const handlePasswordChange =(evnt)=>{
-    //     setPasswordInput(evnt.target.value);
-    // }
+    const [passwordInputNewPW, setPasswordInputNewPW] = useState("");
+    const [passwordInputConfirmNewPW, setPasswordInputConfirmNewPW] = useState("");
     const togglePassword = () => {
         if (passwordType === "password") {
             setPasswordType("text")
@@ -48,14 +48,16 @@ function ForgotPass() {
                             placeholder="Mật khẩu mới"
                             onChange={(e) => {
                                 // setPassword(e.target.value);
-                                setPasswordInput(e.target.value);
+                                setPasswordInputNewPW(e.target.value);
                             }}
-                            value={passwordInput}
+                            value={passwordInputNewPW}
                             name="password"
                         />
-                        <span className="fa1">
+                        <span className="eye1">
                             <div className="btn btn-outline-primary" onClick={togglePassword}>
-                                {passwordType === "password" ? <i><FontAwesomeIcon icon={["fas", "eye-slash"]} /></i> : <i><FontAwesomeIcon icon={["fas", "eye"]} />👁</i>}
+                                <IconContext.Provider value={{ color: '#D57AD4' }}>
+                                    {passwordType === "password" ? <i><FaEyeSlash/></i> : <i><FaEye/></i>}
+                                </IconContext.Provider>
                             </div>
                         </span>
                         <input
@@ -63,14 +65,16 @@ function ForgotPass() {
                             type={passwordType}
                             placeholder='Xác nhận mật khẩu mới'
                             onChange={(e) => {
-                                setPasswordInput(e.target.value);
+                                setPasswordInputConfirmNewPW(e.target.value);
                             }}
-                            value={passwordInput}
+                            value={passwordInputConfirmNewPW}
                             name="password"
                         />
-                        <span className="fa2">
+                        <span className="eye2">
                             <div className="btn btn-outline-primary" onClick={togglePassword}>
-                                {passwordType === "password" ? <i><FontAwesomeIcon icon={["fas", "eye-slash"]} /></i> : <i><FontAwesomeIcon icon={["fas", "eye"]} />👁</i>}
+                                <IconContext.Provider value={{ color: '#D57AD4' }}>
+                                    {passwordType === "password" ? <i><FaEyeSlash /></i> : <i><FaEye /></i>}
+                                </IconContext.Provider>
                             </div>
                         </span>
                     </div>
