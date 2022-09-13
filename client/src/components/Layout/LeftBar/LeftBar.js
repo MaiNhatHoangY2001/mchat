@@ -11,6 +11,11 @@ function LeftBar() {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
+    const [isActive, setIsActive] = useState(false);
+
+    const handleClick = () => {
+        setIsActive(current => !current);
+      };
 
     useEffect(() => {
         fetch(
@@ -59,15 +64,20 @@ function LeftBar() {
             </div>
 
             <div className={cx('flex-column', 'scroller-column', 'list-item')}>
-                <div className={cx('flex-row', 'item')}>
+                <button id='button-item' className={cx('flex-row', 'item')} 
+                     style={{
+                        backgroundColor: isActive ? 'salmon' : '',
+                        color: isActive ? 'white' : '',
+                      }}
+                      onClick={handleClick}>
                     <img 
                         src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} 
                         alt={'avata'} />
                     <div className={cx('flex-column', 'content-item')}>
-                        <p>Mai Ngoc Long</p>
+                        <p>Mai Ngoc Long Mai Ngoc Long Mai Ngoc Long Mai Ngoc Long</p>
                         <span>Nothing</span>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     );
