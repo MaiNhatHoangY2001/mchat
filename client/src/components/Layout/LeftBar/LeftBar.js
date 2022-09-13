@@ -33,6 +33,11 @@ function LeftBar() {
         getIndividualChat(accessToken, id, dispatch, axiosJWTChats);
         setChatActors(currentChat);
     }, [chatActors]);
+    const [isActive, setIsActive] = useState(false);
+
+    const handleClick = () => {
+        setIsActive(current => !current);
+      };
 
     useEffect(() => {
         const search = textSearchUser === '' ? '@' : textSearchUser;
@@ -83,7 +88,12 @@ function LeftBar() {
             {chatActors?.map((actor, index) => {
                 return (
                     <div key={index} className={cx('flex-column', 'scroller-column', 'list-item')}>
-                        <div className={cx('flex-row', 'item')}>
+                        <button id='button-item' className={cx('flex-row', 'item')} 
+                     style={{
+                        backgroundColor: isActive ? 'salmon' : '',
+                        color: isActive ? 'white' : '',
+                      }}
+                      onClick={handleClick}>
                             <img
                                 src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                                 alt={'avata'}
@@ -92,7 +102,7 @@ function LeftBar() {
                                 <p>{actor?.sender.profileName}</p>
                                 <span>{actor?.sender.status}</span>
                             </div>
-                        </div>
+                        </button>
                     </div>
                 );
             })}
