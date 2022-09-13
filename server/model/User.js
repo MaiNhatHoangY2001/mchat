@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
 	},
 	profileName: {
 		type: String,
+		selfDefault: { fields: ['firstName', 'lastName'], space: true },
 	},
 	emailID: {
 		type: String,
@@ -38,7 +39,7 @@ const userSchema = new mongoose.Schema({
 	phoneNumber: {
 		type: String,
 	},
-	
+
 	individualChats: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

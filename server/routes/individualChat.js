@@ -6,9 +6,9 @@ const router = require('express').Router();
 router.post('/', middlewareController.verifyTokenAndUserAuth, individualChatController.addIndividualChat);
 
 // GET MESSAGE
-router.get('/:id', middlewareController.verifyTokenAndUserAuth, individualChatController.getListChat);
+router.get('/:id', middlewareController.verifyTokenAndUserAuth, individualChatController.getListIndividualChat);
 
 // GET
-router.get('/', middlewareController.verifyTokenAndUserAuth, individualChatController.getListIndividualChat);
+router.get('/', middlewareController.verifyTokenAndUserAuth, individualChatController.getListChat);
 
 module.exports = router;
