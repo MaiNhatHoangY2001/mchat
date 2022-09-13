@@ -27,10 +27,32 @@ function Content() {
     const accessToken = user?.accessToken;
     let axiosJWT = createAxios(user, dispatch, logoutSuccess);
 
+    const popupCenter = ({url, title, w, h}) => {
+        // Fixes dual-screen position                             Most browsers      Firefox
+        const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+        const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
     
+        const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : Screen.width;
+        const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : Screen.height;
+    
+        const systemZoom = width / window.screen.availWidth;
+        const left = (width - w) / 2 / systemZoom + dualScreenLeft
+        const top = (height - h) / 2 / systemZoom + dualScreenTop
+        const newWindow = window.open(url, title, 
+          `
+          scrollbars=yes,
+          width=${w / systemZoom}, 
+          height=${h / systemZoom}, 
+          top=${top}, 
+          left=${left}
+          `
+        )
+    
+        if (window.focus) newWindow.focus();
+    }
+   
     const callPopupFunction = () =>{
-        var popup;
-        popup = window.open("https://www.youtube.com/", "My Popup", "height = 650,width=500")
+        popupCenter({url: '../call', title: 'xtf', w: 500, h: 650});  
     };
 
     const [sendData, setSendData] = useState([
@@ -49,12 +71,13 @@ function Content() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const time = new Date();
         if (message !== '') {
             socket.current.emit('on-chat', {
                 sender: sender?._id,
                 message: {
                     content: message,
-                    time: Date.now,
+                    time: time,
                 },
             });
             setMessage('');
@@ -81,16 +104,21 @@ function Content() {
 
     //SOCKET CHAT
     useEffect(() => {
+        const handler = (chatMessage) => {
+            setSendData((prev) => {
+                return [...prev, chatMessage];
+            });
+        };
         if (user?.accessToken) {
             socket.current = io('https://real-time-chat-server-123.herokuapp.com', {
                 'Access-Control-Allow-Credentials': true,
             });
 
-            socket.current.on('user-chat', (mess) => {
-                console.log(mess);
-            });
+            socket.current.on('user-chat', handler);
+
+            return () => socket.current.off('user-chat', handler);
         }
-    }, [sendMessage]);
+    }, [sendData]);
 
     return (
         <div className={cx('flex-row', 'container-center')}>

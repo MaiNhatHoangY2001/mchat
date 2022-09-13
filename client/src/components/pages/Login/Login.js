@@ -7,6 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import 'w3-css/w3.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { IconContext } from 'react-icons/lib';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 
 const cx = classNames.bind(styles);
 
@@ -21,10 +25,12 @@ function Login() {
 
     const handleLogin = (e) => {
         e.preventDefault();
+
         const newUser = {
             userName: userName,
             password: password,
         };
+
         loginUser(newUser, dispatch, navigate, setIsLoading);
     };
 
@@ -34,6 +40,17 @@ function Login() {
         }
     })
 
+    //show-hide-pw
+    const [passwordType, setPasswordType] = useState("password");
+    const [passwordInput, setPasswordInput] = useState("");
+    const togglePassword =()=>{
+      if(passwordType==="password") {
+        setPasswordType("text")
+        return;
+      }
+      setPasswordType("password")
+    }
+
     return (
         <div className={cx('bodyLogin')}>
             <section className={cx('login-container')}>
@@ -41,27 +58,34 @@ function Login() {
                         <img src={'https://data-mline-congnghemoi.s3.ap-southeast-1.amazonaws.com/logo-no-bg.png'} alt={"logo=MLine"} />
                         <div id={cx("line")}>LINE</div>
                     </div>
-                    <div className={cx('login-title')}>Đăng nhập tài khoản MLine</div>
                     <form className={cx('formLogin')} onSubmit={handleLogin}>
                             <div className='col-lg-10'>
-                                <label className={cx('lblTK')}>Tài khoản:</label>
                                 <input
                                     className={cx('txtTK')}
                                     type="text"
-                                    placeholder="Nhập tên tài khoản"
+                                    placeholder="Tên tài khoản"
                                     onChange={(e) => {
                                         setUserName(e.target.value);
                                     }}
                                 /><br/>
-                                <label className={cx('lblMK')}>Mật khẩu:</label>
                                 <input
                                     className={cx('txtMK')}
-                                    type="password"
-                                    placeholder="Nhập mật khẩu"
+                                    type={passwordType}
+                                    placeholder="Mật khẩu"
                                     onChange={(e) => {
                                         setPassword(e.target.value);
+                                        setPasswordInput(e.target.value);
                                     }}
+                                    value={passwordInput}
+                                    name="password"
                                 />
+                                <span className={cx('eyeLogin')}>
+                                    <div className="btn btn-outline-primary" onClick={togglePassword}>
+                                        <IconContext.Provider value={{ color: '#D57AD4'}}>
+                                            {passwordType === "password" ? <i><FaEyeSlash/></i> : <i><FaEye/></i>}
+                                        </IconContext.Provider>
+                                    </div>
+                                </span>
                                 <Link className={cx('forgotpw-link')} to="/forgotpass">
                                     Bạn quên mật khẩu?{' '}
                                 </Link>
