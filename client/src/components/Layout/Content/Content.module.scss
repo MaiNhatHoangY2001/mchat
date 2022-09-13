@@ -4,6 +4,11 @@
     display: block;
     width: 100%;
 }
+.space-big-height {
+    height: 100px;
+    display: block;
+    width: 100%;
+}
 .flex-column {
     display: flex;
     flex-direction: column;
@@ -22,7 +27,6 @@
 /* Main Content */
 .container-center {
     flex: 75%;
-
     min-width: 200px;
 }
 /* Main Chat */
@@ -69,25 +73,70 @@
 }
 
 /* Body Chat */
+.container-center {
+    flex: 75%;
+}
+/* Main Chat */
+.container-center .main-center {
+    flex: 70%;
+}
+/* Header Chat */
+.main-center .header-center {
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+/* Info Friend Chat */
+.header-center .info-friend {
+    flex-grow: 9;
+    justify-content: left;
+    align-items: center;
+}
+.info-friend img {
+    max-width: 46px;
+    max-height: 46px;
+}
+.info-friend .info-content {
+    text-align: left;
+    width: 100%;
+    margin-left: 10px;
+}
+.info-content p {
+    font-size: 18px;
+    font-weight: bold;
+}
+.info-content span {
+    font-size: x-small;
+    color: rgb(11, 207, 11);
+}
+/* Button: Call, Video Call */
+.header-center .btn-event {
+    flex-grow: 1;
+    justify-content: space-evenly;
+}
+.btn-event button {
+    padding: 0 10px;
+}
+/* Body Chat */
 .main-center .body-center {
-    overflow: auto;
+    height: 100vh;
 }
 /* Screen Text Chat */
 /* contain */
-.body-center .screen-chat {
-    border-bottom: 1px solid black;
-    background-image: url('https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/bgcolor.png');
-}
 /* Real Time chat */
-.screen-chat .real-time {
+.real-time {
     padding: 10px;
     text-align: center;
     font-size: x-small;
     color: rgb(154, 154, 154);
 }
+.contain-chat {
+    display: flex;
+    flex: auto;
+    justify-content: flex-end;
+    flex-direction: column;
+}
 /* Info Friend Header Screen Chat */
-.screen-chat .info-friend-chat {
-    align-content: center;
+.info-friend-chat {
     align-items: center;
 }
 .info-friend-chat img {
@@ -104,19 +153,18 @@
     color: rgb(154, 154, 154);
 }
 /* Friend Chat */
-.screen-chat .friend-send {
+.friend-send {
     align-items: flex-end;
 }
 /* User Chat */
-.screen-chat .user-send {
-    align-items: flex-end;
-    flex-direction: row-reverse;
-    justify-content: end;
+.user-send {
+    justify-content: flex-end;
 }
 /* Content chat */
 .img-chat {
     max-width: 30px;
     margin: 0 10px;
+    place-self: flex-end;
 }
 .box-text-chat {
     padding: 10px;
@@ -124,8 +172,7 @@
     max-width: 350px;
     border: 1px solid rgb(168, 168, 168);
 }
-.screen-chat .contain-chat {
-    flex: auto;
+.contain-chat {
     justify-content: flex-end;
 }
 
@@ -133,23 +180,20 @@
 /* Contain */
 .input-chat {
     padding: 10px;
-    flex-direction: row;
 }
 /* Input Text */
 .input-chat .input-text {
     flex: auto;
-    margin: 0 10px;
 }
 /* Button Send */
 .input-chat .btn-chat {
     padding: 4px 10px;
     cursor: pointer;
-    margin: 0;
 }
 .input-text input {
-    padding: 10px;
+    padding: 4px 10px;
     width: 100%;
-    margin: 0;
+    margin: 0 10px;
 }
 
 .tooltip {

@@ -27,32 +27,42 @@ function Content() {
     const accessToken = user?.accessToken;
     let axiosJWT = createAxios(user, dispatch, logoutSuccess);
 
-    const popupCenter = ({url, title, w, h}) => {
+    const popupCenter = ({ url, title, w, h }) => {
         // Fixes dual-screen position                             Most browsers      Firefox
-        const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
-        const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
-    
-        const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : Screen.width;
-        const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : Screen.height;
-    
+        const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+        const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+
+        const width = window.innerWidth
+            ? window.innerWidth
+            : document.documentElement.clientWidth
+            ? document.documentElement.clientWidth
+            : Screen.width;
+        const height = window.innerHeight
+            ? window.innerHeight
+            : document.documentElement.clientHeight
+            ? document.documentElement.clientHeight
+            : Screen.height;
+
         const systemZoom = width / window.screen.availWidth;
-        const left = (width - w) / 2 / systemZoom + dualScreenLeft
-        const top = (height - h) / 2 / systemZoom + dualScreenTop
-        const newWindow = window.open(url, title, 
-          `
+        const left = (width - w) / 2 / systemZoom + dualScreenLeft;
+        const top = (height - h) / 2 / systemZoom + dualScreenTop;
+        const newWindow = window.open(
+            url,
+            title,
+            `
           scrollbars=yes,
           width=${w / systemZoom}, 
           height=${h / systemZoom}, 
           top=${top}, 
           left=${left}
-          `
-        )
-    
+          `,
+        );
+
         if (window.focus) newWindow.focus();
-    }
-   
-    const callPopupFunction = () =>{
-        popupCenter({url: '../call', title: 'xtf', w: 500, h: 650});  
+    };
+
+    const callPopupFunction = () => {
+        popupCenter({ url: '../call', title: 'xtf', w: 500, h: 650 });
     };
 
     const [sendData, setSendData] = useState([
@@ -122,7 +132,7 @@ function Content() {
 
     return (
         <div className={cx('flex-row', 'container-center')}>
-            <div className={cx('flex-column', 'main-center')}>
+            <div className={cx('flex-column', 'fix-height-screen', 'main-center')}>
                 <div className={cx('flex-row', 'header-center')}>
                     <div className={cx('flex-row', 'info-friend')}>
                         <img
@@ -136,7 +146,7 @@ function Content() {
                     </div>
 
                     <div className={cx('flex-row', 'btn-event')}>
-                        <button onClick={() => callPopupFunction() }>Call</button>
+                        <button onClick={() => callPopupFunction()}>Call</button>
                         <button>Video</button>
                         <button className="navbar-logout" onClick={() => handleLogout()}>
                             {' '}
@@ -145,91 +155,91 @@ function Content() {
                     </div>
                 </div>
 
-                <div className={cx('flex-column', 'body-center')}>
-                    <div className={cx('flex-column', 'scroller-column', 'screen-chat')}>
-                        <div className={cx('space-height')}></div>
-                        <div className={cx('flex-column', 'info-friend-chat')}>
+                <div className={cx('flex-column', 'scroller-column', 'body-center')}>
+                    <div className={cx('space-big-height')}></div>
+                    <div className={cx('flex-column', 'info-friend-chat')}>
+                        <img
+                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                            alt="avata"
+                        />
+                        <p>{sender?.firstName}</p>
+                        <span>Hãy nói gì đó với tôi</span>
+                    </div>
+                    <div className={cx('space-big-height')}></div>
+
+                    <div className={cx('flex-column', 'contain-chat')}>
+                        <div className={cx('real-time')}>
+                            <span className={cx('time')}>11:20,</span>
+                            <span className={cx('date')}>03/08/2000</span>
+                        </div>
+
+                        {sendData?.map((mess, index) => {
+                            return (
+                                <div key={index} className={cx('flex-column')}>
+                                    <div
+                                        className={cx('flex-row', mess.sender === id ? 'friend-send' : 'user-send')}
+                                    >
+                                        <img
+                                            className={cx('img-chat')}
+                                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                            alt="avata"
+                                        />
+                                        <div className={cx('box-text-chat', 'tooltip')}>
+                                            <p className={cx('text-chat')}>{mess.message.content}</p>
+                                            <span
+                                                className={cx(
+                                                    'box-tooltip',
+                                                    mess.sender === id ? 'tooltiptextFriend' : 'tooltiptextUser',
+                                                )}
+                                            >
+                                                {mess.message.time}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className={cx('space-height')}></div>
+                                </div>
+                            );
+                        })}
+
+                        <div className={cx('flex-row', 'friend-send')}>
                             <img
+                                className={cx('img-chat')}
                                 src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                                 alt="avata"
                             />
-                            <p>{sender?.firstName}</p>
-                            <span>Hãy nói gì đó với tôi</span>
+                            <div className={cx('box-text-chat')}>
+                                <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
+                            </div>
                         </div>
                         <div className={cx('space-height')}></div>
-                        <div className={cx('flex-column', 'contain-chat')}>
-                            <div className={cx('real-time')}>
-                                <span className={cx('time')}>11:20,</span>
-                                <span className={cx('date')}>03/08/2000</span>
+                        <div className={cx('flex-row', 'user-send')}>
+                            <div className={cx('box-text-chat')}>
+                                <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
                             </div>
-
-                            {sendData?.map((mess, index) => {
-                                return (
-                                    <div key={index} className={cx('flex-column')}>
-                                        <div
-                                            className={cx('flex-row', mess.sender === id ? 'friend-send' : 'user-send')}
-                                        >
-                                            <img
-                                                className={cx('img-chat')}
-                                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                                alt="avata"
-                                            />
-                                            <div className={cx('box-text-chat', 'tooltip')}>
-                                                <p className={cx('text-chat')}>{mess.message.content}</p>
-                                                <span
-                                                    className={cx(
-                                                        'box-tooltip',
-                                                        mess.sender === id ? 'tooltiptextFriend' : 'tooltiptextUser',
-                                                    )}
-                                                >
-                                                    {mess.message.time}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-
-                            <div className={cx('flex-row', 'friend-send')}>
-                                <img
-                                    className={cx('img-chat')}
-                                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                    alt="avata"
-                                />
-                                <div className={cx('box-text-chat')}>
-                                    <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
-                                </div>
-                            </div>
-                            <div className={cx('space-height')}></div>
-                            <div className={cx('flex-row', 'user-send')}>
-                                <div className={cx('box-text-chat')}>
-                                    <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
-                                </div>
-                                <img
-                                    className={cx('img-chat')}
-                                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                    alt="avata"
-                                />
-                            </div>
-                            <div className={cx('space-height')}></div>
-                        </div>
-                    </div>
-
-                    <form onSubmit={handleSubmit} className={cx('flex-row', 'input-chat')}>
-                        <button className={cx('btn-chat', 'file')}>File</button>
-                        <div className={cx('input-text')}>
-                            <input
-                                type="text"
-                                placeholder="Input chat ...."
-                                onChange={(e) => setMessage(e.target.value)}
+                            <img
+                                className={cx('img-chat')}
+                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                alt="avata"
                             />
                         </div>
-
-                        <button type="submit" className={cx('btn-chat', 'send')}>
-                            Gửi
-                        </button>
-                    </form>
+                        <div className={cx('space-height')}></div>
+                    </div>
                 </div>
+
+                <form onSubmit={handleSubmit} className={cx('flex-row', 'input-chat')}>
+                    <button className={cx('btn-chat', 'file')}>File</button>
+                    <div className={cx('input-text')}>
+                        <input
+                            type="text"
+                            placeholder="Input chat ...."
+                            onChange={(e) => setMessage(e.target.value)}
+                        />
+                    </div>
+
+                    <button type="submit" className={cx('btn-chat', 'send')}>
+                        Gửi
+                    </button>
+                </form>
             </div>
 
             <RightBar />
