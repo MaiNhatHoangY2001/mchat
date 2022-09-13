@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema({
 	},
 	profileName: {
 		type: String,
-		selfDefault: { fields: ['firstName', 'lastName'], space: true },
 	},
 	emailID: {
 		type: String,
@@ -62,6 +61,8 @@ const userSchema = new mongoose.Schema({
 //HASHING PASSWORD
 userSchema.pre('save', function (next) {
 	let user = this;
+
+	this.profileName = this.get("firstName") + " " + this.get("lastName");
 
 	// only hash the password if it has been modified (or is new)
 	if (!user.isModified('password')) return next();

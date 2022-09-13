@@ -20,8 +20,12 @@ const individualChatController = {
 		try {
 			const idUser = mongoose.Types.ObjectId(req.params.id);
 
-			const listInvidualChat = await IndividualChat.find({ user: idUser }).populate('message');
-			const listGroupChat = await GroupChat.find({ user: idUser }).populate('message');
+			const listInvidualChat = await IndividualChat.find({ user: idUser })
+				.populate('message', 'time')
+				.populate('sender', 'firstName lastName birthDate profileName status');
+			const listGroupChat = await GroupChat.find({ user: idUser })
+				.populate('message', 'time')
+				.populate('sender', 'firstName lastName birthDate profileName status');
 			const listChat = listGroupChat.concat(listInvidualChat);
 			const listSort = listChat.sort(function (a, b) {
 				return new Date(b.message[0].time) - new Date(a.message[0].time);

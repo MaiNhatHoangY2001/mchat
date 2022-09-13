@@ -4,8 +4,6 @@ const individualChatSchema = new mongoose.Schema({
 	sender: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
-		unique: true, 
-		required: true,
 	},
 	status: {
 		type: String,

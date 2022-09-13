@@ -7,12 +7,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getIndividualChat } from '../../../redux/apiRequest/chatApiRequest';
 import { createAxios } from '../../../redux/createInstance';
 import { getIndividualChatSuccess } from '../../../redux/chatSlice';
+import { searchUser } from '../../../redux/apiRequest/userApiRequest';
+import { getSearchSuccess, getUsersSuccess } from '../../../redux/userSlice';
 
 const cx = classNames.bind(styles);
 
 function LeftBar() {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
     const currentChat = useSelector((state) => state.chat.individualChat?.actor);
+    const currentSearch = useSelector((state) => state.user.users?.allUsers);
 
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
@@ -24,6 +27,7 @@ function LeftBar() {
     const accessToken = currentUser?.accessToken;
 
     let axiosJWTChats = createAxios(currentUser, dispatch, getIndividualChatSuccess);
+    let axiosJWTSearch = createAxios(currentUser, dispatch, getUsersSuccess);
 
     useEffect(() => {
         getIndividualChat(accessToken, id, dispatch, axiosJWTChats);
@@ -31,12 +35,11 @@ function LeftBar() {
     }, [chatActors]);
 
     useEffect(() => {
-        fetch(
-            'https://real-time-chat-server-123.herokuapp.com/api/user/search?term=' +
-                (textSearchUser === '' ? '@' : textSearchUser),
-        )
-            .then((response) => response.json())
-            .then((users) => setUsersSearch(users.filter((user) => user.userName !== currentUser.userName)));
+        const search = textSearchUser === '' ? '@' : textSearchUser;
+        searchUser(accessToken, dispatch, search, axiosJWTSearch);
+        if (currentSearch !== undefined) {
+            setUsersSearch(currentSearch?.filter((user) => user.userName !== currentUser.userName));
+        }
     }, [textSearchUser]);
 
     return (
@@ -86,8 +89,8 @@ function LeftBar() {
                                 alt={'avata'}
                             />
                             <div className={cx('flex-column', 'content-item')}>
-                                <p>Mai Ngoc Long</p>
-                                <span>Nothing</span>
+                                <p>{actor?.sender.profileName}</p>
+                                <span>{actor?.sender.status}</span>
                             </div>
                         </div>
                     </div>

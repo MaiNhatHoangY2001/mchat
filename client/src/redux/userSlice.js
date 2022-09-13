@@ -1,21 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
-
+import { createSlice } from '@reduxjs/toolkit';
 
 const userSlice = createSlice({
-    name:"user",
-    initialState:{
-        sender:{
-            user:null,
+    name: 'user',
+    initialState: {
+        sender: {
+            user: null,
         },
-        users:{
+        users: {
             allUsers: null,
-            isFetching:false,
-            error:false
-        },
-        msg:"",
+            isFetching: false,
+            error: false,
+        }
     },
-    reducers:{
-        getUsersStart: (state)=>{
+    reducers: {
+        getUsersStart: (state) => {
             state.users.isFetching = true;
         },
         getUsersSuccess: (state, action) => {
@@ -26,33 +24,17 @@ const userSlice = createSlice({
             state.users.isFetching = false;
             state.users.error = true;
         },
-        deleteUsersStart: (state)=>{
-            state.users.isFetching = true;
-        },
-        deleteUsersSuccess: (state,action) => {
-            state.users.isFetching = false;
-            state.msg = action.payload;
-        },
-        deleteUsersFailed: (state, action) => {
-            state.users.isFetching = false;
-            state.users.error = true;
-            state.msg = action.payload;
-        },
-
-        setSender: (state, action)=>{
+        setSender: (state, action) => {
             state.sender.user = action.payload;
-        }
-    }
-})
+        },
+    },
+});
 
 export const {
     getUsersStart,
     getUsersSuccess,
     getUsersFailed,
-    deleteUsersFailed,
-    deleteUsersStart,
-    deleteUsersSuccess,
-    setSender
+    setSender,
 } = userSlice.actions;
 
 export default userSlice.reducer;
