@@ -21,6 +21,8 @@ export const getAllUsers = async (accessToken, dispatch, axiosJWT) => {
     }
 };
 
+
+
 export const deleteUser = async (accessToken, dispatch, id, axiosJWT) => {
     dispatch(deleteUsersStart());
     try {

@@ -11,6 +11,7 @@ import { RightBar } from '../../Layout';
 import { getMsgs } from '../../../redux/apiRequest/chatApiRequest';
 import { height } from '@mui/system';
 import { popupCenter } from './PopupCenter';
+import { getMessagesSuccess } from '../../../redux/chatSlice';
 
 const cx = classNames.bind(styles);
 
@@ -20,13 +21,18 @@ function Content() {
     const chat = useSelector((state) => state.chat.message?.content);
 
     const socket = useRef();
+    
     const [message, setMessage] = useState('');
     const [sendMessage, setSendMessage] = useState({});
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
     const id = user?._id;
     const accessToken = user?.accessToken;
-    let axiosJWT = createAxios(user, dispatch, logoutSuccess);
+
+    let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
+    let axiosJWTGetmsg = createAxios(user, dispatch, getMessagesSuccess);
 
     const callPopupFunction = () => {
         popupCenter({ url: '../call', title: 'xtf', w: 500, h: 650 });
@@ -43,7 +49,7 @@ function Content() {
     ]);
 
     const handleLogout = () => {
-        logOut(dispatch, navigate, id, accessToken, axiosJWT);
+        logOut(dispatch, navigate, id, accessToken, axiosJWTLogout);
     };
 
     const handleSubmit = (e) => {
@@ -76,7 +82,7 @@ function Content() {
             sender: sender?._id,
             user: user?._id,
         };
-        getMsgs(accessToken, dispatch, id, axiosJWT);
+        getMsgs(accessToken, dispatch, id, axiosJWTGetmsg);
     }, [sender]);
 
     //SOCKET CHAT

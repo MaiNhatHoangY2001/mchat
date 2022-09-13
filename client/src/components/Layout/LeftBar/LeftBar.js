@@ -3,14 +3,32 @@ import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import AutoComplete from './AutoComplete';
 import TextField from '@mui/material/TextField';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIndividualChat } from '../../../redux/apiRequest/chatApiRequest';
+import { createAxios } from '../../../redux/createInstance';
+import { getIndividualChatSuccess } from '../../../redux/chatSlice';
 
 const cx = classNames.bind(styles);
 
 function LeftBar() {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
+    const currentChat = useSelector((state) => state.chat.individualChat?.actor);
+
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
+    const [chatActors, setChatActors] = useState([]);
+
+    const dispatch = useDispatch();
+
+    const id = currentUser?._id;
+    const accessToken = currentUser?.accessToken;
+
+    let axiosJWTChats = createAxios(currentUser, dispatch, getIndividualChatSuccess);
+
+    useEffect(() => {
+        getIndividualChat(accessToken, id, dispatch, axiosJWTChats);
+        setChatActors(currentChat);
+    }, [chatActors]);
     const [isActive, setIsActive] = useState(false);
 
     const handleClick = () => {
@@ -35,12 +53,14 @@ function LeftBar() {
                         alt={'avata'}
                     ></img>
                 </div>
-                
+
                 <div className={cx('flex-row', 'input-search')}>
                     <button className={cx('btn')}>
-                        <img className={cx('btn-img')}
-                            src="https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/list.png" 
-                            alt="menu" />
+                        <img
+                            className={cx('btn-img')}
+                            src="https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/list.png"
+                            alt="menu"
+                        />
                     </button>
                     <div className={cx('search')}>
                         <AutoComplete
@@ -62,23 +82,27 @@ function LeftBar() {
                     </div>
                 </div>
             </div>
-
-            <div className={cx('flex-column', 'scroller-column', 'list-item')}>
-                <button id='button-item' className={cx('flex-row', 'item')} 
+            {chatActors?.map((actor, index) => {
+                return (
+                    <div key={index} className={cx('flex-column', 'scroller-column', 'list-item')}>
+                        <button id='button-item' className={cx('flex-row', 'item')} 
                      style={{
                         backgroundColor: isActive ? 'salmon' : '',
                         color: isActive ? 'white' : '',
                       }}
                       onClick={handleClick}>
-                    <img 
-                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} 
-                        alt={'avata'} />
-                    <div className={cx('flex-column', 'content-item')}>
-                        <p>Mai Ngoc Long Mai Ngoc Long Mai Ngoc Long Mai Ngoc Long</p>
-                        <span>Nothing</span>
+                            <img
+                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                alt={'avata'}
+                            />
+                            <div className={cx('flex-column', 'content-item')}>
+                                <p>Mai Ngoc Long Mai Ngoc Long Mai Ngoc Long Mai Ngoc Long</p>
+                                <span>Nothing</span>
+                            </div>
+                        </button>
                     </div>
-                </button>
-            </div>
+                );
+            })}
         </div>
     );
 }

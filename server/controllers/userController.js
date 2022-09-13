@@ -11,12 +11,18 @@ const userController = {
 			res.status(500).json(error);
 		}
 	},
-	
-	//GET A USERS
+
+	//GET PROFILE NAME
 	getAUsers: async (req, res) => {
 		try {
-			const user = await User.findById(req.params.id).populate('individualChats').populate('groupChats');
-			res.status(200).json(user);
+			const user = await User.findById(req.params.id);
+			res.status(200).json({
+				firstName: user.firstName,
+				lastName: user.lastName,
+				birthDate: user.birthDate,
+				profileName: user.profileName,
+				status: user.status,
+			});
 		} catch (error) {
 			res.status(500).json(error);
 		}
