@@ -20,6 +20,7 @@ import {
     getIndividualChatSuccess,
     getMessagesSuccess,
 } from '../../../../redux/chatSlice';
+import RightBar from '../../RightBar';
 
 const cx = classNames.bind(styles);
 
@@ -42,6 +43,7 @@ function Chat() {
             },
         },
     ]);
+    const [isRightBar, setRightBar] = useState(true);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -154,106 +156,125 @@ function Chat() {
     }, [sendData]);
     return (
         <>
-            <div className={cx('flex-row', 'header-center')}>
-                <div className={cx('flex-row', 'info-friend')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt="avata" />
-                    <div className={cx('flex-column', 'info-content')}>
-                        <p>{sender?.firstName}</p>
-                        <span>Active</span>
-                    </div>
-                </div>
-
-                <div className={cx('flex-row', 'btn-event')}>
-                    <button onClick={() => callPopupFunction()}>Call</button>
-                    <button>Video</button>
-                    <button className="navbar-logout" onClick={() => handleLogout()}>
-                        {' '}
-                        Log out
-                    </button>
-                </div>
-            </div>
-
-            <div className={cx('flex-column', 'scroller-column', 'body-center')}>
-                <div className={cx('space-big-height')}></div>
-                <div className={cx('flex-column', 'info-friend-chat')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt="avata" />
-                    <p>{sender?.firstName}</p>
-                    <span>Hãy nói gì đó với tôi</span>
-                </div>
-                <div className={cx('space-big-height')}></div>
-
-                <div className={cx('flex-column', 'contain-chat')}>
-                    <div className={cx('real-time')}>
-                        <span className={cx('time')}>11:20,</span>
-                        <span className={cx('date')}>03/08/2000</span>
-                    </div>
-
-                    {sendData?.map((mess, index) => {
-                        return (
-                            <div key={index} className={cx('flex-column')}>
-                                <div className={cx('flex-row', mess.sender === id ? 'friend-send' : 'user-send')}>
-                                    <img
-                                        className={cx('img-chat')}
-                                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                        alt="avata"
-                                    />
-                                    <div className={cx('box-text-chat', 'tooltip')}>
-                                        <p className={cx('text-chat')}>{mess.message.content}</p>
-                                        <span
-                                            className={cx(
-                                                'box-tooltip',
-                                                mess.sender === id ? 'tooltiptextFriend' : 'tooltiptextUser',
-                                            )}
-                                        >
-                                            {mess.message.time}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className={cx('space-height')}></div>
+            <div className={cx('flex-row', 'container-center')}>
+                <div className={cx('flex-column', 'fix-height-screen', 'main-center')}>
+                    <div className={cx('flex-row', 'header-center')}>
+                        <div className={cx('flex-row', 'info-friend')}>
+                            <img
+                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                alt="avata"
+                            />
+                            <div className={cx('flex-column', 'info-content')}>
+                                <p>{sender?.firstName}</p>
+                                <span>Active</span>
                             </div>
-                        );
-                    })}
+                        </div>
 
-                    {/* <div className={cx('flex-row', 'friend-send')}>
-            <img
-                className={cx('img-chat')}
-                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                alt="avata"
-            />
-            <div className={cx('box-text-chat')}>
-                <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
-            </div>
-        </div>
-        <div className={cx('space-height')}></div>
-        <div className={cx('flex-row', 'user-send')}>
-            <div className={cx('box-text-chat')}>
-                <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
-            </div>
-            <img
-                className={cx('img-chat')}
-                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                alt="avata"
-            />
-        </div> */}
-                    <div className={cx('space-height')}></div>
+                        <div className={cx('flex-row', 'btn-event')}>
+                            <button onClick={() => callPopupFunction()}>Call</button>
+                            <button>Video</button>
+                            <button className="navbar-logout" onClick={() => handleLogout()}>
+                                {' '}
+                                Log out
+                            </button>
+                            <button onClick={() => setRightBar(isRightBar ? false : true)}>Media</button>
+                        </div>
+                    </div>
+
+                    <div className={cx('flex-column', 'scroller-column', 'body-center')}>
+                        <div className={cx('space-big-height')}></div>
+                        <div className={cx('flex-column', 'info-friend-chat')}>
+                            <img
+                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                alt="avata"
+                            />
+                            <p>{sender?.firstName}</p>
+                            <span>Hãy nói gì đó với tôi</span>
+                        </div>
+                        <div className={cx('space-big-height')}></div>
+
+                        <div className={cx('flex-column', 'contain-chat')}>
+                            <div className={cx('real-time')}>
+                                <span className={cx('time')}>11:20,</span>
+                                <span className={cx('date')}>03/08/2000</span>
+                            </div>
+
+                            {sendData?.map((mess, index) => {
+                                return (
+                                    <div key={index} className={cx('flex-column')}>
+                                        <div className={cx('flex-row', mess.sender === id ? 'friend-send' : 'user-send')}>
+                                            <img
+                                                className={cx('img-chat')}
+                                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                                alt="avata"
+                                            />
+                                            <div className={cx('box-text-chat', 'tooltip')}>
+                                                <p className={cx('text-chat')}>{mess.message.content}</p>
+                                                <span
+                                                    className={cx(
+                                                        'box-tooltip',
+                                                        mess.sender === id ? 'tooltiptextFriend' : 'tooltiptextUser',
+                                                    )}
+                                                >
+                                                    {mess.message.time}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className={cx('space-height')}></div>
+                                    </div>
+                                );
+                            })}
+
+                            {/* <div className={cx('flex-row', 'friend-send')}>
+                <img
+                    className={cx('img-chat')}
+                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                    alt="avata"
+                />
+                <div className={cx('box-text-chat')}>
+                    <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
                 </div>
             </div>
+            <div className={cx('space-height')}></div>
+            <div className={cx('flex-row', 'user-send')}>
+                <div className={cx('box-text-chat')}>
+                    <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
+                </div>
+                <img
+                    className={cx('img-chat')}
+                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                    alt="avata"
+                />
+            </div> */}
+                            <div className={cx('space-height')}></div>
+                        </div>
+                    </div>
 
-            <form onSubmit={handleSubmit} className={cx('flex-row', 'input-chat')}>
-                <button className={cx('btn-chat', 'file')}>File</button>
-                <div className={cx('input-text')}>
-                    <input
+                    <form onSubmit={handleSubmit} className={cx('flex-row', 'input-chat')}>
+                        <button className={cx('btn-chat', 'file')}>File</button>
+                        <div className={cx('input-text')}>
+                            <input
                         type="text"
                         placeholder="Input chat ...."
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                     />
-                </div>
+                        </div>
 
-                <button type="submit" className={cx('btn-chat', 'send')}>
-                    Gửi
-                </button>
-            </form>
+                        <button type="submit" className={cx('btn-chat', 'send')}>
+                            Gửi
+                        </button>
+                    </form>
+                </div>
+                {isRightBar ? <RightBar />: <></>}
+            </div>
+            {/*           
+            <ul id="messengers"></ul> */}
+            {/* <form onSubmit={handleSubmit}>
+                <input type="text" placeholder="name" onChange={(e) => setName(e.target.value)} />
+
+            </form> */}
+            {/* <p>{sender?.userName}</p> */}
         </>
     );
 }
