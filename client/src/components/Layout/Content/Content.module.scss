@@ -57,6 +57,7 @@
 .info-content p {
     font-size: 18px;
     font-weight: bold;
+    margin: 0;
 }
 .info-content span {
     font-size: x-small;
@@ -158,7 +159,7 @@
 }
 /* User Chat */
 .user-send {
-    justify-content: flex-end;
+    flex-direction: row-reverse;
 }
 /* Content chat */
 .img-chat {
@@ -171,6 +172,9 @@
     border-radius: 10px;
     max-width: 350px;
     border: 1px solid rgb(168, 168, 168);
+    p {
+        margin: 0;
+    }
 }
 .contain-chat {
     justify-content: flex-end;

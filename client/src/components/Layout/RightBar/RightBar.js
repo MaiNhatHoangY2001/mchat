@@ -21,7 +21,7 @@ function RightBar() {
         }
     };
     return (
-        <div className={cx('flex-column', 'main-right')}>
+        <div className={cx('flex-column', '.fix-height-screen', 'main-right')}>
             <div className={cx('title')}>
                 <h2>Thông Tin Cuộc Trò Chuyện</h2>
             </div>

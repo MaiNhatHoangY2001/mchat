@@ -15,6 +15,10 @@
 .scroller-column {
     overflow-y: scroll;
 }
+.fix-height-screen {
+    max-height: 100vh;
+}
+
 /*The right bar content all*/
 .main-right {
     flex: 30%;
@@ -36,4 +40,11 @@
 }
 .list-item {
     flex: auto;
+}
+
+@media screen and (max-width: 1700px) {
+    .main-right {
+        display: none;
+    }
+    
 }
