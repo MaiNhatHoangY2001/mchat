@@ -28,9 +28,21 @@ const individualChatController = {
 				.populate('sender', 'firstName lastName birthDate profileName status');
 			const listChat = listGroupChat.concat(listInvidualChat);
 			const listSort = listChat.sort(function (a, b) {
-				return new Date(b.message[0].time) - new Date(a.message[0].time);
+				return new Date(b.message[0]?.time) - new Date(a.message[0]?.time);
 			});
 			res.status(200).json(listSort);
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
+	getIndividualChat: async (req, res) => {
+		try {
+			const idUser = mongoose.Types.ObjectId(req.query.idUser);
+			const idSender = mongoose.Types.ObjectId(req.query.idSender);
+
+			const individualChat = await IndividualChat.find({ user: idUser, sender: idSender });
+
+			res.status(200).json(individualChat);
 		} catch (error) {
 			res.status(500).json(error);
 		}
