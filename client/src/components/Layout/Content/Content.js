@@ -15,7 +15,7 @@ function Content() {
                 {sender !== null ? <Chat /> : <Blank />}
             </div>
 
-            <RightBar />
+            {sender !== null ? <RightBar /> : ''}
 
             {/*           
             <ul id="messengers"></ul> */}

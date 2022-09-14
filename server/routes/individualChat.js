@@ -11,4 +11,7 @@ router.get('/:id', middlewareController.verifyTokenAndUserAuth, individualChatCo
 // GET
 router.get('/', middlewareController.verifyTokenAndUserAuth, individualChatController.getListChat);
 
+//GET A INDIVIDUAL CHAT
+router.get('/a/chat', middlewareController.verifyTokenAndUserAuth, individualChatController.getIndividualChat);
+
 module.exports = router;

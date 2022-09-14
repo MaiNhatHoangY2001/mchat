@@ -1,12 +1,12 @@
 import styles from './Home.module.scss';
 import classNames from 'classnames/bind';
-import { Content, LeftBar, RightBar } from '../../Layout';
+import { Content, LeftBar } from '../../Layout';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createAxios } from '../../../redux/createInstance';
 import { getIndividualChatSuccess } from '../../../redux/chatSlice';
-import { getIndividualChat } from '../../../redux/apiRequest/chatApiRequest';
+import { getListIndividualChat } from '../../../redux/apiRequest/chatApiRequest';
 
 const cx = classNames.bind(styles);
 
@@ -23,7 +23,7 @@ function Home() {
     const id = currentUser?._id;
 
     useEffect(() => {
-        getIndividualChat(accessToken, id, dispatch, axiosJWTChats);
+        getListIndividualChat(accessToken, id, dispatch, axiosJWTChats);
     }, []);
 
     useEffect(() => {
