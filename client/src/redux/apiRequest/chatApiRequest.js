@@ -12,8 +12,7 @@ import {
     getMessagesStart,
     getMessagesSuccess,
 } from '../chatSlice';
-
-import { url } from './authApiRequest';
+import { url } from '../createInstance';
 
 export const addIndividualChat4NewUser = async (
     accessToken,

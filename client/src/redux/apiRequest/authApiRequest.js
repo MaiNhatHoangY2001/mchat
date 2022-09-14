@@ -12,12 +12,8 @@ import {
     registerSuccess,
 } from '../authSlice';
 import { clearActor } from '../chatSlice';
+import { url } from '../createInstance';
 import { clearSender } from '../userSlice';
-
-export const url =
-    process.env.NODE_ENV !== 'production'
-        ? 'http://localhost:8000'
-        : 'https://real-time-chat-server-123.herokuapp.com';
 
 export const loginUser = async (user, dispatch, navigate, setIsLoading) => {
     dispatch(loginStart());

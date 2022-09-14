@@ -19,7 +19,7 @@ export default function ComboBox({ currentUser, users, renderInput }) {
     };
 
     const getOptionLabel = (option) => {
-        return option?.userName;
+        return option?.userName === undefined ? '' : option?.userName;
     };
 
     return (

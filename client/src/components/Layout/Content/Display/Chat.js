@@ -4,8 +4,8 @@ import io from 'socket.io-client';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { logOut, url } from '../../../../redux/apiRequest/authApiRequest';
-import { createAxios } from '../../../../redux/createInstance';
+import { logOut } from '../../../../redux/apiRequest/authApiRequest';
+import { createAxios, url } from '../../../../redux/createInstance';
 import { logoutSuccess } from '../../../../redux/authSlice';
 import {
     addIndividualChat4NewUser,
