@@ -54,6 +54,7 @@ const chatSlice = createSlice({
             state.message.error = true;
         },
         getMessagesStart: (state) => {
+            state.message.content = null;
             state.message.isFetching = true;
         },
         getMessagesSuccess: (state, action) => {

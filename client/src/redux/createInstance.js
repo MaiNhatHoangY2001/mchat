@@ -1,10 +1,13 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
+export const url =
+    process.env.NODE_ENV !== 'production' ? 'http://localhost:8000' : 'https://real-time-chat-server-123.herokuapp.com';
+
 const refreshToken = async () => {
     try {
         axios.defaults.withCredentials = true;
-        const res = await axios.post('https://real-time-chat-server-123.herokuapp.com/api/refresh', {
+        const res = await axios.post(`${url}/api/refresh`, {
             withCredentials: true,
         });
         return res.data;
