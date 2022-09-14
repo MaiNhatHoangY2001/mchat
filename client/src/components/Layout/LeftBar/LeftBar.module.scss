@@ -20,8 +20,8 @@
 /* Left Bar */
 .container-left {
     flex: 25%;
-    max-width: 600px;
-    min-width: 400px;
+    max-width: 420px;
+    min-width: 420px;
 }
 /* contain of Avata and input Search */
 .container-left .avata-search {
@@ -33,6 +33,11 @@
 .avata img {
     margin-bottom: 10px;
     max-width: 80px;
+}
+/*User name logging on*/
+.user-name {
+    font-size: 30px;
+    font-weight: bold;
 }
 /* Input Search */
 /* Button */
@@ -48,6 +53,7 @@
 /* input text search */
 .search {
     flex: 80%;
+    width: 100%;
 }
 .search input {
     width: 100%;

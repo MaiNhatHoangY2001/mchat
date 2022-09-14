@@ -165,19 +165,19 @@ function Chat() {
                                 alt="avata"
                             />
                             <div className={cx('flex-column', 'info-content')}>
-                                <p>{sender?.firstName}</p>
+                                <p>{sender?.profileName}</p>
                                 <span>Active</span>
                             </div>
                         </div>
 
                         <div className={cx('flex-row', 'btn-event')}>
                             <button onClick={() => callPopupFunction()}>Call</button>
-                            <button>Video</button>
+                            <button onClick={() => callPopupFunction()}>Video</button>
                             <button className="navbar-logout" onClick={() => handleLogout()}>
                                 {' '}
                                 Log out
                             </button>
-                            <button onClick={() => setRightBar(isRightBar ? false : true)}>Media</button>
+                            <button onClick={() => setRightBar(isRightBar ? false : true)}>Info</button>
                         </div>
                     </div>
 
@@ -188,7 +188,7 @@ function Chat() {
                                 src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                                 alt="avata"
                             />
-                            <p>{sender?.firstName}</p>
+                            <p>{sender?.profileName}</p>
                             <span>Hãy nói gì đó với tôi</span>
                         </div>
                         <div className={cx('space-big-height')}></div>

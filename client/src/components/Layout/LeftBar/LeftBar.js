@@ -20,6 +20,8 @@ function LeftBar() {
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
     const [chatActors, setChatActors] = useState([]);
+    
+    const [isShowMenu, setIsShowMenu] = useState(false);
 
     const activeButtonStyles = {
         backgroundColor: 'salmon',
@@ -35,6 +37,10 @@ function LeftBar() {
     const handleClick = (id, sender) => {
         dispatch(addIndividualChatSuccess(id));
         dispatch(setSender(sender));
+    };
+    
+    const menuPopUp = ()=>{
+        setIsShowMenu((prev)=>!prev);
     };
 
     useEffect(() => {
@@ -52,21 +58,22 @@ function LeftBar() {
     return (
         <div className={cx('flex-column', 'container-left')}>
             <div className={cx('flex-column', 'avata-search')}>
-                <div className={cx('avata')}>
+                <div className={cx('avata') }onClick = {menuPopUp}>
                     <img
                         src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                         alt={'avata'}
                     ></img>
+                    <div className={cx('user-name')}>{currentUser?.profileName}</div>
                 </div>
-
+                
                 <div className={cx('flex-row', 'input-search')}>
-                    <button className={cx('btn')}>
+                    {/* <button className={cx('btn')}>
                         <img
                             className={cx('btn-img')}
                             src="https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/list.png"
                             alt="menu"
                         />
-                    </button>
+                    </button> */}
                     <div className={cx('search')}>
                         <AutoComplete
                             currentUser={currentUser}

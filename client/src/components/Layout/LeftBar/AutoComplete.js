@@ -23,7 +23,7 @@ export default function ComboBox({ currentUser, users, renderInput }) {
     };
 
     return (
-        <Stack spacing={2} sx={{ width: 300 }}>
+        <Stack spacing={2} sx={{ width: 400 }}>
             <Autocomplete
                 freeSolo
                 id="search-user"
