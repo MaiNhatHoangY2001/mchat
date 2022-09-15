@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logOut } from '../../../../redux/apiRequest/authApiRequest';
 import { createAxios, url } from '../../../../redux/createInstance';
-import { logoutSuccess } from '../../../../redux/authSlice';
+import { loginSuccess, logoutSuccess } from '../../../../redux/authSlice';
 import {
     addIndividualChat4NewUser,
     addMessage,
@@ -14,13 +14,6 @@ import {
     getMsgs,
 } from '../../../../redux/apiRequest/chatApiRequest';
 import { popupCenter } from '../PopupCenter';
-import {
-    addIndividualChatSuccess,
-    addMessageSuccess,
-    getIndividualChatSuccess,
-    getMessagesSuccess,
-} from '../../../../redux/chatSlice';
-import RightBar from '../../RightBar';
 
 const cx = classNames.bind(styles);
 
@@ -50,11 +43,8 @@ function Chat({ setRightBar }) {
     const id = user?._id;
     const accessToken = user?.accessToken;
 
-    let axiosJWTChats = createAxios(user, dispatch, getIndividualChatSuccess);
     let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
-    let axiosJWTGetMsg = createAxios(user, dispatch, getMessagesSuccess);
-    let axiosJWTAddInvidual = createAxios(user, dispatch, addIndividualChatSuccess);
-    let axiosJWTAddMsg = createAxios(user, dispatch, addMessageSuccess);
+    let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
 
     const callPopupFunction = () => {
         popupCenter({ url: '../call', title: 'xtf', w: 500, h: 650 });
@@ -78,7 +68,7 @@ function Chat({ setRightBar }) {
 
             if (sendData.length <= 0) {
                 addChat4NewUser();
-                getListIndividualChat(accessToken, id, dispatch, axiosJWTChats);
+                getListIndividualChat(accessToken, id, dispatch, axiosJWTLogin);
             } else {
                 addMsgWithInfo();
             }
@@ -94,7 +84,7 @@ function Chat({ setRightBar }) {
             individualChat: individualChatId,
         };
 
-        addMessage(msg, accessToken, dispatch, axiosJWTAddMsg);
+        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
 
     //
@@ -116,7 +106,7 @@ function Chat({ setRightBar }) {
             user: user?._id,
         };
 
-        addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTAddInvidual);
+        addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
     };
 
     useEffect(() => {
@@ -127,21 +117,13 @@ function Chat({ setRightBar }) {
         setSendData(chat);
     }, [chat]);
 
-    useEffect(() => {
-        const id = {
-            sender: sender?._id,
-            user: user?._id,
-        };
-        getMsgs(accessToken, dispatch, id, axiosJWTGetMsg);
-    }, [sender]);
-
     //SOCKET CHAT
     useEffect(() => {
         const handler = (chatMessage) => {
             setSendData((prev) => {
                 return [...prev, chatMessage];
             });
-            getListIndividualChat(accessToken, id, dispatch, axiosJWTChats);
+            getListIndividualChat(accessToken, id, dispatch, axiosJWTLogin);
         };
         if (user?.accessToken) {
             socket.current = io(url, {

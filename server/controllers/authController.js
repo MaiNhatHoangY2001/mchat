@@ -2,7 +2,8 @@ const bcrypt = require('bcrypt');
 const User = require('../model/User');
 const jwt = require('jsonwebtoken');
 
-let refreshTokens = [];
+let authToken;
+
 const authController = {
 	//REGISTER IS ADD USER IN CONTROLLER
 
@@ -48,8 +49,7 @@ const authController = {
 			if (user && validPassword) {
 				const accessToken = authController.generateAccessToken(user);
 				const refreshToken = authController.generateRefreshToken(user);
-				refreshTokens.push(refreshToken);
-				console.log(refreshToken);
+				authToken = refreshToken;
 				res.cookie('refreshToken', refreshToken, {
 					// create cookie with refresh token that expires in 7 days
 					httpOnly: true,
@@ -70,22 +70,22 @@ const authController = {
 	requestRefreshToken: async (req, res) => {
 		//Take refresh token from user
 		const refreshToken = req.cookies.refreshToken;
-		//console.log(refreshToken);
 		//Send error if token is not valid
 		if (!refreshToken) return res.status(401).json("You're not authenticated");
-		if (!refreshTokens.includes(refreshToken)) {
+		if (authToken !== refreshToken) {
 			return res.status(403).json('Refresh token is not valid');
 		}
 		jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
 			if (err) {
 				console.log(err);
 			}
-			refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
 			//create new access token, refresh token and send to user
+
 			const newAccessToken = authController.generateAccessToken(user);
 			const newRefreshToken = authController.generateRefreshToken(user);
-			refreshTokens.push(newRefreshToken);
-			res.cookie('refreshToken', refreshToken, {
+			authToken = newRefreshToken;
+			res.clearCookie('refreshToken');
+			res.cookie('refreshToken', newRefreshToken, {
 				httpOnly: true,
 				secure: true,
 				//expires: new Date(Date.now() + 7*24*60*60*1000),
@@ -101,7 +101,6 @@ const authController = {
 
 	//LOGOUT
 	userLogout: async (req, res) => {
-		refreshTokens = refreshTokens.filter((token) => token !== req.cookies.refreshToken);
 		res.clearCookie('refreshToken');
 		res.status(200).json('LOGOUT!!');
 	},

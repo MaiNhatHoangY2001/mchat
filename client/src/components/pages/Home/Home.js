@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createAxios } from '../../../redux/createInstance';
-import { getIndividualChatSuccess } from '../../../redux/chatSlice';
 import { getListIndividualChat } from '../../../redux/apiRequest/chatApiRequest';
+import { loginSuccess } from '../../../redux/authSlice';
 
 const cx = classNames.bind(styles);
 
@@ -17,13 +17,13 @@ function Home() {
     const dispatch = useDispatch();
 
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
-    let axiosJWTChats = createAxios(currentUser, dispatch, getIndividualChatSuccess);
+    let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
 
     const accessToken = currentUser?.accessToken;
     const id = currentUser?._id;
 
     useEffect(() => {
-        getListIndividualChat(accessToken, id, dispatch, axiosJWTChats);
+        getListIndividualChat(accessToken, id, dispatch, axiosJWT);
     }, []);
 
     useEffect(() => {
