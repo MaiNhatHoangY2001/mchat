@@ -6,7 +6,7 @@ import ButtonMedia from './Button/ButtonMedia';
 import { useState } from 'react';
 const cx = classNames.bind(styles);
 
-function RightBar() {
+function RightBar({ isRightBar }) {
     const [layout, setLayout] = useState(0);
     const renderSwitch = () => {
         switch (layout) {
@@ -21,7 +21,10 @@ function RightBar() {
         }
     };
     return (
-        <div className={cx('flex-column', '.fix-height-screen', 'main-right')}>
+        <div
+            className={cx('flex-column', '.fix-height-screen', 'main-right')}
+            style={{ display: isRightBar ? 'box' : 'none' }}
+        >
             <div className={cx('title')}>
                 <h2>Thông Tin Cuộc Trò Chuyện</h2>
             </div>

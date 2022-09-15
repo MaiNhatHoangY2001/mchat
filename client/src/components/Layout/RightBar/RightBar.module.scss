@@ -44,7 +44,9 @@
 
 @media screen and (max-width: 1700px) {
     .main-right {
-        display: none;
+        position: fixed;
+        right: 0;
+        width: inherit;
     }
     
 }
