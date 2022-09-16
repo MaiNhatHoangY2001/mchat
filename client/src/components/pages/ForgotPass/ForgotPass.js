@@ -36,7 +36,7 @@ function ForgotPass() {
                 </div>
                 {/* <form onSubmit={handleLogin}> */}
                 <form className={cx('formForgotPW')}>
-                    <div className="col-lg-8">
+                    <div className="col-lg-10">
                         <input
                             className={cx('txtTkForgotPW')}
                             type="text"
@@ -60,13 +60,9 @@ function ForgotPass() {
                             <div className="btn btn-outline-primary" onClick={togglePassword}>
                                 <IconContext.Provider value={{ color: '#D57AD4' }}>
                                     {passwordType === 'password' ? (
-                                        <i>
-                                            <FaEyeSlash />
-                                        </i>
+                                        <i><FaEyeSlash /></i>
                                     ) : (
-                                        <i>
-                                            <FaEye />
-                                        </i>
+                                        <i><FaEye /></i>
                                     )}
                                 </IconContext.Provider>
                             </div>
@@ -85,13 +81,9 @@ function ForgotPass() {
                             <div className="btn btn-outline-primary" onClick={togglePassword}>
                                 <IconContext.Provider value={{ color: '#D57AD4' }}>
                                     {passwordType === 'password' ? (
-                                        <i>
-                                            <FaEyeSlash />
-                                        </i>
+                                        <i><FaEyeSlash /></i>
                                     ) : (
-                                        <i>
-                                            <FaEye />
-                                        </i>
+                                        <i><FaEye /></i>
                                     )}
                                 </IconContext.Provider>
                             </div>
