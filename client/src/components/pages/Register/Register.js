@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link,useNavigate } from 'react-router-dom';
 import { registerUser } from '../../../redux/apiRequest/authApiRequest';
+//import { DatePicker } from 'react-datepicker'
 //import {Formik, useFormik} from 'formik'
 const cx = classNames.bind(styles);
 
 function Register() {
     const user = useSelector((state) => state.auth.login?.currentUser);
+
+//    const [isOpen, setIsOpen] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
     const [firstName, setFirstName] = useState('');
@@ -19,6 +22,7 @@ function Register() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [repass, setRePass] = useState('');
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -151,6 +155,21 @@ function Register() {
                                 placeholder="dd/mm/yyyy" 
   //                              className={cx('input-register')}
                                 onChange={(e) => setDate(e.target.value)}/>
+                            {/* <button
+                                onClick={() => {
+                                setIsOpen(true)
+                                }}
+                            >
+                                Open
+                            </button>
+                            <DatePicker
+                                isOpen={isOpen}
+                                onClose={() => setIsOpen(false)}
+                                defaultValue={new Date(2022, 8, 8)}
+                                minDate={new Date(2022, 10, 10)}
+                                maxDate={new Date(2023, 0, 10)}
+                                headerFormat='DD, MM dd'
+                            /> */}
                         {/* </div> */}
 
                         {/* <div className={cx('row-register')}> */}
