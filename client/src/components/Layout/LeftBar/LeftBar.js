@@ -40,7 +40,7 @@ function LeftBar() {
             user: userId,
         };
 
-        await getMsgs(accessToken, dispatch, apiSent, axiosJWT);
+        getMsgs(accessToken, dispatch, apiSent, axiosJWT);
         dispatch(addIndividualChatSuccess(individualId));
         dispatch(setSender(sender));
     };
@@ -58,7 +58,6 @@ function LeftBar() {
         searchUser(accessToken, dispatch, search, axiosJWT);
         if (currentSearch !== null) {
             setUsersSearch(currentSearch?.filter((user) => user.userName !== currentUser.userName));
-            console.log(currentSearch);
         }
     }, [textSearchUser]);
 
