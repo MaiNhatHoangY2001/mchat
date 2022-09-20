@@ -7,7 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../redux/createInstance';
 import { addIndividualChatSuccess } from '../../../redux/chatSlice';
 import { searchUser } from '../../../redux/apiRequest/userApiRequest';
-import { getUsersSuccess, setSender } from '../../../redux/userSlice';
+import { setSender } from '../../../redux/userSlice';
+import { getMsgs } from '../../../redux/apiRequest/chatApiRequest';
+import { loginSuccess } from '../../../redux/authSlice';
 
 const cx = classNames.bind(styles);
 
@@ -20,21 +22,31 @@ function LeftBar() {
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
     const [chatActors, setChatActors] = useState([]);
+    const [isShowMenu, setIsShowMenu] = useState(false);
+
+    const dispatch = useDispatch();
+    const accessToken = currentUser?.accessToken;
+
+    let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
 
     const activeButtonStyles = {
         backgroundColor: 'salmon',
         color: 'white',
     };
 
-    const dispatch = useDispatch();
+    const handleClick = async (individualId, sender, userId) => {
+        const apiSent = {
+            sender: sender?._id,
+            user: userId,
+        };
 
-    const accessToken = currentUser?.accessToken;
-
-    let axiosJWTSearch = createAxios(currentUser, dispatch, getUsersSuccess);
-
-    const handleClick = (id, sender) => {
-        dispatch(addIndividualChatSuccess(id));
+        getMsgs(accessToken, dispatch, apiSent, axiosJWT);
+        dispatch(addIndividualChatSuccess(individualId));
         dispatch(setSender(sender));
+    };
+
+    const menuPopUp = () => {
+        setIsShowMenu((prev) => !prev);
     };
 
     useEffect(() => {
@@ -43,8 +55,8 @@ function LeftBar() {
 
     useEffect(() => {
         const search = textSearchUser === '' ? '@' : textSearchUser;
-        searchUser(accessToken, dispatch, search, axiosJWTSearch);
-        if (currentSearch !== undefined) {
+        searchUser(accessToken, dispatch, search, axiosJWT);
+        if (currentSearch !== null) {
             setUsersSearch(currentSearch?.filter((user) => user.userName !== currentUser.userName));
         }
     }, [textSearchUser]);
@@ -52,21 +64,22 @@ function LeftBar() {
     return (
         <div className={cx('flex-column', 'container-left')}>
             <div className={cx('flex-column', 'avata-search')}>
-                <div className={cx('avata')}>
+                <div className={cx('avata')} onClick={menuPopUp}>
                     <img
                         src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                         alt={'avata'}
                     ></img>
+                    <div className={cx('user-name')}>{currentUser?.profileName}</div>
                 </div>
 
                 <div className={cx('flex-row', 'input-search')}>
-                    <button className={cx('btn')}>
+                    {/* <button className={cx('btn')}>
                         <img
                             className={cx('btn-img')}
                             src="https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/list.png"
                             alt="menu"
                         />
-                    </button>
+                    </button> */}
                     <div className={cx('search')}>
                         <AutoComplete
                             currentUser={currentUser}
@@ -97,7 +110,7 @@ function LeftBar() {
                             id="button-item"
                             className={cx('flex-row', 'item')}
                             style={actorSenderActive ? activeButtonStyles : {}}
-                            onClick={() => handleClick(actor?._id, actor?.sender)}
+                            onClick={() => handleClick(actor?._id, actor?.sender, actor?.user)}
                         >
                             <img
                                 src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}

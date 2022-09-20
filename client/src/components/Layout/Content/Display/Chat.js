@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logOut } from '../../../../redux/apiRequest/authApiRequest';
 import { createAxios, url } from '../../../../redux/createInstance';
-import { logoutSuccess } from '../../../../redux/authSlice';
+import { loginSuccess, logoutSuccess } from '../../../../redux/authSlice';
+import Loading from '../../Loading/Loading';
 import {
     addIndividualChat4NewUser,
     addMessage,
@@ -14,21 +15,15 @@ import {
     getMsgs,
 } from '../../../../redux/apiRequest/chatApiRequest';
 import { popupCenter } from '../PopupCenter';
-import {
-    addIndividualChatSuccess,
-    addMessageSuccess,
-    getIndividualChatSuccess,
-    getMessagesSuccess,
-} from '../../../../redux/chatSlice';
-import RightBar from '../../RightBar';
 
 const cx = classNames.bind(styles);
 
-function Chat() {
+function Chat({ setRightBar }) {
     const user = useSelector((state) => state.auth.login?.currentUser);
     const sender = useSelector((state) => state.user.sender?.user);
     const chat = useSelector((state) => state.chat.message?.content);
     const individualChat = useSelector((state) => state.chat.individualChat);
+    const currentContent = useSelector((state) => state.chat?.message);
 
     const socket = useRef();
 
@@ -43,7 +38,6 @@ function Chat() {
             },
         },
     ]);
-    const [isRightBar, setRightBar] = useState(true);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -51,11 +45,8 @@ function Chat() {
     const id = user?._id;
     const accessToken = user?.accessToken;
 
-    let axiosJWTChats = createAxios(user, dispatch, getIndividualChatSuccess);
     let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
-    let axiosJWTGetMsg = createAxios(user, dispatch, getMessagesSuccess);
-    let axiosJWTAddInvidual = createAxios(user, dispatch, addIndividualChatSuccess);
-    let axiosJWTAddMsg = createAxios(user, dispatch, addMessageSuccess);
+    let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
 
     const callPopupFunction = () => {
         popupCenter({ url: '../call', title: 'xtf', w: 500, h: 650 });
@@ -79,7 +70,7 @@ function Chat() {
 
             if (sendData.length <= 0) {
                 addChat4NewUser();
-                getListIndividualChat(accessToken, id, dispatch, axiosJWTChats);
+                getListIndividualChat(accessToken, id, dispatch, axiosJWTLogin);
             } else {
                 addMsgWithInfo();
             }
@@ -95,7 +86,7 @@ function Chat() {
             individualChat: individualChatId,
         };
 
-        addMessage(msg, accessToken, dispatch, axiosJWTAddMsg);
+        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
 
     //
@@ -117,7 +108,7 @@ function Chat() {
             user: user?._id,
         };
 
-        addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTAddInvidual);
+        addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
     };
 
     useEffect(() => {
@@ -128,21 +119,13 @@ function Chat() {
         setSendData(chat);
     }, [chat]);
 
-    useEffect(() => {
-        const id = {
-            sender: sender?._id,
-            user: user?._id,
-        };
-        getMsgs(accessToken, dispatch, id, axiosJWTGetMsg);
-    }, [sender]);
-
     //SOCKET CHAT
     useEffect(() => {
         const handler = (chatMessage) => {
             setSendData((prev) => {
                 return [...prev, chatMessage];
             });
-            getListIndividualChat(accessToken, id, dispatch, axiosJWTChats);
+            getListIndividualChat(accessToken, id, dispatch, axiosJWTLogin);
         };
         if (user?.accessToken) {
             socket.current = io(url, {
@@ -156,8 +139,10 @@ function Chat() {
     }, [sendData]);
     return (
         <>
-            <div className={cx('flex-row', 'container-center')}>
-                <div className={cx('flex-column', 'fix-height-screen', 'main-center')}>
+            {currentContent.isFetching === true ? (
+                <Loading />
+            ) : (
+                <>
                     <div className={cx('flex-row', 'header-center')}>
                         <div className={cx('flex-row', 'info-friend')}>
                             <img
@@ -165,21 +150,19 @@ function Chat() {
                                 alt="avata"
                             />
                             <div className={cx('flex-column', 'info-content')}>
-                                <p>{sender?.firstName}</p>
+                                <p>{sender?.profileName}</p>
                                 <span>Active</span>
                             </div>
                         </div>
 
                         <div className={cx('flex-row', 'btn-event')}>
                             <button onClick={() => callPopupFunction()}>Call</button>
-                            <button>Video</button>
+                            <button onClick={() => callPopupFunction()}>Video</button>
                             <button className="navbar-logout" onClick={() => handleLogout()}>
                                 {' '}
                                 Log out
                             </button>
-                            <button id="myBtn" onClick={() => setRightBar(isRightBar ? false : true)}>
-                                Media
-                            </button>
+                            <button onClick={setRightBar.handleClickSetRightBar}>Info</button>
                         </div>
                     </div>
 
@@ -190,7 +173,7 @@ function Chat() {
                                 src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                                 alt="avata"
                             />
-                            <p>{sender?.firstName}</p>
+                            <p>{sender?.profileName}</p>
                             <span>Hãy nói gì đó với tôi</span>
                         </div>
                         <div className={cx('space-big-height')}></div>
@@ -269,17 +252,16 @@ function Chat() {
                             Gửi
                         </button>
                     </form>
-                </div>
 
-                {isRightBar ? <RightBar /> : <></>}
-            </div>
-            {/*           
+                    {/*           
             <ul id="messengers"></ul> */}
-            {/* <form onSubmit={handleSubmit}>
+                    {/* <form onSubmit={handleSubmit}>
                 <input type="text" placeholder="name" onChange={(e) => setName(e.target.value)} />
 
             </form> */}
-            {/* <p>{sender?.userName}</p> */}
+                    {/* <p>{sender?.userName}</p> */}
+                </>
+            )}
         </>
     );
 }
