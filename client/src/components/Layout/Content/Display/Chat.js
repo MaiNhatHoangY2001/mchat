@@ -177,7 +177,9 @@ function Chat() {
                                 {' '}
                                 Log out
                             </button>
-                            <button onClick={() => setRightBar(isRightBar ? false : true)}>Media</button>
+                            <button id="myBtn" onClick={() => setRightBar(isRightBar ? false : true)}>
+                                Media
+                            </button>
                         </div>
                     </div>
 
@@ -202,7 +204,9 @@ function Chat() {
                             {sendData?.map((mess, index) => {
                                 return (
                                     <div key={index} className={cx('flex-column')}>
-                                        <div className={cx('flex-row', mess.sender === id ? 'friend-send' : 'user-send')}>
+                                        <div
+                                            className={cx('flex-row', mess.sender === id ? 'friend-send' : 'user-send')}
+                                        >
                                             <img
                                                 className={cx('img-chat')}
                                                 src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
@@ -254,11 +258,11 @@ function Chat() {
                         <button className={cx('btn-chat', 'file')}>File</button>
                         <div className={cx('input-text')}>
                             <input
-                        type="text"
-                        placeholder="Input chat ...."
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    />
+                                type="text"
+                                placeholder="Input chat ...."
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                            />
                         </div>
 
                         <button type="submit" className={cx('btn-chat', 'send')}>
@@ -266,7 +270,8 @@ function Chat() {
                         </button>
                     </form>
                 </div>
-                {isRightBar ? <RightBar />: <></>}
+
+                {isRightBar ? <RightBar /> : <></>}
             </div>
             {/*           
             <ul id="messengers"></ul> */}
