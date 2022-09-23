@@ -13,15 +13,23 @@ const cx = classNames.bind(styles);
 
 function ForgotPass() {
     //show-hide-pw
-    const [passwordType, setPasswordType] = useState('password');
     const [passwordInputNewPW, setPasswordInputNewPW] = useState('');
     const [passwordInputConfirmNewPW, setPasswordInputConfirmNewPW] = useState('');
-    const togglePassword = () => {
-        if (passwordType === 'password') {
-            setPasswordType('text');
+    const [passwordType1, setPasswordType1] = useState('password');
+    const [passwordType2, setPasswordType2] = useState('password');
+    const togglePassword1 = () => {
+        if (passwordType1 === 'password') {
+            setPasswordType1('text');
+            return;
+        } 
+        setPasswordType1('password');
+    };
+    const togglePassword2 = () => {
+        if (passwordType2 === 'password') {
+            setPasswordType2('text');
             return;
         }
-        setPasswordType('password');
+        setPasswordType2('password');
     };
 
     return (
@@ -47,7 +55,7 @@ function ForgotPass() {
                         />
                         <input
                             className={cx('txtNewPW')}
-                            type={passwordType}
+                            type={passwordType1}
                             placeholder="Mật khẩu mới"
                             onChange={(e) => {
                                 // setPassword(e.target.value);
@@ -57,9 +65,9 @@ function ForgotPass() {
                             name="password"
                         />
                         <span className="eye1">
-                            <div className="btn btn-outline-primary" onClick={togglePassword}>
+                            <div className="btn btn-outline-primary" onClick={togglePassword1}>
                                 <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                    {passwordType === 'password' ? (
+                                    {passwordType1 === 'password' ? (
                                         <i><FaEyeSlash /></i>
                                     ) : (
                                         <i><FaEye /></i>
@@ -69,7 +77,7 @@ function ForgotPass() {
                         </span>
                         <input
                             className={cx('txtConfirmNewPW')}
-                            type={passwordType}
+                            type={passwordType2}
                             placeholder="Xác nhận mật khẩu mới"
                             onChange={(e) => {
                                 setPasswordInputConfirmNewPW(e.target.value);
@@ -78,9 +86,9 @@ function ForgotPass() {
                             name="password"
                         />
                         <span className="eye2">
-                            <div className="btn btn-outline-primary" onClick={togglePassword}>
+                            <div className="btn btn-outline-primary" onClick={togglePassword2}>
                                 <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                    {passwordType === 'password' ? (
+                                    {passwordType2 === 'password' ? (
                                         <i><FaEyeSlash /></i>
                                     ) : (
                                         <i><FaEye /></i>

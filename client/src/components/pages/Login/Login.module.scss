@@ -7,6 +7,14 @@
     position: fixed;
     margin: 0;
     padding: 0;
+
+    //ko cho chuột bôi đen trừ input
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
 .login-container {
@@ -22,6 +30,8 @@
 
 .logo {
     width: 12%;
+    cursor: default;
+    pointer-events: none;
 }
 
 .logo img {
@@ -49,6 +59,7 @@
     background-color: #fff;
     box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
     padding-bottom: 2%;
+    border-radius: 5%;
 }
 
 .txtTK,
