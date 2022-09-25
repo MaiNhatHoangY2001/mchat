@@ -53,7 +53,7 @@ const authController = {
 				res.cookie('refreshToken', refreshToken, {
 					// create cookie with refresh token that expires in 7 days
 					httpOnly: true,
-					//expires: new Date(Date.now() + 7*24*60*60*1000),
+					expires: new Date(Date.now() + 365*24*60*60*1000),
 					secure: true,
 					path: '/',
 					sameSite: 'none',
@@ -88,7 +88,7 @@ const authController = {
 			res.cookie('refreshToken', newRefreshToken, {
 				httpOnly: true,
 				secure: true,
-				//expires: new Date(Date.now() + 7*24*60*60*1000),
+				expires: new Date(Date.now() + 365*24*60*60*1000),
 				path: '/',
 				sameSite: 'none',
 			});

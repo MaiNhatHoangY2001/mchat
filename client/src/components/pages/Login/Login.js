@@ -41,8 +41,8 @@ function Login() {
     })
 
     //show-hide-pw
-    const [passwordType, setPasswordType] = useState("password");
     const [passwordInput, setPasswordInput] = useState("");
+    const [passwordType, setPasswordType] = useState("password");
     const togglePassword =()=>{
       if(passwordType==="password") {
         setPasswordType("text")
