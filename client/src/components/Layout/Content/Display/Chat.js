@@ -211,28 +211,6 @@ function Chat({ setRightBar }) {
                                     </div>
                                 );
                             })}
-
-                            {/* <div className={cx('flex-row', 'friend-send')}>
-                <img
-                    className={cx('img-chat')}
-                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                    alt="avata"
-                />
-                <div className={cx('box-text-chat')}>
-                    <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
-                </div>
-            </div>
-            <div className={cx('space-height')}></div>
-            <div className={cx('flex-row', 'user-send')}>
-                <div className={cx('box-text-chat')}>
-                    <p className={cx('text-chat')}>Mai Ngoc Long Mai Ngoc Long</p>
-                </div>
-                <img
-                    className={cx('img-chat')}
-                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                    alt="avata"
-                />
-            </div> */}
                             <div className={cx('space-height')}></div>
                         </div>
                     </div>
@@ -252,14 +230,6 @@ function Chat({ setRightBar }) {
                             Gửi
                         </button>
                     </form>
-
-                    {/*           
-            <ul id="messengers"></ul> */}
-                    {/* <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="name" onChange={(e) => setName(e.target.value)} />
-
-            </form> */}
-                    {/* <p>{sender?.userName}</p> */}
                 </>
             )}
         </>

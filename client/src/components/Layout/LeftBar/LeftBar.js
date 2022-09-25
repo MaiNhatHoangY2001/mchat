@@ -10,6 +10,7 @@ import { searchUser } from '../../../redux/apiRequest/userApiRequest';
 import { setSender } from '../../../redux/userSlice';
 import { getMsgs } from '../../../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../../../redux/authSlice';
+import { fontSize } from '@mui/system';
 
 const cx = classNames.bind(styles);
 
@@ -30,7 +31,7 @@ function LeftBar() {
     let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
 
     const activeButtonStyles = {
-        backgroundColor: 'salmon',
+        backgroundColor: 'rgb(242, 153, 227)',
         color: 'white',
     };
 
@@ -73,13 +74,6 @@ function LeftBar() {
                 </div>
 
                 <div className={cx('flex-row', 'input-search')}>
-                    {/* <button className={cx('btn')}>
-                        <img
-                            className={cx('btn-img')}
-                            src="https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/list.png"
-                            alt="menu"
-                        />
-                    </button> */}
                     <div className={cx('search')}>
                         <AutoComplete
                             currentUser={currentUser}
@@ -108,17 +102,17 @@ function LeftBar() {
                         <button
                             key={index}
                             id="button-item"
-                            className={cx('flex-row', 'item')}
-                            style={actorSenderActive ? activeButtonStyles : {}}
                             onClick={() => handleClick(actor?._id, actor?.sender, actor?.user)}
                         >
-                            <img
-                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                alt={'avata'}
-                            />
-                            <div className={cx('flex-column', 'content-item')}>
-                                <p>{actor?.sender.profileName}</p>
-                                <span>{actor?.sender.status}</span>
+                            <div className={cx('flex-row', 'item')} style={actorSenderActive ? activeButtonStyles : {}}>
+                                <img
+                                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                    alt={'avata'}
+                                />
+                                <div className={cx('flex-column', 'content-item')}>
+                                    <p>{actor?.sender.profileName}</p>
+                                    <span>{actor?.sender.status}</span>
+                                </div>
                             </div>
                         </button>
                     );

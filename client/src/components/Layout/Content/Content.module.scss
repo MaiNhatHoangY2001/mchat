@@ -27,12 +27,11 @@
 
 /* Main Content */
 .container-center {
-    flex: 75%;
-    min-width: 200px;
+    flex: 1;
 }
 /* Main Chat */
 .container-center .main-center {
-    flex: 70%;
+    flex: 1;
 }
 /* Header Chat */
 .main-center .header-center {
@@ -74,14 +73,6 @@
     margin: 0;
 }
 
-/* Body Chat */
-.container-center {
-    flex: 75%;
-}
-/* Main Chat */
-.container-center .main-center {
-    flex: 70%;
-}
 /* Header Chat */
 .main-center .header-center {
     padding: 10px;
@@ -258,4 +249,10 @@
     -webkit-animation-duration: 0.4s;
     animation-name: fadeIn;
     animation-duration: 0.4s;
+}
+
+@media (max-width: 1200px) {
+    .container-center {
+        display: block;
+    }
 }
