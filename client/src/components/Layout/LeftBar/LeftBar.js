@@ -58,7 +58,7 @@ function LeftBar() {
         const search = textSearchUser === '' ? '@' : textSearchUser;
         searchUser(accessToken, dispatch, search, axiosJWT);
         if (currentSearch !== null) {
-            setUsersSearch(currentSearch?.filter((user) => user.userName !== currentUser.userName));
+            setUsersSearch(currentSearch?.filter((user) => user.profileName !== currentUser.profileName));
         }
     }, [textSearchUser]);
 

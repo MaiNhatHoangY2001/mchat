@@ -1,7 +1,7 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import Stack from '@mui/material/Stack';
 import { useDispatch } from 'react-redux';
-import { getIndividualChat } from '../../../redux/apiRequest/chatApiRequest';
+import { getMsgs } from '../../../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../../../redux/authSlice';
 import { createAxios } from '../../../redux/createInstance';
 import { setSender } from '../../../redux/userSlice';
@@ -12,14 +12,14 @@ export default function ComboBox({ currentUser, users, renderInput }) {
     let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
 
     const handleGetUser = (sender) => {
-        dispatch(setSender(sender));
-        const actor = { idUser: currentUser._id, idSender: sender._id };
+        const actor = { sender: currentUser._id, user: sender._id };
 
-        getIndividualChat(currentUser.accessToken, actor, dispatch, axiosJWT);
+        getMsgs(currentUser.accessToken, dispatch, actor, axiosJWT);
+        dispatch(setSender(sender));
     };
 
     const getOptionLabel = (option) => {
-        return option.userName === undefined ? '' : option.userName;
+        return option.profileName === undefined ? '' : option.profileName;
     };
 
     return (

@@ -1,4 +1,3 @@
-
 import {
     addIndividualChatFailed,
     addIndividualChatStart,
@@ -71,12 +70,12 @@ export const addMessage = async (message, accessToken, dispatch, axiosJWT) => {
     }
 };
 
-export const getMsgs = async (accessToken, dispatch, sender, axiosJWT) => {
+export const getMsgs = async (accessToken, dispatch, actor, axiosJWT) => {
     dispatch(getMessagesStart());
     try {
         const res = await axiosJWT.get(`${url}/api/individualChat`, {
             headers: { token: `Bearer ${accessToken}` },
-            params: sender,
+            params: actor,
         });
         dispatch(getMessagesSuccess(res.data));
     } catch (error) {
@@ -97,7 +96,7 @@ export const getListIndividualChat = async (accessToken, userId, dispatch, axios
 };
 
 export const getIndividualChat = async (accessToken, actor, dispatch, axiosJWT) => {
-    dispatch(addIndividualChatSuccess());
+    dispatch(addIndividualChatStart());
     try {
         const res = await axiosJWT.get(`${url}/api/individualChat/a/chat`, {
             headers: { token: `Bearer ${accessToken}` },
@@ -105,6 +104,6 @@ export const getIndividualChat = async (accessToken, actor, dispatch, axiosJWT) 
         });
         dispatch(addIndividualChatSuccess(res.data[0]._id));
     } catch (error) {
-        dispatch(addIndividualChatSuccess());
+        dispatch(addIndividualChatFailed());
     }
 };
