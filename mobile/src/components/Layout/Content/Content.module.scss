@@ -1,0 +1,258 @@
+/* Create Space height 10px */
+.space-height {
+    height: 10px;
+    display: block;
+    width: 100%;
+}
+.space-big-height {
+    height: 100px;
+    display: block;
+    width: 100%;
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+.scroller-column {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.fix-height-screen {
+    max-height: 100vh;
+}
+
+/* Main Content */
+.container-center {
+    flex: 1;
+}
+/* Main Chat */
+.container-center .main-center {
+    flex: 1;
+}
+/* Header Chat */
+.main-center .header-center {
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+/* Info Friend Chat */
+.header-center .info-friend {
+    flex-grow: 9;
+    justify-content: left;
+    align-items: center;
+}
+.info-friend img {
+    max-width: 46px;
+    max-height: 46px;
+    object-fit: cover;
+}
+.info-friend .info-content {
+    text-align: left;
+    width: 100%;
+    margin-left: 10px;
+}
+.info-content p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+.info-content span {
+    font-size: x-small;
+    color: rgb(11, 207, 11);
+}
+/* Button: Call, Video Call */
+.header-center .btn-event {
+    flex-grow: 1;
+    justify-content: space-evenly;
+}
+.btn-event button {
+    padding: 10px;
+    margin: 0;
+}
+
+/* Header Chat */
+.main-center .header-center {
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+/* Info Friend Chat */
+.header-center .info-friend {
+    flex-grow: 9;
+    justify-content: left;
+    align-items: center;
+}
+.info-friend img {
+    max-width: 46px;
+    max-height: 46px;
+}
+.info-friend .info-content {
+    text-align: left;
+    width: 100%;
+    margin-left: 10px;
+}
+.info-content p {
+    font-size: 18px;
+    font-weight: bold;
+}
+.info-content span {
+    font-size: x-small;
+    color: rgb(11, 207, 11);
+}
+/* Button: Call, Video Call */
+.header-center .btn-event {
+    flex-grow: 1;
+    justify-content: space-evenly;
+}
+.btn-event button {
+    padding: 0 10px;
+}
+/* Body Chat */
+.main-center .body-center {
+    height: 100vh;
+    background-image: url('https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/bgcolor.png');
+}
+/* Screen Text Chat */
+/* contain */
+/* Real Time chat */
+.real-time {
+    padding: 10px;
+    text-align: center;
+    font-size: x-small;
+    color: rgb(154, 154, 154);
+}
+.contain-chat {
+    display: flex;
+    flex: auto;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+/* Info Friend Header Screen Chat */
+.info-friend-chat {
+    align-items: center;
+}
+.info-friend-chat img {
+    max-width: 100px;
+}
+.info-friend-chat p {
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 24px;
+}
+.info-friend-chat span {
+    font-size: small;
+    color: rgb(154, 154, 154);
+}
+/* Friend Chat */
+.friend-send {
+    align-items: flex-end;
+}
+/* User Chat */
+.user-send {
+    flex-direction: row-reverse;
+}
+/* Content chat */
+.img-chat {
+    max-width: 30px;
+    margin: 0 10px;
+    place-self: flex-end;
+}
+.box-text-chat {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 350px;
+    border: 1px solid rgb(168, 168, 168);
+    background-color: rgb(207, 126, 232);
+    p {
+        margin: 0;
+        overflow-wrap: break-word;
+    }
+}
+.contain-chat {
+    justify-content: flex-end;
+}
+
+/* Input Chat */
+/* Contain */
+.input-chat {
+    padding: 10px;
+}
+/* Input Text */
+.input-chat .input-text {
+    flex: auto;
+}
+/* Button Send */
+.input-chat .btn-chat {
+    padding: 4px 10px;
+    cursor: pointer;
+}
+.input-text input {
+    padding: 4px 10px;
+    width: 100%;
+    margin: 0 10px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+.box-tooltip {
+    visibility: hidden;
+    width: 250px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 3;
+    top: 10px;
+}
+.tooltip .tooltiptextUser {
+    right: 105%;
+}
+.tooltip .tooltiptextFriend {
+    left: 105%;
+}
+.tooltip:hover .box-tooltip {
+    visibility: visible;
+}
+
+.tooltip:hover {
+    cursor: pointer;
+    background-color: aliceblue;
+}
+
+/* Container File */
+.main-right {
+    flex: 30%;
+    border-left: 1px solid black;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    -webkit-animation-name: fadeIn; /* Fade in the background */
+    -webkit-animation-duration: 0.4s;
+    animation-name: fadeIn;
+    animation-duration: 0.4s;
+}
+
+@media (max-width: 1200px) {
+    .container-center {
+        display: block;
+    }
+}

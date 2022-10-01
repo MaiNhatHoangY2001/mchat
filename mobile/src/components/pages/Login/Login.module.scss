@@ -1,0 +1,125 @@
+.bodyLogin {
+    background: url(https://data-mline-congnghemoi.s3.ap-southeast-1.amazonaws.com/bgcolor.png) no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+
+    //ko cho chuột bôi đen trừ input
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3rem;
+    border-radius: 12px;
+    min-width: 20%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.logo {
+    width: 12%;
+    cursor: default;
+    pointer-events: none;
+}
+
+.logo img {
+    width: 12vw;
+}
+
+#line {
+    text-align: center;
+    font-size: 6vh;
+    font-weight: 900;
+    color: rgb(250, 139, 158);
+    margin-top: -12%;
+}
+
+.formLogin {
+    display: flex;
+    margin-top: 2rem;
+    font-size: 2.5vh;
+    font-weight: 600;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 80%;
+    background-color: #fff;
+    box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
+    padding-bottom: 2%;
+    border-radius: 5%;
+}
+
+.txtTK,
+.txtMK {
+    border: none;
+    padding: 0.35rem;
+    font-family: "Inter", sans-serif;
+    margin: 0.75rem 0;
+    border-radius: 4px;
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+}
+
+.eyeLogin {
+    margin-left: -13%;
+}
+
+.txtTK,
+.txtMK,
+.btnLogin,
+.currentLogin {
+    margin-top: 8%;
+}
+
+.btnLogin {
+    align-self: center;
+    margin-top: 10% !important;
+    font-size: 1rem;
+    padding: 3% !important;
+    width: 35%;
+    border: 1px solid #D57AD4;
+    border-radius: 10%;
+    color: white;
+    background-color: #D57AD4;
+}
+
+.btnLogin:hover {
+    background-color: #fff;
+    border: 1px solid rgb(250, 139, 158);
+    color: rgb(250, 139, 158);
+}
+
+.login-register {
+    margin: 2rem 1rem 0 1rem;
+    font-size: 1rem;
+}
+
+.currentLogin,
+.login-register-link,
+.forgotpw-link {
+    text-decoration: none;
+    color: #D57AD4;
+    font-weight: 700;
+}
+
+.forgotpw-link {
+    float: right;
+}
+
+.login-register-link:hover,
+.forgotpw-link:hover {
+    color: rgb(250, 139, 158);
+}
