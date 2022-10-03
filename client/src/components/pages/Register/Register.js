@@ -44,13 +44,14 @@ function Register() {
         //     alert(validationForm.msg);
         // }
         const newUser = {
-            userName: userName,
             password: password,
             firstName: firstName,
             lastName: lastName,
+            profileName: firstName + ' ' + lastName,
             date: date,
-            emailID: emailID,
             phoneNumber: phoneNumber,
+            refreshToken: '',
+            profileImg: '',
         };
         registerUser(newUser, dispatch, navigate, setIsLoading);
     };
