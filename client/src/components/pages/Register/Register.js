@@ -2,7 +2,7 @@ import styles from './Register.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../../redux/apiRequest/authApiRequest';
 //import { DatePicker } from 'react-datepicker'
 //import {Formik, useFormik} from 'formik'
@@ -11,8 +11,19 @@ const cx = classNames.bind(styles);
 function Register() {
     const user = useSelector((state) => state.auth.login?.currentUser);
 
+    const [input, setInput] = useState({
+        userName: '',
+        
+    })
+    const [error, setError] = useState({
+        userName: '',
+    })
+    const onInputChange = e =>{
+        const {userName} = e.target;
+//u        setInput(preventDefault => ({...preventDefault, [userName]: value}))
+    }
 //    const [isOpen, setIsOpen] = useState(false);
-
+    // bỏ username - email, gộp họ và tên, số dt đưa lên đầu
     const [isLoading, setIsLoading] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -26,15 +37,6 @@ function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-//    const reSDT = "^(0[0-9]{9}$)";
-    // const xacNhanPass = (e) =>{
-    //     const pass = password.toString;
-    //     const xnpass = repass.toString;
-    //     if(xnpass == pass) 
-    //         document.getElementById('spanspass').innerText("V");
-    //     else
-    //         document.getElementById('spanspass').innerHTML("")
-    // }
     const handleRegister = (e) => {
         e.preventDefault();
         // const validationForm = this.validationForm();
@@ -52,48 +54,14 @@ function Register() {
         };
         registerUser(newUser, dispatch, navigate, setIsLoading);
     };
-    
 
     useEffect(() => {
-        if(user){
-            navigate("/");
+        if (user) {
+            navigate('/');
         }
-    })
+    });
 
-    // const validate = values => {
-    //     const errors = {};
-      
-    //     if (!values.firstName) {
-    //       errors.firstName = 'Required';
-    //     } else if (values.firstName.length > 15) {
-    //       errors.firstName = 'Must be 15 characters or less';
-    //     }
-      
-    //     if (!values.lastName) {
-    //       errors.lastName = 'Required';
-    //     } else if (values.lastName.length > 20) {
-    //       errors.lastName = 'Must be 20 characters or less';
-    //     }
-      
-    //     if (!values.email) {
-    //       errors.email = 'Required';
-    //     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    //       errors.email = 'Invalid email address';
-    //     }
-      
-    //     return errors;
-    //   };
-    //   const formik = useFormik({
-    //     initialValues: {
-    //       firstName: '',
-    //       lastName: '',
-    //       email: '',
-    //     },
-    //     validate,
-    //     onSubmit: values => {
-    //       alert(JSON.stringify(values, null, 2));
-    //     },
-    //   });
+
     return (
         // <body>
             <section className={cx('register-container')}>
@@ -115,7 +83,7 @@ function Register() {
                                 // className={cx('mainput')}
                                 onChange={(e) => setPassword(e.target.value)} />
                         {/* </div> */}
-
+            
                         {/* <div className={cx('row-register')}> */}
                             <label className={cx('margininput')}>&nbsp;Xác nhận:</label> 
                             <input
@@ -125,7 +93,6 @@ function Register() {
                                 onChange={(e) => setRePass(e.target.value)}
                     //            onBlur={(e) => xacNhanPass(e.target.value)}
                                 />
-                            <span id="spanspass"></span>
                             <br/>
                         {/* </div> */}
 
@@ -151,32 +118,18 @@ function Register() {
                         {/* <div className={cx('row-register')}> */}
                             <label className={cx('margininput')}>Năm sinh:</label>
                             <input 
-                                type="text" 
+                                type="date" 
                                 placeholder="dd/mm/yyyy" 
   //                              className={cx('input-register')}
                                 onChange={(e) => setDate(e.target.value)}/>
-                            {/* <button
-                                onClick={() => {
-                                setIsOpen(true)
-                                }}
-                            >
-                                Open
-                            </button>
-                            <DatePicker
-                                isOpen={isOpen}
-                                onClose={() => setIsOpen(false)}
-                                defaultValue={new Date(2022, 8, 8)}
-                                minDate={new Date(2022, 10, 10)}
-                                maxDate={new Date(2023, 0, 10)}
-                                headerFormat='DD, MM dd'
-                            /> */}
+                            <br/>
                         {/* </div> */}
 
                         {/* <div className={cx('row-register')}> */}
                             <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email:</label>
                             <input 
                                 type="email" 
-                                placeholder="Nhập email" 
+                                placeholder="nhom6@congnghemoi.IT" 
                                 // className={cx('input-register')}
                                 onChange={(e) => setEmailID(e.target.value)}/>   
                         {/* </div> */}
@@ -192,7 +145,7 @@ function Register() {
                         {/* <div className={cx('row-register')}> */}
                             <label className={cx('marginbutton')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bạn đã có tài khoản?</label>      
                             <Link to="/login" className={cx('login-link')}>
-                                <label>&nbsp;&nbsp;&nbsp;Đăng nhập ngay</label>
+                                <label>&nbsp;&nbsp;&nbsp;Đăng nhập ngay!</label>
                             </Link>
                         {/* </div> */}
                     </div>     
@@ -200,7 +153,6 @@ function Register() {
                       
                 </form>
             </section>
-    //    </body> 
     );
 }
 
