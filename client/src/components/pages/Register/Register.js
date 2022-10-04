@@ -4,33 +4,26 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../../redux/apiRequest/authApiRequest';
-//import {Formik, useFormik} from 'formik'
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { IconContext } from 'react-icons/lib';
 const cx = classNames.bind(styles);
 
 function Register() {
     const user = useSelector((state) => state.auth.login?.currentUser);
 
+//    const [isOpen, setIsOpen] = useState(false);
+    // bỏ username - email, gộp họ và tên, số dt đưa lên đầun
     const [isLoading, setIsLoading] = useState(false);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [emailID, setEmailID] = useState('');
+    const [name, setName] = useState('');
+//    const [emailID, setEmailID] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [date, setDate] = useState('');
-    const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [repass, setRePass] = useState('');
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    //    const reSDT = "^(0[0-9]{9}$)";
-    // const xacNhanPass = (e) =>{
-    //     const pass = password.toString;
-    //     const xnpass = repass.toString;
-    //     if(xnpass == pass)
-    //         document.getElementById('spanspass').innerText("V");
-    //     else
-    //         document.getElementById('spanspass').innerHTML("")
-    // }
     const handleRegister = (e) => {
         e.preventDefault();
         // const validationForm = this.validationForm();
@@ -38,12 +31,10 @@ function Register() {
         //     alert(validationForm.msg);
         // }
         const newUser = {
-            password: password,
-            firstName: firstName,
-            lastName: lastName,
-            profileName: firstName + ' ' + lastName,
-            date: date,
             phoneNumber: phoneNumber,
+            password: password,
+            profileName: name,
+            date: date,
             refreshToken: '',
             profileImg: '',
         };
@@ -56,148 +47,144 @@ function Register() {
         }
     });
 
-    // const validate = values => {
-    //     const errors = {};
-
-    //     if (!values.firstName) {
-    //       errors.firstName = 'Required';
-    //     } else if (values.firstName.length > 15) {
-    //       errors.firstName = 'Must be 15 characters or less';
-    //     }
-
-    //     if (!values.lastName) {
-    //       errors.lastName = 'Required';
-    //     } else if (values.lastName.length > 20) {
-    //       errors.lastName = 'Must be 20 characters or less';
-    //     }
-
-    //     if (!values.email) {
-    //       errors.email = 'Required';
-    //     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    //       errors.email = 'Invalid email address';
-    //     }
-
-    //     return errors;
-    //   };
-    //   const formik = useFormik({
-    //     initialValues: {
-    //       firstName: '',
-    //       lastName: '',
-    //       email: '',
-    //     },
-    //     validate,
-    //     onSubmit: values => {
-    //       alert(JSON.stringify(values, null, 2));
-    //     },
-    //   });
+    const [passwordInputNewPW, setPasswordInputNewPW] = useState('');
+    const [passwordInputConfirmNewPW, setPasswordInputConfirmNewPW] = useState('');
+    const [passwordType1, setPasswordType1] = useState('password');
+    const [passwordType2, setPasswordType2] = useState('password');
+    const togglePassword1 = () => {
+        if (passwordType1 === 'password') {
+            setPasswordType1('text');
+            return;
+        } 
+        setPasswordType1('password');
+    };
+    const togglePassword2 = () => {
+        if (passwordType2 === 'password') {
+            setPasswordType2('text');
+            return;
+        }
+        setPasswordType2('password');
+    };
+    
+    
     return (
         // <body>
-        <section className={cx('register-container')}>
-            <form onSubmit={handleRegister} className={cx('register-form')}>
-                <h2> THÔNG TIN ĐĂNG KÝ </h2>
-                <div className="col-lg-6">
-                    <label className={cx('margininput')}>Tài khoản:</label>
-                    <input
-                        type="text"
-                        placeholder="Nhập tên tài khoản"
-                        id="userName"
-                        name="userName"
-                        onChange={(e) => setUserName(e.target.value)}
-                    />
-                    {/* <div className={cx('row-register')}> */}
-                    <label className={cx('margininput')}>Mật khẩu:</label>
-                    <input
-                        type="password"
-                        placeholder="Nhập mật khẩu"
-                        // className={cx('mainput')}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    {/* </div> */}
-                    {/* <div className={cx('row-register')}> */}
-                    <label className={cx('margininput')}>&nbsp;Xác nhận:</label>
-                    <input
-                        type="password"
-                        placeholder="Nhập lại mật khẩu"
-                        //className={cx('input-register')}
-                        onChange={(e) => setRePass(e.target.value)}
-                        //            onBlur={(e) => xacNhanPass(e.target.value)}
-                    />
-                    <span id="spanspass"></span>
-                    <br />
-                    {/* </div> */}
-                    {/* <div className={cx('row-register')}> */}
-                    <label className={cx('margininput')}>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Họ:
-                    </label>
-                    <input
-                        type="text"
-                        placeholder="Nhập họ"
-                        //                               className={cx('input-register')}
-                        onChange={(e) => setFirstName(e.target.value)}
-                    />
-                    <br />
-                    {/* </div> */}
-                    {/* <div className={cx('row-register')}> */}
-                    <label className={cx('margininput')}>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tên:
-                    </label>
-                    <input
-                        type="text"
-                        placeholder="Nhập tên"
-                        // className={cx('input-register')}
-                        onChange={(e) => setLastName(e.target.value)}
-                    />
-                    {/* </div> */}
-                    {/* <div className={cx('row-register')}> */}
-                    <label className={cx('margininput')}>Năm sinh:</label>
-                    <input
-                        type="text"
-                        placeholder="dd/mm/yyyy"
-                        //                              className={cx('input-register')}
-                        onChange={(e) => setDate(e.target.value)}
-                    />
-                    {/* </div> */}
-                    {/* <div className={cx('row-register')}> */}
-                    <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email:</label>
-                    <input
-                        type="email"
-                        placeholder="Nhập email"
-                        // className={cx('input-register')}
-                        onChange={(e) => setEmailID(e.target.value)}
-                    />
-                    {/* </div> */}
-                    {/* <div className={cx('row-register')}> */}
-                    <label className={cx('margininput')}>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SĐT:
-                    </label>
-                    <input
-                        type="text"
-                        placeholder="Nhập số điện thoại"
-                        // className={cx('input-register')}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                    />
-                    {/* </div>  */}
-                    <br /> <br />
-                    {/* <div className={cx('row-register')}> */}
-                    <label className={cx('marginbutton')}>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bạn đã có tài khoản?
-                    </label>
-                    <Link to="/login" className={cx('login-link')}>
-                        <label>&nbsp;&nbsp;&nbsp;Đăng nhập ngay</label>
-                    </Link>
-                    {/* </div> */}
-                </div>
-                {isLoading ? (
-                    <p>Đang tạo tài khoản, vui lòng chờ trong giây lát</p>
-                ) : (
-                    <button type="submit" className={cx('btnRegister')}>
-                        {' '}
-                        ĐĂNG KÝ
-                    </button>
-                )}
-            </form>
-        </section>
-        //    </body>
+            <section className={cx('register-container')}>
+                <form onSubmit={handleRegister} className={cx('register-form')}>
+                    <h2> THÔNG TIN ĐĂNG KÝ </h2> <br/>
+                    <div className='col-lg-6'>
+                        
+                            {/* <label className={cx('margininput')}>Tài khoản:</label>
+                            <input type="text" placeholder="Nhập tên tài khoản" 
+                               id="userName" name="userName"
+                                onChange={(e) => setUserName(e.target.value)} />                            */}
+                            {/* <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SĐT:</label> */}
+                            <input 
+                                type="text" 
+                                placeholder="Nhập số điện thoại" 
+                                className={cx('inputRegister')}
+                                onChange={(e) => setPhoneNumber(e.target.value)}/>
+
+                        {/* <div className={cx('row-register')}> */}
+                            {/* <label className={cx('margininput')}>Mật khẩu:</label>   */}
+                            <input
+                                type={passwordType1}
+                                placeholder="Nhập mật khẩu"
+                                className={cx('inputRegisterPass')}
+                                onChange={(e) => {  setPassword(e.target.value); 
+                                                    setPasswordInputNewPW(e.target.value)}} 
+                                value={passwordInputNewPW}
+                                name="password"
+                                />
+                        {/* </div> */}  
+                        <span className="eye1">
+                            <div className="btn btn-outline-primary" onClick={togglePassword1}>
+                                <IconContext.Provider value={{ color: '#D57AD4' }}>
+                                    {passwordType1 === 'password' ? (
+                                        <i><FaEyeSlash /></i>
+                                    ) : (
+                                        <i><FaEye /></i>
+                                    )}
+                                </IconContext.Provider>
+                            </div>
+                        </span>
+                        {/* <div className={cx('row-register')}> */}
+                            {/* <label className={cx('margininput')}>&nbsp;Xác nhận:</label>  */}
+                            <input
+                                type={passwordType2}
+                                placeholder="Nhập lại mật khẩu"
+                                className={cx('inputRegisterPass')}
+                                onChange={(e) => {  setRePass(e.target.value); 
+                                                    setPasswordInputConfirmNewPW(e.target.value)}}
+                                value={passwordInputConfirmNewPW}
+                                name="password"
+                                />
+                            <span className="eye2">
+                            <div className="btn btn-outline-primary" onClick={togglePassword2}>
+                                <IconContext.Provider value={{ color: '#D57AD4' }}>
+                                    {passwordType2 === 'password' ? (
+                                        <i><FaEyeSlash /></i>
+                                    ) : (
+                                        <i><FaEye /></i>
+                                    )}
+                                </IconContext.Provider>
+                            </div>
+                        </span>    
+                            <br/>
+                        {/* </div> */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            {/* <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Họ tên:</label>  */}
+                             <input 
+                                type="text" 
+                                placeholder="Nhập họ và tên" 
+                                className={cx('inputRegister')}
+                                onChange={(e) => setName(e.target.value)} />
+                            
+                        {/* </div> */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            {/* <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tên:</label>
+                            <input 
+                                type="text" 
+                                placeholder="Nhập tên" 
+                                // className={cx('input-register')}
+                                onChange={(e) => setLastName(e.target.value)}/> */}
+                        {/* </div> */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            {/* <label className={cx('margininput')}>&nbsp;Năm sinh:</label> */}
+                            <input 
+                                type="date" 
+                                placeholder="dd/mm/yyyy" 
+                                className={cx('inputRegisterDate')}
+                                onChange={(e) => setDate(e.target.value)}/>
+                            <br/>
+                        {/* </div> */}
+
+                        {/* <div className={cx('row-register')}> */}
+                            {/* <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email:</label>
+                            <input 
+                                type="email" 
+                                placeholder="nhom6@congnghemoi.IT" 
+                                // className={cx('input-register')}
+                                onChange={(e) => setEmailID(e.target.value)}/>    */}
+                        {/* </div> */}
+                        {/* <div className={cx('row-register')}> */}
+                            
+                        {/* </div>  */}
+                        <br/> 
+                        {/* <div className={cx('row-register')}> */}
+                            <label className={cx('marginbutton')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bạn đã có tài khoản?</label>      
+                            <Link to="/login" className={cx('login-link')}>
+                                <label>&nbsp;&nbsp;&nbsp;Đăng nhập ngay!</label>
+                            </Link>
+                        {/* </div> */}
+                    </div>     
+                            {isLoading ? <p>Đang tạo tài khoản, vui lòng chờ trong giây lát</p> :  <button type="submit" className={cx('btnRegister')}> ĐĂNG KÝ</button>}
+                      
+                </form>
+            </section>
     );
 }
 

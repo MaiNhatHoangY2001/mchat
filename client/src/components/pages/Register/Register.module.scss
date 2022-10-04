@@ -28,9 +28,43 @@
     box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
 //    margin: 0.75rem;
     height: 80%;
+    border-radius: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-width: 30%;
+}
+.inputRegister{
+    border: none;
+    padding: 0.35rem;
+    font-family: "Inter", sans-serif;
+    margin: 0.75rem 0;
+    border-radius: 4px;
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+}
+.inputRegisterPass{
+    border: none;
+    padding: 0.35rem;
+    font-family: "Inter", sans-serif;
+    border-radius: 4px;
+    width: 85%;
+    padding-top: 5%;
+    padding-bottom: 4%;
+    border-bottom: 1px solid lightgray;
+}
+.inputRegisterDate{
+    border: none;
+    padding: 0.35rem;
+    font-family: "Inter", sans-serif;
+    border-radius: 4px;
+    width: 100%;
+    padding-top: 5%;
+    padding-bottom: 4%;
+    border-bottom: 1px solid lightgray;
+    opacity: 0.5;
 }
 .margininput{
     margin: 0.75rem;
+    text-align: boild;
 }
 .magrinbutton{
     margin: 1rem;
@@ -47,7 +81,7 @@
 }
 .btnRegister {
     align-self: center;
-    margin-top: 10% !important;
+    margin-top: 3.5% !important;
     font-size: 1rem;
     padding: 3% !important;
     width: 35%;
@@ -77,7 +111,9 @@
 //     text-align: center;
     
 // }
-
+.divRow{
+    flex-direction: row;
+}
 .register-title {
     font-weight: 700;
     font-size: 1.5rem;
