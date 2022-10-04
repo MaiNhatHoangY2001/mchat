@@ -9,14 +9,27 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.10",
+    "@reduxjs/toolkit": "^1.8.5",
     "babel-plugin-react-native-classname-to-style": "^1.2.2",
     "babel-plugin-react-native-platform-specific-extensions": "^1.1.1",
+    "bootstrap": "^5.2.1",
+    "classnames": "^2.3.1",
     "expo": "~46.0.13",
     "expo-status-bar": "~1.4.0",
+    "jwt-decode": "^3.1.2",
+    "normalize.css": "^8.0.1",
     "react": "18.0.0",
     "react-native": "0.69.6",
     "react-native-sass-transformer": "^2.0.0",
-    "sass": "^1.55.0"
+    "react-redux": "^8.0.4",
+    "react-router-native": "^6.4.1",
+    "redux": "^4.2.0",
+    "redux-persist": "^6.0.0",
+    "sass": "^1.55.0",
+    "socket.io-client": "^4.5.2",
+    "w3-css": "^4.1.0",
+    "web-vitals": "^2.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

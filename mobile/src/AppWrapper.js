@@ -1,19 +1,20 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { View } from "react-native";
+import { Route, Routes, NativeRouter } from "react-router-native";
+import { Home } from "./components/pages";
 import { publicRoutes } from "./routes";
 
 function AppWrapper() {
   return (
-    <Router>
-      <div className="App">
+    <NativeRouter>
+      <View>
         <Routes>
           {publicRoutes.map((route, index) => {
             const Page = route.component;
-
             return <Route key={index} path={route.path} element={<Page />} />;
           })}
         </Routes>
-      </div>
-    </Router>
+      </View>
+    </NativeRouter>
   );
 }
 
