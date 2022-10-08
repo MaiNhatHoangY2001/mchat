@@ -1,22 +1,22 @@
-
+import { SkeletonTheme } from 'react-loading-skeleton';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { publicRoutes } from './routes';
 
 function App() {
-   
-
     return (
-        <Router>
-            <div className="App">
-                <Routes>
-                    {publicRoutes.map((route, index) => {
-                        const Page = route.component;
+        <SkeletonTheme baseColor="#f0c1cd" highlightColor="#ead3d9">
+            <Router>
+                <div className="App">
+                    <Routes>
+                        {publicRoutes.map((route, index) => {
+                            const Page = route.component;
 
-                        return <Route key={index} path={route.path} element={<Page />} />;
-                    })}
-                </Routes>
-            </div>
-        </Router>
+                            return <Route key={index} path={route.path} element={<Page />} />;
+                        })}
+                    </Routes>
+                </div>
+            </Router>
+        </SkeletonTheme>
     );
 }
 
