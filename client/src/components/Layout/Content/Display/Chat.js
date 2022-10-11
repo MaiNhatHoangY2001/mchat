@@ -12,11 +12,18 @@ import {
     addIndividualChat4NewUser,
     addMessage,
     getListIndividualChat,
+    getMsgs,
+    getMsgsGroupChat,
 } from '../../../../redux/apiRequest/chatApiRequest';
 import { popupCenter } from '../PopupCenter';
 import LoadingChat from '../../Loading/LoadingChat';
+import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
+import { getMessagesSuccess } from '../../../../redux/chatSlice';
 
 const cx = classNames.bind(styles);
+
+const TYPE_MSG = 0;
+const TYPE_IMG = 1;
 
 function Chat({ setRightBar }) {
     const user = useSelector((state) => state.auth.login?.currentUser);
@@ -24,6 +31,7 @@ function Chat({ setRightBar }) {
     const chat = useSelector((state) => state.chat.message?.content);
     const individualChat = useSelector((state) => state.chat.individualChat);
     const isGroupChat = useSelector((state) => state.groupChat?.groupChat.isGroupChat);
+    const urlImage = useSelector((state) => state.file?.upload?.url.url);
 
     const socket = useRef();
 
@@ -31,6 +39,7 @@ function Chat({ setRightBar }) {
     const [message, setMessage] = useState('');
     const [sendData, setSendData] = useState([
         {
+            type_Msg: null,
             sender: null,
             message: {
                 content: null,
@@ -60,13 +69,16 @@ function Chat({ setRightBar }) {
         e.preventDefault();
         const time = new Date();
         if (message !== '') {
-            socket.current.emit('on-chat', {
+            const newChat = {
                 sender: currentUserId,
                 message: {
+                    type_Msg: 0,
                     content: message,
                     time: time,
                 },
-            });
+            };
+
+            socket.current.emit('on-chat', newChat);
             if (!isGroupChat) {
                 if (sendData.length <= 0) {
                     addChat4NewUser();
@@ -77,13 +89,32 @@ function Chat({ setRightBar }) {
             } else {
                 addMsgWithInfoGroupChat();
             }
-
             setMessage('');
         }
     };
+
+    const addMsgImgWithInfo = (url) => {
+        const time = new Date();
+        socket.current.emit('on-chat', {
+            sender: currentUserId,
+            message: {
+                type_Msg: 1,
+                content: urlImage,
+                time: time,
+            },
+        });
+        const msg = {
+            type_Msg: TYPE_IMG,
+            content: url,
+            individualChat: individualChatId,
+        };
+
+        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
+    };
+
     const addMsgWithInfoGroupChat = () => {
         const msg = {
-            type_Msg: 0,
+            type_Msg: TYPE_MSG,
             content: message,
             groupChat: sender?._id,
             userGroupChat: currentUserId,
@@ -94,7 +125,7 @@ function Chat({ setRightBar }) {
 
     const addMsgWithInfo = () => {
         const msg = {
-            type_Msg: 0,
+            type_Msg: TYPE_MSG,
             content: message,
             individualChat: individualChatId,
         };
@@ -105,7 +136,7 @@ function Chat({ setRightBar }) {
     //
     const addChat4NewUser = () => {
         const msg = {
-            type_Msg: 0,
+            type_Msg: TYPE_MSG,
             content: message,
         };
         const indiviSender = {
@@ -123,6 +154,26 @@ function Chat({ setRightBar }) {
 
         addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
     };
+
+    //SAVE MSG WHEN RELOAD PAGE
+    useEffect(() => {
+        if (!isGroupChat) {
+            const apiSent = {
+                sender: sender?._id,
+                user: user?._id,
+            };
+            if (window.performance) {
+                if (performance.navigation.type == 1) {
+                    getMsgs(accessToken, dispatch, apiSent, axiosJWTLogin);
+                }
+            }
+        } else {
+            const apiSent = {
+                groupId: sender?._id,
+            };
+            getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWTLogin);
+        }
+    }, []);
 
     useEffect(() => {
         setIndividualChatId(individualChat.idChat);
@@ -200,7 +251,12 @@ function Chat({ setRightBar }) {
                                             alt="avata"
                                         />
                                         <div className={cx('box-text-chat', 'tooltip')}>
-                                            <p className={cx('text-chat')}>{mess.message.content}</p>
+                                            {/* <p className={cx('text-chat')}>{mess.message.content}</p> */}
+                                            {mess.message?.type_Msg === TYPE_MSG ? (
+                                                <p className={cx('text-chat')}>{mess.message.content}</p>
+                                            ) : (
+                                                <img alt="not fount" width={'20px'} src={mess.message.content} />
+                                            )}
 
                                             <span
                                                 className={cx(
@@ -225,7 +281,26 @@ function Chat({ setRightBar }) {
             </div>
 
             <form onSubmit={handleSubmit} className={cx('flex-row', 'input-chat')}>
-                <button className={cx('btn-chat', 'file')}>File</button>
+                <input
+                    type="file"
+                    id="selectedFile"
+                    name="myImage"
+                    accept="image/*"
+                    className={cx('btn-chat', 'file')}
+                    onChange={(event) => {
+                        const bodyFormData = new FormData();
+                        bodyFormData.append('file', event.target.files[0]);
+                        uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+                        addMsgImgWithInfo(urlImage);
+                    }}
+                    style={{ display: 'none' }}
+                />
+                <input
+                    type="button"
+                    value="Browse..."
+                    onClick={() => document.getElementById('selectedFile').click()}
+                />
+
                 <div className={cx('input-text')}>
                     <input
                         type="text"

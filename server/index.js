@@ -13,6 +13,7 @@ const authRoute = require('./routes/auth');
 const individualChatRoute = require('./routes/individualChat');
 const groupChatRoute = require('./routes/groupChat');
 const messageRoute = require('./routes/message');
+const uploadFileRoute = require('./routes/uploadFile');
 
 const port = process.env.PORT || 8000;
 const origin = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : 'https://mchat-realtimechat-cnm.netlify.app';
@@ -39,6 +40,7 @@ app.use('/api', authRoute);
 app.use('/api/individualChat', individualChatRoute);
 app.use('/api/groupChat', groupChatRoute);
 app.use('/api/message', messageRoute);
+app.use('/api/files', uploadFileRoute);
 
 const server = app.listen(port, () => {
 	console.log(`server is running... at ${port}`);

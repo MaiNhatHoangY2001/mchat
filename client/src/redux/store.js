@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import userReducer from './userSlice';
 import chatReducer from './chatSlice';
 import groupChatReducer from './groupChatSlice';
+import fileReducer from './fileSlice';
 
 const persistConfig = {
     key: 'root',
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
     user: userReducer,
     chat: chatReducer,
     groupChat: groupChatReducer,
+    file: fileReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -30,7 +32,7 @@ export const store = configureStore({
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
         }),
-    //devTools: false,
+    devTools: false,
 });
 
 export let persistor = persistStore(store);

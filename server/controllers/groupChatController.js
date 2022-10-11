@@ -53,6 +53,7 @@ const groupChatController = {
 				},
 				{
 					$project: {
+						'message.type_Msg': 1,
 						sender: '$message.userGroupChat',
 						'message.content': 1,
 						'message.time': 1,

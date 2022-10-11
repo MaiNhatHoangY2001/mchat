@@ -77,7 +77,8 @@ const individualChatController = {
 					$project: {
 						'message.content': 1,
 						'message.time': 1,
-						sender: "$user",
+						'message.type_Msg': 1,
+						sender: '$user',
 						_id: 0,
 					},
 				},
