@@ -5,6 +5,7 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage';
 import userReducer from './userSlice';
 import chatReducer from './chatSlice';
+import groupChatReducer from './groupChatSlice';
 
 const persistConfig = {
     key: 'root',
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
     auth: authReducer,
     user: userReducer,
     chat: chatReducer,
+    groupChat: groupChatReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

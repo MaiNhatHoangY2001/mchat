@@ -13,6 +13,7 @@ import {
     getMessagesSuccess,
 } from '../chatSlice';
 import { url } from '../createInstance';
+import { getGroupChatFailed, getGroupChatStart, getGroupChatSuccess } from '../groupChatSlice';
 
 export const addIndividualChat4NewUser = async (
     accessToken,
@@ -83,6 +84,19 @@ export const getMsgs = async (accessToken, dispatch, actor, axiosJWT) => {
     }
 };
 
+export const getMsgsGroupChat = async (accessToken, dispatch, actor, axiosJWT) => {
+    dispatch(getMessagesStart());
+    try {
+        const res = await axiosJWT.get(`${url}/api/groupChat`, {
+            headers: { token: `Bearer ${accessToken}` },
+            params: actor,
+        });
+        dispatch(getMessagesSuccess(res.data));
+    } catch (error) {
+        dispatch(getMessagesFailed());
+    }
+};
+
 export const getListIndividualChat = async (accessToken, userId, dispatch, axiosJWT) => {
     dispatch(getIndividualChatStart());
     try {
@@ -92,6 +106,18 @@ export const getListIndividualChat = async (accessToken, userId, dispatch, axios
         dispatch(getIndividualChatSuccess(res.data));
     } catch (error) {
         dispatch(getIndividualChatFailed());
+    }
+};
+
+export const getListGroupChat = async (accessToken, userId, dispatch, axiosJWT) => {
+    dispatch(getGroupChatStart());
+    try {
+        const res = await axiosJWT.get(`${url}/api/groupChat/` + userId, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(getGroupChatSuccess(res.data));
+    } catch (error) {
+        dispatch(getGroupChatFailed());
     }
 };
 

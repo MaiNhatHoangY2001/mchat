@@ -8,15 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import { logOut } from '../../../../redux/apiRequest/authApiRequest';
 import { createAxios, url } from '../../../../redux/createInstance';
 import { loginSuccess, logoutSuccess } from '../../../../redux/authSlice';
-import Loading from '../../Loading/Loading';
 import {
     addIndividualChat4NewUser,
     addMessage,
     getListIndividualChat,
-    getMsgs,
 } from '../../../../redux/apiRequest/chatApiRequest';
 import { popupCenter } from '../PopupCenter';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import LoadingChat from '../../Loading/LoadingChat';
 
 const cx = classNames.bind(styles);
 
@@ -25,7 +23,7 @@ function Chat({ setRightBar }) {
     const sender = useSelector((state) => state.user.sender?.user);
     const chat = useSelector((state) => state.chat.message?.content);
     const individualChat = useSelector((state) => state.chat.individualChat);
-    const currentContent = useSelector((state) => state.chat?.message);
+    const isGroupChat = useSelector((state) => state.groupChat?.groupChat.isGroupChat);
 
     const socket = useRef();
 
@@ -44,7 +42,7 @@ function Chat({ setRightBar }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const id = user?._id;
+    const currentUserId = user?._id;
     const accessToken = user?.accessToken;
 
     let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
@@ -55,7 +53,7 @@ function Chat({ setRightBar }) {
     };
 
     const handleLogout = () => {
-        logOut(dispatch, navigate, id, accessToken, axiosJWTLogout);
+        logOut(dispatch, navigate, currentUserId, accessToken, axiosJWTLogout);
     };
 
     const handleSubmit = (e) => {
@@ -63,22 +61,35 @@ function Chat({ setRightBar }) {
         const time = new Date();
         if (message !== '') {
             socket.current.emit('on-chat', {
-                sender: sender?._id,
+                sender: currentUserId,
                 message: {
                     content: message,
                     time: time,
                 },
             });
-
-            if (sendData.length <= 0) {
-                addChat4NewUser();
-                getListIndividualChat(accessToken, id, dispatch, axiosJWTLogin);
+            if (!isGroupChat) {
+                if (sendData.length <= 0) {
+                    addChat4NewUser();
+                    getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+                } else {
+                    addMsgWithInfo();
+                }
             } else {
-                addMsgWithInfo();
+                addMsgWithInfoGroupChat();
             }
 
             setMessage('');
         }
+    };
+    const addMsgWithInfoGroupChat = () => {
+        const msg = {
+            type_Msg: 0,
+            content: message,
+            groupChat: sender?._id,
+            userGroupChat: currentUserId,
+        };
+
+        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
 
     const addMsgWithInfo = () => {
@@ -127,7 +138,7 @@ function Chat({ setRightBar }) {
             setSendData((prev) => {
                 return [...prev, chatMessage];
             });
-            getListIndividualChat(accessToken, id, dispatch, axiosJWTLogin);
+            getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         };
         if (user?.accessToken) {
             socket.current = io(url, {
@@ -145,7 +156,7 @@ function Chat({ setRightBar }) {
                 <div className={cx('flex-row', 'info-friend')}>
                     <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt="avata" />
                     <div className={cx('flex-column', 'info-content')}>
-                        {<p>{sender?.profileName}</p> || <Skeleton />}
+                        {<p>{sender?.profileName}</p>}
                         <span>Active</span>
                     </div>
                 </div>
@@ -171,61 +182,18 @@ function Chat({ setRightBar }) {
                 <div className={cx('space-big-height')}></div>
 
                 <div className={cx('flex-column', 'contain-chat')}>
-                    {/* <div className={cx('real-time')}>
-                        <span className={cx('time')}>11:20,</span>
-                        <span className={cx('date')}>03/08/2000</span>
-                    </div> */}
                     {sendData === null ? (
-                        <div className={cx('flex-column')}>
-                            <div className={cx('flex-row', 'friend-send')}>
-                                <Skeleton
-                                    width={40}
-                                    height={30}
-                                    className={cx('img-chat')}
-                                    circle
-                                    containerClassName="avatar-skeleton"
-                                />
-                                <Skeleton className={cx('box-text-chat')} width={350} />
-                            </div>
-                            <div className={cx('space-height')}></div>
-                            <div className={cx('flex-row', 'user-send')}>
-                                <Skeleton
-                                    width={40}
-                                    height={30}
-                                    className={cx('img-chat')}
-                                    circle
-                                    containerClassName="avatar-skeleton"
-                                />
-                                <Skeleton className={cx('box-text-chat')} width={350} />
-                            </div>
-                            <div className={cx('space-height')}></div>
-                            <div className={cx('flex-row', 'friend-send')}>
-                                <Skeleton
-                                    width={40}
-                                    height={30}
-                                    className={cx('img-chat')}
-                                    circle
-                                    containerClassName="avatar-skeleton"
-                                />
-                                <Skeleton className={cx('box-text-chat')} width={350} />
-                            </div>
-                            <div className={cx('space-height')}></div>
-                            <div className={cx('flex-row', 'user-send')}>
-                                <Skeleton
-                                    width={40}
-                                    height={30}
-                                    className={cx('img-chat')}
-                                    circle
-                                    containerClassName="avatar-skeleton"
-                                />
-                                <Skeleton className={cx('box-text-chat')} width={350} />
-                            </div>
-                        </div>
+                        <LoadingChat />
                     ) : (
                         sendData?.map((mess, index) => {
                             return (
                                 <div key={index} className={cx('flex-column')}>
-                                    <div className={cx('flex-row', mess.sender === id ? 'friend-send' : 'user-send')}>
+                                    <div
+                                        className={cx(
+                                            'flex-row',
+                                            mess.sender === currentUserId ? 'user-send' : 'friend-send',
+                                        )}
+                                    >
                                         <img
                                             className={cx('img-chat')}
                                             src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
@@ -237,7 +205,9 @@ function Chat({ setRightBar }) {
                                             <span
                                                 className={cx(
                                                     'box-tooltip',
-                                                    mess.sender === id ? 'tooltiptextFriend' : 'tooltiptextUser',
+                                                    mess.sender === currentUserId
+                                                        ? 'tooltiptextUser'
+                                                        : 'tooltiptextFriend',
                                                 )}
                                             >
                                                 {mess.message.time}

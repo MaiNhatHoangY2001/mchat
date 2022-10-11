@@ -23,14 +23,7 @@ const individualChatController = {
 			const listInvidualChat = await IndividualChat.find({ user: idUser })
 				.populate('message', 'time')
 				.populate('sender', 'firstName lastName birthDate profileName status');
-			const listGroupChat = await GroupChat.find({ user: idUser })
-				.populate('message', 'time')
-				.populate('sender', 'firstName lastName birthDate profileName status');
-			const listChat = listGroupChat.concat(listInvidualChat);
-			const listSort = listChat.sort(function (a, b) {
-				return new Date(b.message[0]?.time) - new Date(a.message[0]?.time);
-			});
-			res.status(200).json(listSort);
+			res.status(200).json(listInvidualChat);
 		} catch (error) {
 			res.status(500).json(error);
 		}
@@ -84,7 +77,7 @@ const individualChatController = {
 					$project: {
 						'message.content': 1,
 						'message.time': 1,
-						sender: 1,
+						sender: "$user",
 						_id: 0,
 					},
 				},

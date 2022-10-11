@@ -8,15 +8,17 @@ import { createAxios } from '../../../redux/createInstance';
 import { addIndividualChatSuccess } from '../../../redux/chatSlice';
 import { searchUser } from '../../../redux/apiRequest/userApiRequest';
 import { setSender } from '../../../redux/userSlice';
-import { getMsgs } from '../../../redux/apiRequest/chatApiRequest';
+import { getMsgs, getMsgsGroupChat } from '../../../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../../../redux/authSlice';
 import { fontSize } from '@mui/system';
+import { setIsGroupChat } from '../../../redux/groupChatSlice';
 
 const cx = classNames.bind(styles);
 
 function LeftBar() {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
-    const currentChat = useSelector((state) => state.chat.individualChat?.actor);
+    const currentIndividualChat = useSelector((state) => state.chat.individualChat?.actor);
+    const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
     const currentSearch = useSelector((state) => state.user.users?.allUsers);
     const currentSender = useSelector((state) => state.user.sender?.user);
 
@@ -33,16 +35,27 @@ function LeftBar() {
     const activeButtonStyles = {
         backgroundColor: 'rgb(242, 153, 227)',
         color: 'white',
+        pointerEvents: 'none',
+        userSelect: 'none',
     };
 
-    const handleClick = async (individualId, sender, userId) => {
-        const apiSent = {
-            sender: sender?._id,
-            user: userId,
-        };
+    const handleClick = async (individualId, sender, userId, isGroupChat) => {
+        if (!isGroupChat) {
+            const apiSent = {
+                sender: sender?._id,
+                user: userId,
+            };
+            getMsgs(accessToken, dispatch, apiSent, axiosJWT);
+            dispatch(addIndividualChatSuccess(individualId));
+            dispatch(setIsGroupChat(false));
+        } else {
+            const apiSent = {
+                groupId: sender?._id,
+            };
+            getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWT);
+            dispatch(setIsGroupChat(true));
+        }
 
-        getMsgs(accessToken, dispatch, apiSent, axiosJWT);
-        dispatch(addIndividualChatSuccess(individualId));
         dispatch(setSender(sender));
     };
 
@@ -51,8 +64,14 @@ function LeftBar() {
     };
 
     useEffect(() => {
-        setChatActors(currentChat);
-    }, [currentChat]);
+        if (currentIndividualChat !== null) {
+            const listChat = currentIndividualChat.concat(currentGroupChat);
+            const listSort = listChat.sort(function (a, b) {
+                return new Date(b.message[0]?.time) - new Date(a.message[0]?.time);
+            });
+            setChatActors(listSort);
+        }
+    }, [currentIndividualChat, currentGroupChat]);
 
     useEffect(() => {
         const search = textSearchUser === '' ? '@' : textSearchUser;
@@ -97,22 +116,29 @@ function LeftBar() {
             </div>
             <div className={cx('flex-column', 'scroller-column', 'list-item')}>
                 {chatActors?.map((actor, index) => {
-                    const actorSenderActive = currentSender?._id === actor?.sender._id;
+                    const isActorSenderActive = currentSender?._id === (actor?.sender?._id || actor?._id);
+                    const isGroupChat = actor?.sender?._id === undefined;
+                    const actorGroupChat = {
+                        _id: actor?._id,
+                        profileName: actor?.groupName,
+                    };
+
                     return (
                         <button
                             key={index}
                             id="button-item"
-                            onClick={() => handleClick(actor?._id, actor?.sender, actor?.user)}
+                            onClick={() =>
+                                handleClick(actor?._id, actor?.sender || actorGroupChat, actor?.user, isGroupChat)
+                            }
+                            className={cx('flex-row', 'item')}
+                            style={isActorSenderActive ? activeButtonStyles : {}}
                         >
-                            <div className={cx('flex-row', 'item')} style={actorSenderActive ? activeButtonStyles : {}}>
-                                <img
-                                    src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                    alt={'avata'}
-                                />
-                                <div className={cx('flex-column', 'content-item')}>
-                                    <p>{actor?.sender.profileName}</p>
-                                    <span>{actor?.sender.status}</span>
-                                </div>
+                            <img
+                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                alt={'avata'}
+                            />
+                            <div className={cx('flex-column', 'content-item')}>
+                                <p>{actor?.sender?.profileName || actor?.groupName}</p>
                             </div>
                         </button>
                     );

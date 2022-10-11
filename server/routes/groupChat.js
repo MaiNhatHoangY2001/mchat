@@ -3,14 +3,10 @@ const middlewareController = require('../controllers/middlewareController');
 const router = require('express').Router();
 
 // ADD GROUP CHAT
-router.post('/', groupChatController.addGroupChat);
+router.post('/', middlewareController.verifyTokenAndUserAuth, groupChatController.addGroupChat);
 // GET ALL GROUP CHAT
-router.get('/', middlewareController.verifyTokenAndAdminAuth, groupChatController.getAllGroupChat);
-// GET A GROUP CHAT
-router.get('/:id', middlewareController.verifyTokenAndAdminAuth, groupChatController.getGroupChat);
-// UPDATE A GROUP CHAT
-router.put('/:id', middlewareController.verifyTokenAndAdminAuth, groupChatController.updateGroupChat);
-// DELETE A GROUP CHAT
-router.delete('/:id', middlewareController.verifyTokenAndAdminAuth, groupChatController.deleteGroupChat);
+router.get('/:id', middlewareController.verifyTokenAndUserAuth, groupChatController.getListGroupChat);
 
+// GET CHAT IN GROUP CHAT
+router.get('/', middlewareController.verifyTokenAndUserAuth, groupChatController.getListChat);
 module.exports = router;
