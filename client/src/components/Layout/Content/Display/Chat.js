@@ -32,7 +32,7 @@ function Chat({ setRightBar }) {
     const chat = useSelector((state) => state.chat.message?.content);
     const individualChat = useSelector((state) => state.chat.individualChat);
     const isGroupChat = useSelector((state) => state.groupChat?.groupChat.isGroupChat);
-    const urlImage = useSelector((state) => state.file?.upload?.url.url);
+    // const urlImage = useSelector((state) => state.file?.upload?.url.url);
 
     const socket = useRef();
 
@@ -121,7 +121,7 @@ function Chat({ setRightBar }) {
             sender: currentUserId,
             message: {
                 type_Msg: 1,
-                content: urlImage,
+                content: url,
                 time: time,
             },
         });
@@ -204,13 +204,10 @@ function Chat({ setRightBar }) {
     //SOCKET CHAT
     useEffect(() => {
         const handler = (chatMessage) => {
-            // if (chatMessage.message?.type_Msg === 0) {
-            //     Push.create(chatMessage.message?.content);
-            // }
-
             setSendData((prev) => {
                 return [...prev, chatMessage];
             });
+
             getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         };
         if (user?.accessToken) {
@@ -219,7 +216,6 @@ function Chat({ setRightBar }) {
             });
 
             socket.current.on('user-chat', handler);
-
             return () => socket.current.off('user-chat', handler);
         }
     }, [sendData]);
@@ -309,11 +305,11 @@ function Chat({ setRightBar }) {
                     name="myImage"
                     accept="image/*"
                     className={cx('btn-chat', 'file')}
-                    onChange={(event) => {
+                    onChange={async (event) => {
                         const bodyFormData = new FormData();
                         bodyFormData.append('file', event.target.files[0]);
-                        uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
-                        addMsgImgWithInfo(urlImage);
+                        const image = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+                        addMsgImgWithInfo(image.url);
                     }}
                     style={{ display: 'none' }}
                 />
