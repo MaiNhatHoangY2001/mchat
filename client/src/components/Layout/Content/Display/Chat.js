@@ -53,6 +53,7 @@ function Chat({ setRightBar }) {
     const dispatch = useDispatch();
 
     const currentUserId = user?._id;
+    const currentSenderId = sender?._id;
     const accessToken = user?.accessToken;
 
     let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
@@ -72,6 +73,7 @@ function Chat({ setRightBar }) {
         if (message !== '') {
             const newChat = {
                 sender: currentUserId,
+                receiver: currentSenderId,
                 message: {
                     type_Msg: 0,
                     content: message,
@@ -90,8 +92,12 @@ function Chat({ setRightBar }) {
             } else {
                 addMsgWithInfoGroupChat();
             }
+
+            //delete receiver property
+            delete newChat.receiver;
             //add chat on content
             setSendData((prev) => [...prev, newChat]);
+
             setMessage('');
         }
     };
@@ -100,7 +106,7 @@ function Chat({ setRightBar }) {
         const msg = {
             type_Msg: TYPE_MSG,
             content: message,
-            groupChat: sender?._id,
+            groupChat: currentSenderId,
             userGroupChat: currentUserId,
         };
 
@@ -141,7 +147,7 @@ function Chat({ setRightBar }) {
             msg = {
                 type_Msg: TYPE_IMG,
                 content: url,
-                groupChat: sender?._id,
+                groupChat: currentSenderId,
                 userGroupChat: currentUserId,
             };
         }
@@ -157,16 +163,16 @@ function Chat({ setRightBar }) {
             content: message,
         };
         const indiviSender = {
-            sender: user?._id,
+            sender: currentUserId,
             status: 'Active',
             chatStatus: 0,
-            user: sender?._id,
+            user: currentSenderId,
         };
         const indiviUser = {
-            sender: sender?._id,
+            sender: currentSenderId,
             status: 'Active',
             chatStatus: 0,
-            user: user?._id,
+            user: currentUserId,
         };
 
         addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
@@ -182,8 +188,8 @@ function Chat({ setRightBar }) {
     useEffect(() => {
         if (!isGroupChat) {
             const apiSent = {
-                sender: sender?._id,
-                user: user?._id,
+                sender: currentSenderId,
+                user: currentUserId,
             };
             if (window.performance) {
                 if (performance.navigation.type == 1) {
@@ -192,7 +198,7 @@ function Chat({ setRightBar }) {
             }
         } else {
             const apiSent = {
-                groupId: sender?._id,
+                groupId: currentSenderId,
             };
             getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWTLogin);
         }
@@ -209,7 +215,7 @@ function Chat({ setRightBar }) {
     //SOCKET CHAT
     useEffect(() => {
         const handler = (chatMessage) => {
-            if (chatMessage.sender === sender._id) {
+            if (chatMessage.sender === currentSenderId && chatMessage.receiver === currentUserId) {
                 setSendData((prev) => {
                     return [...prev, chatMessage];
                 });
