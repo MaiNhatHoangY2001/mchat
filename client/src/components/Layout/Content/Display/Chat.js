@@ -119,14 +119,16 @@ function Chat({ setRightBar }) {
 
     const addMsgImgWithInfo = (url) => {
         const time = new Date();
-        socket.current.emit('on-chat', {
+        const newChat = {
             sender: currentUserId,
             message: {
                 type_Msg: 1,
                 content: url,
                 time: time,
             },
-        });
+        };
+
+        socket.current.emit('on-chat', newChat);
 
         let msg;
         if (!isGroupChat) {
@@ -143,7 +145,8 @@ function Chat({ setRightBar }) {
                 userGroupChat: currentUserId,
             };
         }
-
+        //add chat on content
+        setSendData((prev) => [...prev, newChat]);
         addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
 
