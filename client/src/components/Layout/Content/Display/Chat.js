@@ -18,7 +18,8 @@ import {
 import { popupCenter } from '../PopupCenter';
 import LoadingChat from '../../Loading/LoadingChat';
 import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
-import { getMessagesSuccess } from '../../../../redux/chatSlice';
+import Push from 'push.js';
+import moment from 'moment';
 
 const cx = classNames.bind(styles);
 
@@ -93,25 +94,6 @@ function Chat({ setRightBar }) {
         }
     };
 
-    const addMsgImgWithInfo = (url) => {
-        const time = new Date();
-        socket.current.emit('on-chat', {
-            sender: currentUserId,
-            message: {
-                type_Msg: 1,
-                content: urlImage,
-                time: time,
-            },
-        });
-        const msg = {
-            type_Msg: TYPE_IMG,
-            content: url,
-            individualChat: individualChatId,
-        };
-
-        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
-    };
-
     const addMsgWithInfoGroupChat = () => {
         const msg = {
             type_Msg: TYPE_MSG,
@@ -129,6 +111,36 @@ function Chat({ setRightBar }) {
             content: message,
             individualChat: individualChatId,
         };
+
+        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
+    };
+
+    const addMsgImgWithInfo = (url) => {
+        const time = new Date();
+        socket.current.emit('on-chat', {
+            sender: currentUserId,
+            message: {
+                type_Msg: 1,
+                content: urlImage,
+                time: time,
+            },
+        });
+
+        let msg;
+        if (!isGroupChat) {
+            msg = {
+                type_Msg: TYPE_IMG,
+                content: url,
+                individualChat: individualChatId,
+            };
+        } else {
+            msg = {
+                type_Msg: TYPE_IMG,
+                content: url,
+                groupChat: sender?._id,
+                userGroupChat: currentUserId,
+            };
+        }
 
         addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
@@ -153,6 +165,12 @@ function Chat({ setRightBar }) {
         };
 
         addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
+    };
+
+    const convertTime = (time) => {
+        const formattedDate = moment(time).utcOffset('+0700').format('HH:mm DD [tháng] MM, YYYY');
+
+        return formattedDate;
     };
 
     //SAVE MSG WHEN RELOAD PAGE
@@ -186,6 +204,10 @@ function Chat({ setRightBar }) {
     //SOCKET CHAT
     useEffect(() => {
         const handler = (chatMessage) => {
+            // if (chatMessage.message?.type_Msg === 0) {
+            //     Push.create(chatMessage.message?.content);
+            // }
+
             setSendData((prev) => {
                 return [...prev, chatMessage];
             });
@@ -200,7 +222,7 @@ function Chat({ setRightBar }) {
 
             return () => socket.current.off('user-chat', handler);
         }
-    }, [sendData]);
+    }, []);
     return (
         <>
             <div className={cx('flex-row', 'header-center')}>
@@ -266,7 +288,7 @@ function Chat({ setRightBar }) {
                                                         : 'tooltiptextFriend',
                                                 )}
                                             >
-                                                {mess.message.time}
+                                                {convertTime(mess.message.time)}
                                             </span>
                                         </div>
                                     </div>
