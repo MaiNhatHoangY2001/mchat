@@ -67,7 +67,7 @@ function Login() {
                         <input
                             className={cx('txtTK')}
                             type="text"
-                            placeholder="Tên tài khoản"
+                            placeholder="Số điện thoại"
                             onChange={(e) => {
                                 setPhoneNumber(e.target.value);
                             }}
