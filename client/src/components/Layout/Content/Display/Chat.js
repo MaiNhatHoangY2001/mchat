@@ -222,7 +222,7 @@ function Chat({ setRightBar }) {
 
             return () => socket.current.off('user-chat', handler);
         }
-    }, []);
+    }, [sendData]);
     return (
         <>
             <div className={cx('flex-row', 'header-center')}>
