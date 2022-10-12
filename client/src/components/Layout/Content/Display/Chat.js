@@ -90,6 +90,8 @@ function Chat({ setRightBar }) {
             } else {
                 addMsgWithInfoGroupChat();
             }
+            //add chat on content
+            setSendData((prev) => [...prev, newChat]);
             setMessage('');
         }
     };
@@ -204,9 +206,11 @@ function Chat({ setRightBar }) {
     //SOCKET CHAT
     useEffect(() => {
         const handler = (chatMessage) => {
-            setSendData((prev) => {
-                return [...prev, chatMessage];
-            });
+            if (chatMessage.sender === sender._id) {
+                setSendData((prev) => {
+                    return [...prev, chatMessage];
+                });
+            }
 
             getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         };
