@@ -7,6 +7,7 @@ import 'w3-css/w3.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
+import React from 'react';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const cx = classNames.bind(styles);
@@ -37,7 +38,7 @@ function ForgotPass() {
             <section className={cx('forgotpw-container')}>
                 <div className={cx('logo')}>
                     <img
-                        src={'https://data-mline-congnghemoi.s3.ap-southeast-1.amazonaws.com/logo-no-bg.png'}
+                        src={'https://raw.githubusercontent.com/Tuan2210/TH_CongNgheMoi/master/data%20MLine/logo-no-bg.png'}
                         alt={'logo=MLine'}
                     />
                     <div id={cx('line')}>LINE</div>
@@ -68,9 +69,13 @@ function ForgotPass() {
                             <div className="btn btn-outline-primary" onClick={togglePassword1}>
                                 <IconContext.Provider value={{ color: '#D57AD4' }}>
                                     {passwordType1 === 'password' ? (
-                                        <i><FaEyeSlash /></i>
+                                        <i>
+                                            <FaEyeSlash />
+                                        </i>
                                     ) : (
-                                        <i><FaEye /></i>
+                                        <i>
+                                            <FaEye />
+                                        </i>
                                     )}
                                 </IconContext.Provider>
                             </div>
@@ -89,9 +94,13 @@ function ForgotPass() {
                             <div className="btn btn-outline-primary" onClick={togglePassword2}>
                                 <IconContext.Provider value={{ color: '#D57AD4' }}>
                                     {passwordType2 === 'password' ? (
-                                        <i><FaEyeSlash /></i>
+                                        <i>
+                                            <FaEyeSlash />
+                                        </i>
                                     ) : (
-                                        <i><FaEye /></i>
+                                        <i>
+                                            <FaEye />
+                                        </i>
                                     )}
                                 </IconContext.Provider>
                             </div>

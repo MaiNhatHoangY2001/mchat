@@ -9,6 +9,7 @@ import 'w3-css/w3.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
+import React from 'react';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 
@@ -56,7 +57,7 @@ function Login() {
             <section className={cx('login-container')}>
                 <div className={cx('logo')}>
                     <img
-                        src={'https://data-mline-congnghemoi.s3.ap-southeast-1.amazonaws.com/logo-no-bg.png'}
+                        src={'https://raw.githubusercontent.com/Tuan2210/TH_CongNgheMoi/master/data%20MLine/logo-no-bg.png'}
                         alt={'logo=MLine'}
                     />
                     <div id={cx('line')}>LINE</div>
