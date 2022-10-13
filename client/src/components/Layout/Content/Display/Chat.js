@@ -69,34 +69,43 @@ function Chat({ setRightBar }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const time = new Date();
         if (message !== '') {
-            const newChat = {
-                sender: currentUserId,
-                receiver: currentSenderId,
-                message: {
-                    type_Msg: 0,
-                    content: message,
-                    time: time,
-                },
-                isNewChat: false,
-            };
-
-            if (sendData.length <= 0) {
-                newChat.isNewChat = true;
-            }
-
-            addMsg(TYPE_MSG, message);
-
-            socket.current.emit('on-chat', newChat);
-            //delete receiver property
-            delete newChat.receiver;
-            delete newChat.isNewChat;
-            //add chat on content
-            setSendData((prev) => [...prev, newChat]);
-
+            createChat(TYPE_MSG, message);
             setMessage('');
         }
+    };
+
+    const addMsgImgWithInfo = (url) => {
+        createChat(TYPE_IMG, url);
+    };
+
+    const createChat = (typeChat, mess) => {
+        const time = new Date();
+        const newChat = {
+            sender: currentUserId,
+            receiver: currentSenderId,
+            message: {
+                type_Msg: typeChat,
+                content: mess,
+                time: time,
+            },
+            isNewChat: false,
+            senderName: sender.profileName,
+        };
+
+        if (sendData.length <= 0) {
+            newChat.isNewChat = true;
+        }
+
+        addMsg(typeChat, mess);
+
+        socket.current.emit('on-chat', newChat);
+        //delete receiver property
+        delete newChat.receiver;
+        delete newChat.isNewChat;
+        delete newChat.senderName;
+        //add chat on content
+        setSendData((prev) => [...prev, newChat]);
     };
 
     const addMsg = (typeChat, mess) => {
@@ -109,33 +118,6 @@ function Chat({ setRightBar }) {
         } else {
             addMsgWithInfoGroupChat(typeChat, mess);
         }
-    };
-
-    const addMsgImgWithInfo = (url) => {
-        const time = new Date();
-        const newChat = {
-            sender: currentUserId,
-            receiver: currentSenderId,
-            message: {
-                type_Msg: 1,
-                content: url,
-                time: time,
-            },
-            isNewChat: false,
-        };
-        
-        if (sendData.length <= 0) {
-            newChat.isNewChat = true;
-        }
-
-        addMsg(TYPE_IMG, url);
-
-        socket.current.emit('on-chat', newChat);
-        //delete receiver property
-        delete newChat.receiver;
-        delete newChat.isNewChat;
-        //add chat on content
-        setSendData((prev) => [...prev, newChat]);
     };
 
     //
@@ -233,6 +215,15 @@ function Chat({ setRightBar }) {
                 setSendData((prev) => {
                     return [...prev, chatMessage];
                 });
+            }
+
+            //displaying a notification
+            if (chatMessage.receiver === currentUserId) {
+                Push.create(chatMessage.senderName, {
+                    body: chatMessage.message.content,
+                    silent: true,
+                });
+                Push.clear();
             }
         };
         if (user?.accessToken) {
