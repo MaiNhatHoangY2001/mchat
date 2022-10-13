@@ -79,22 +79,19 @@ function Chat({ setRightBar }) {
                     content: message,
                     time: time,
                 },
+                isNewChat: false,
             };
 
-            socket.current.emit('on-chat', newChat);
-            if (!isGroupChat) {
-                if (sendData.length <= 0) {
-                    addChat4NewUser();
-                    getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-                } else {
-                    addMsgWithInfo();
-                }
-            } else {
-                addMsgWithInfoGroupChat();
+            if (sendData.length <= 0) {
+                newChat.isNewChat = true;
             }
 
+            addMsg(TYPE_MSG, message);
+
+            socket.current.emit('on-chat', newChat);
             //delete receiver property
             delete newChat.receiver;
+            delete newChat.isNewChat;
             //add chat on content
             setSendData((prev) => [...prev, newChat]);
 
@@ -102,65 +99,50 @@ function Chat({ setRightBar }) {
         }
     };
 
-    const addMsgWithInfoGroupChat = () => {
-        const msg = {
-            type_Msg: TYPE_MSG,
-            content: message,
-            groupChat: currentSenderId,
-            userGroupChat: currentUserId,
-        };
-
-        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
-    };
-
-    const addMsgWithInfo = () => {
-        const msg = {
-            type_Msg: TYPE_MSG,
-            content: message,
-            individualChat: individualChatId,
-        };
-
-        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
+    const addMsg = (typeChat, mess) => {
+        if (!isGroupChat) {
+            if (sendData.length <= 0) {
+                addChat4NewUser(typeChat, mess);
+            } else {
+                addMsgWithInfo(typeChat, mess);
+            }
+        } else {
+            addMsgWithInfoGroupChat(typeChat, mess);
+        }
     };
 
     const addMsgImgWithInfo = (url) => {
         const time = new Date();
         const newChat = {
             sender: currentUserId,
+            receiver: currentSenderId,
             message: {
                 type_Msg: 1,
                 content: url,
                 time: time,
             },
+            isNewChat: false,
         };
+        
+        if (sendData.length <= 0) {
+            newChat.isNewChat = true;
+        }
+
+        addMsg(TYPE_IMG, url);
 
         socket.current.emit('on-chat', newChat);
-
-        let msg;
-        if (!isGroupChat) {
-            msg = {
-                type_Msg: TYPE_IMG,
-                content: url,
-                individualChat: individualChatId,
-            };
-        } else {
-            msg = {
-                type_Msg: TYPE_IMG,
-                content: url,
-                groupChat: currentSenderId,
-                userGroupChat: currentUserId,
-            };
-        }
+        //delete receiver property
+        delete newChat.receiver;
+        delete newChat.isNewChat;
         //add chat on content
         setSendData((prev) => [...prev, newChat]);
-        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
 
     //
-    const addChat4NewUser = () => {
+    const addChat4NewUser = (typeChat, mess) => {
         const msg = {
-            type_Msg: TYPE_MSG,
-            content: message,
+            type_Msg: typeChat,
+            content: mess,
         };
         const indiviSender = {
             sender: currentUserId,
@@ -176,6 +158,31 @@ function Chat({ setRightBar }) {
         };
 
         addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
+        window.setTimeout(function () {
+            //add chat finish before get one second
+            getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        }, 1000);
+    };
+
+    const addMsgWithInfoGroupChat = (typeChat, mess) => {
+        const msg = {
+            type_Msg: typeChat,
+            content: mess,
+            groupChat: currentSenderId,
+            userGroupChat: currentUserId,
+        };
+
+        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
+    };
+
+    const addMsgWithInfo = (typeChat, mess) => {
+        const msg = {
+            type_Msg: typeChat,
+            content: mess,
+            individualChat: individualChatId,
+        };
+
+        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
 
     const convertTime = (time) => {
@@ -215,13 +222,18 @@ function Chat({ setRightBar }) {
     //SOCKET CHAT
     useEffect(() => {
         const handler = (chatMessage) => {
+            if (chatMessage.isNewChat) {
+                window.setTimeout(function () {
+                    //add chat finish before get one second
+                    getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+                }, 1000);
+            }
+
             if (chatMessage.sender === currentSenderId && chatMessage.receiver === currentUserId) {
                 setSendData((prev) => {
                     return [...prev, chatMessage];
                 });
             }
-
-            getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         };
         if (user?.accessToken) {
             socket.current = io(url, {
