@@ -58,14 +58,14 @@ function Login() {
                 <div className={cx('logo')}>
                     <img
                         src={'https://raw.githubusercontent.com/Tuan2210/TH_CongNgheMoi/master/data%20MLine/logo-no-bg.png'}
-                        alt={'logo=MLine'}
+                        alt={'logoMLine'}
                     />
                     <div id={cx('line')}>LINE</div>
                 </div>
                 <form className={cx('formLogin')} onSubmit={handleLogin}>
                     <div className="col-lg-10">
                         <input
-                            className={cx('txtTK')}
+                            className={cx('txtSDT')}
                             type="text"
                             placeholder="Số điện thoại"
                             onChange={(e) => {
