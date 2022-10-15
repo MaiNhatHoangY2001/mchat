@@ -85,7 +85,7 @@ function Login() {
                             name="password"
                         />
                         <span className={cx('eyeLogin')}>
-                            <div className="btn btn-outline-primary" onClick={togglePassword}>
+                            <div className="btn btn-outline-info" onClick={togglePassword}>
                                 <IconContext.Provider value={{ color: '#D57AD4' }}>
                                     {passwordType === 'password' ? (
                                         <i>
