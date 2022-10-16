@@ -51,15 +51,19 @@ function ForgotPass() {
                     <div className="col-lg-10">
                         <input
                             className={cx('txtSdtForgotPW')}
-                            type="text"
                             placeholder="Số điện thoại"
+                            type="number"
+                            min={0}
+                            max={9}
                             // onChange={(e) => {
                             //     setUserName(e.target.value);
                             // }}
                         />
                         <span className="iconPhone">
                             <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                <i><IoPhonePortraitOutline size={30} /></i>
+                                <i>
+                                    <IoPhonePortraitOutline size={30} />
+                                </i>
                             </IconContext.Provider>
                         </span>
                         <input

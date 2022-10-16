@@ -26,6 +26,7 @@
     "push.js": "^1.0.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.37.0",
     "react-icons": "^4.4.0",
     "react-loading-skeleton": "^3.1.0",
     "react-redux": "^8.0.2",
