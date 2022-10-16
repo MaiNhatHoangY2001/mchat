@@ -75,13 +75,16 @@
     font-size: 1rem;
     margin: 0.75rem 0;
     border-radius: 4px;
-    width: 100%;
+    width: 85%;
     border-bottom: 1px solid lightgray;
 }
 
 .txtMK {
-    width: 85%;
     margin-right: 51px;
+}
+
+.txtSDT {
+    margin-right: 13px;
 }
 
 .txtSDT:hover,
@@ -89,6 +92,7 @@
     background-color: #d57ad328;
 }
 
+.iconPhone,
 .eyeLogin {
     margin-left: -13%;
 }

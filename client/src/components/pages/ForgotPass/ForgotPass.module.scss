@@ -75,24 +75,19 @@
     font-family: "Inter", sans-serif;
     font-size: 1rem;
     border-radius: 4px;
-    width: 87%;
+    width: 85%;
+    margin-right: 6px;
     border-bottom: 1px solid lightgray;
+}
+
+.txtSdtForgotPW {
+    margin-right: 11px;
 }
 
 .txtSdtForgotPW:hover,
 .txtNewPW:hover,
 .txtConfirmNewPW:hover {
     background-color: #d57ad328;
-}
-
-.txtSdtForgotPW {
-    width: 100%;
-}
-
-.txtNewPW,
-.txtConfirmNewPW {
-    width: 85%;
-    margin-right: 6px;
 }
 
 .lblTkForgotPW,
