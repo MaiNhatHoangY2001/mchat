@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { loginUser } from '../../../redux/apiRequest/authApiRequest';
 import { useDispatch, useSelector } from 'react-redux';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'; //npm i react-hook-form
+// import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'; //npm i react-hook-form
 
 import 'w3-css/w3.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -32,15 +32,9 @@ function Login() {
         const newUser = {
             phoneNumber: phoneNumber,
             password: password,
-            // phoneNumber: phoneNumberValue,
-            // password: pwValue,
         };
 
         loginUser(newUser, dispatch, navigate, setIsLoading);
-
-        //hàm check regex sdt
-        const onSubmit = (data) => console.log(data);
-        handleSubmit(onSubmit);
     };
 
     useEffect(() => {
@@ -49,22 +43,10 @@ function Login() {
         }
     });
 
-    const {register, handleSubmit, getValues, formState: {errors}} = useForm();
-    const onSubmit = (data) => console.log(data);
-    const onError = (errors, e) => console.log(errors, e);
-   
-    console.log(errors);
-
-    //xử lý nhiều hàm handle trong onSubmit
-    const onSaveAllSubmits = (e) => {
-        e.preventDefault();
-        
-        handleLogin(e);
-        handleSubmit(onSubmit);
-    }
-
-    const phoneNumberValue = getValues('inputPhoneNumber');
-    const pwValue = getValues('password');
+    // const {register, handleSubmit, getValues, formState: {errors}} = useForm();
+    // const onSubmit = (data) => console.log(data);
+    // const onError = (errors, e) => console.log(errors, e);
+    // console.log(errors);
 
     //show-hide-pw
     const [passwordInput, setPasswordInput] = useState('');
@@ -76,6 +58,30 @@ function Login() {
         }
         setPasswordType('password');
     };
+
+    const [errorMess, setErrorMess] = useState('');
+    let isNum = /^\d+$/.test(phoneNumber);
+    let regexPhoneNumber = /\+?(0|84)\d{9}/.test(phoneNumber);
+    function checkPhoneNumberAfterClickBtn() {
+        if(phoneNumber === '')
+            setErrorMess(errorMess => errorMess = 'Vui lòng nhập số điện thoại!');
+        else if(!isNum)
+            setErrorMess(errorMess => errorMess = 'Vui lòng nhập lại số điện thoại!');
+        else if(phoneNumber.length !== 10 )
+            setErrorMess(errorMess => errorMess = 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
+        else if(!regexPhoneNumber)
+            setErrorMess(errorMess => errorMess = 'SĐT không hợp lệ!');
+        else
+            setErrorMess(errorMess => errorMess = '✅');
+        // if(phoneNumber !== '' && !isNum)
+        //     setErrorMess(errorMess => errorMess = 'Vui lòng nhập lại số điện thoại!');
+        // if(phoneNumber !== '' && isNum && phoneNumber.length !== 10 )
+        //     setErrorMess(errorMess => errorMess = 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
+        // if(phoneNumber !== '' && isNum && phoneNumber.length === 10 && !regexPhoneNumber)
+        //     setErrorMess(errorMess => errorMess = 'SĐT không hợp lệ!');
+        // if(phoneNumber !== '' && isNum && phoneNumber.length === 10 && regexPhoneNumber)
+        //     setErrorMess(errorMess => errorMess = '✅');
+    }
 
     return (
         <div className={cx('bodyLogin')}>
@@ -94,26 +100,28 @@ function Login() {
                             className={cx('txtSDT')}
                             placeholder="Số điện thoại"
                             type="text"
+                            // pattern='\+?(0|84)\d{9}'
+                            // title='Nhập đúng 10 ký tự số điện thoại!'
                             // min={0}
-                            {...register('inputPhoneNumber', {
-                                // valueAsNumber: true,
-                                required: {
-                                    value: true,
-                                    message: 'Vui lòng nhập số điện thoại'
-                                },
-                                min: {
-                                    value: 0,
-                                    message: 'Vui lòng không nhập số âm!',
-                                },
-                                maxLength: {
-                                    value: 10,
-                                    message: 'Vui lòng nhập đủ 10 ký tự số điện thoại!',
-                                },
-                                pattern: {
-                                    value: /\+?(0|84)\d{9,10}/,
-                                    message: 'SĐT không hợp lệ, vui lòng nhập lại!'
-                                }
-                            })}
+                            // {...register('inputPhoneNumber', {
+                            //     // valueAsNumber: true,
+                            //     required: {
+                            //         value: true,
+                            //         message: 'Vui lòng nhập số điện thoại'
+                            //     },
+                            //     min: {
+                            //         value: 0,
+                            //         message: 'Vui lòng không nhập số âm!',
+                            //     },
+                            //     maxLength: {
+                            //         value: 10,
+                            //         message: 'Vui lòng nhập đủ 10 ký tự số điện thoại!',
+                            //     },
+                            //     pattern: {
+                            //         value: \+?(0|84)\d{9},
+                            //         message: 'SĐT không hợp lệ, vui lòng nhập lại!'
+                            //     }
+                            // })}
                             onChange={(e) => {
                                 setPhoneNumber(e.target.value);
                             }}
@@ -123,18 +131,18 @@ function Login() {
                                 <i><IoPhonePortraitOutline size={30}/></i>
                             </IconContext.Provider>
                         </span>
-                        {errors.inputPhoneNumber && <p className={cx('errorMess')}>{errors.inputPhoneNumber.message}</p>}
+                        {/* {errors.inputPhoneNumber && <p className={cx('errorMess')}>{errors.inputPhoneNumber.message}</p>} */}
+                        <p className={cx('errorMess')}>{errorMess}</p>
                         <input
                             className={cx('txtMK')}
                             type={passwordType}
                             placeholder="Mật khẩu"
-                            {...register('password')}
                             onChange={(e) => {
                                 setPassword(e.target.value);
                                 setPasswordInput(e.target.value);
                             }}
                             value={passwordInput}
-                            // name="password"
+                            name="password"
                         />
                         <span className={cx('eyeLogin')}>
                             <div className="btn btn-outline-info" onClick={togglePassword}>
@@ -154,7 +162,7 @@ function Login() {
                             <button 
                                 className={cx('btnLogin')} 
                                 type="submit"
-                                // onClick={(e) => {handleLogin(e)}}
+                                onClick={checkPhoneNumberAfterClickBtn}
                             >ĐĂNG NHẬP</button>
                     )}
                     <div className={cx('login-register')}>Bạn chưa có tài khoản?</div>
