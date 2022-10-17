@@ -100,6 +100,7 @@ export const getMsgsGroupChat = async (accessToken, dispatch, actor, axiosJWT) =
 export const getListIndividualChat = async (accessToken, userId, dispatch, axiosJWT) => {
     dispatch(getIndividualChatStart());
     try {
+        
         const res = await axiosJWT.get(`${url}/api/individualChat/` + userId, {
             headers: { token: `Bearer ${accessToken}` },
         });

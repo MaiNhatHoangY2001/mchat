@@ -7,14 +7,19 @@
     position: fixed;
     margin: 0;
     padding: 0;
-
     //ko cho chuột bôi đen trừ input
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
 .forgotpw-container {
@@ -29,18 +34,18 @@
 }
 
 .logo {
-    width: 12%;
+    width: 150px;
     cursor: default;
     pointer-events: none;
 }
 
 .logo img {
-    width: 12vw;
+    width: 160px;
 }
 
 #line {
     text-align: center;
-    font-size: 6vh;
+    font-size: 2.5rem;
     font-weight: 900;
     color: rgb(250, 139, 158);
     margin-top: -12%;
@@ -54,33 +59,41 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 30%;
-    height: 80%;
+    width: 400px;
+    height: 370px;
     background-color: #fff;
     box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
     padding-bottom: 2%;
     border-radius: 5%;
 }
 
-.txtTkForgotPW,
+.txtSdtForgotPW,
 .txtNewPW,
 .txtConfirmNewPW {
     border: none;
     padding: 0.35rem;
     font-family: "Inter", sans-serif;
+    font-size: 1rem;
     border-radius: 4px;
-    width: 87%;
+    width: 85%;
+    margin-right: 6px;
     border-bottom: 1px solid lightgray;
 }
 
-.txtTkForgotPW {
-    width: 100%;
+.txtSdtForgotPW {
+    margin-right: 12px;
+}
+
+.txtSdtForgotPW:hover,
+.txtNewPW:hover,
+.txtConfirmNewPW:hover {
+    background-color: #d57ad328;
 }
 
 .lblTkForgotPW,
 .lblMKMoi,
 .lblXacNhanMK,
-.txtTkForgotPW,
+.txtSdtForgotPW,
 .txtNewPW,
 .txtConfirmNewPW,
 .btnNewPW {
@@ -110,6 +123,7 @@
     margin-top: 1rem;
     color: #D57AD4;
     font-weight: 700;
+    font-size: 1rem;
 }
 
 .comback-login:hover {

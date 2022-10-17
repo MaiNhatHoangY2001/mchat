@@ -8,6 +8,7 @@ export const uploadFile = async (accessToken, dispatch, axiosJWT, file) => {
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(uploadSuccess(res.data));
+        return res.data;
     } catch (error) {
         dispatch(uploadFailed());
     }

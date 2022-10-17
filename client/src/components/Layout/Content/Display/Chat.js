@@ -32,7 +32,7 @@ function Chat({ setRightBar }) {
     const chat = useSelector((state) => state.chat.message?.content);
     const individualChat = useSelector((state) => state.chat.individualChat);
     const isGroupChat = useSelector((state) => state.groupChat?.groupChat.isGroupChat);
-    const urlImage = useSelector((state) => state.file?.upload?.url.url);
+    // const urlImage = useSelector((state) => state.file?.upload?.url.url);
 
     const socket = useRef();
 
@@ -53,6 +53,7 @@ function Chat({ setRightBar }) {
     const dispatch = useDispatch();
 
     const currentUserId = user?._id;
+    const currentSenderId = sender?._id;
     const accessToken = user?.accessToken;
 
     let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
@@ -68,103 +69,102 @@ function Chat({ setRightBar }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const time = new Date();
         if (message !== '') {
-            const newChat = {
-                sender: currentUserId,
-                message: {
-                    type_Msg: 0,
-                    content: message,
-                    time: time,
-                },
-            };
-
-            socket.current.emit('on-chat', newChat);
-            if (!isGroupChat) {
-                if (sendData.length <= 0) {
-                    addChat4NewUser();
-                    getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-                } else {
-                    addMsgWithInfo();
-                }
-            } else {
-                addMsgWithInfoGroupChat();
-            }
+            createChat(TYPE_MSG, message);
             setMessage('');
         }
     };
 
-    const addMsgWithInfoGroupChat = () => {
+    const addMsgImgWithInfo = (url) => {
+        createChat(TYPE_IMG, url);
+    };
+
+    const createChat = (typeChat, mess) => {
+        const time = new Date();
+        const newChat = {
+            sender: currentUserId,
+            receiver: currentSenderId,
+            message: {
+                type_Msg: typeChat,
+                content: mess,
+                time: time,
+            },
+            isNewChat: false,
+            senderName: sender.profileName,
+        };
+
+        if (sendData.length <= 0) {
+            newChat.isNewChat = true;
+        }
+
+        addMsg(typeChat, mess);
+
+        socket.current.emit('on-chat', newChat);
+        //delete receiver property
+        delete newChat.receiver;
+        delete newChat.isNewChat;
+        delete newChat.senderName;
+        //add chat on content
+        setSendData((prev) => [...prev, newChat]);
+    };
+
+    const addMsg = (typeChat, mess) => {
+        if (!isGroupChat) {
+            if (sendData.length <= 0) {
+                addChat4NewUser(typeChat, mess);
+            } else {
+                addMsgWithInfo(typeChat, mess);
+            }
+        } else {
+            addMsgWithInfoGroupChat(typeChat, mess);
+        }
+    };
+
+    //
+    const addChat4NewUser = (typeChat, mess) => {
         const msg = {
-            type_Msg: TYPE_MSG,
-            content: message,
-            groupChat: sender?._id,
+            type_Msg: typeChat,
+            content: mess,
+        };
+        const indiviSender = {
+            sender: currentUserId,
+            status: 'Active',
+            chatStatus: 0,
+            user: currentSenderId,
+        };
+        const indiviUser = {
+            sender: currentSenderId,
+            status: 'Active',
+            chatStatus: 0,
+            user: currentUserId,
+        };
+
+        addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
+        window.setTimeout(function () {
+            //add chat finish before get one second
+            getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        }, 1000);
+    };
+
+    const addMsgWithInfoGroupChat = (typeChat, mess) => {
+        const msg = {
+            type_Msg: typeChat,
+            content: mess,
+            groupChat: currentSenderId,
             userGroupChat: currentUserId,
         };
 
         addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
 
-    const addMsgWithInfo = () => {
+    const addMsgWithInfo = (typeChat, mess) => {
         const msg = {
-            type_Msg: TYPE_MSG,
-            content: message,
+            type_Msg: typeChat,
+            content: mess,
             individualChat: individualChatId,
         };
 
         addMessage(msg, accessToken, dispatch, axiosJWTLogin);
-    };
-
-    const addMsgImgWithInfo = (url) => {
-        const time = new Date();
-        socket.current.emit('on-chat', {
-            sender: currentUserId,
-            message: {
-                type_Msg: 1,
-                content: urlImage,
-                time: time,
-            },
-        });
-
-        let msg;
-        if (!isGroupChat) {
-            msg = {
-                type_Msg: TYPE_IMG,
-                content: url,
-                individualChat: individualChatId,
-            };
-        } else {
-            msg = {
-                type_Msg: TYPE_IMG,
-                content: url,
-                groupChat: sender?._id,
-                userGroupChat: currentUserId,
-            };
-        }
-
-        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
-    };
-
-    //
-    const addChat4NewUser = () => {
-        const msg = {
-            type_Msg: TYPE_MSG,
-            content: message,
-        };
-        const indiviSender = {
-            sender: user?._id,
-            status: 'Active',
-            chatStatus: 0,
-            user: sender?._id,
-        };
-        const indiviUser = {
-            sender: sender?._id,
-            status: 'Active',
-            chatStatus: 0,
-            user: user?._id,
-        };
-
-        addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
     };
 
     const convertTime = (time) => {
@@ -177,8 +177,8 @@ function Chat({ setRightBar }) {
     useEffect(() => {
         if (!isGroupChat) {
             const apiSent = {
-                sender: sender?._id,
-                user: user?._id,
+                sender: currentSenderId,
+                user: currentUserId,
             };
             if (window.performance) {
                 if (performance.navigation.type == 1) {
@@ -187,7 +187,7 @@ function Chat({ setRightBar }) {
             }
         } else {
             const apiSent = {
-                groupId: sender?._id,
+                groupId: currentSenderId,
             };
             getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWTLogin);
         }
@@ -204,14 +204,27 @@ function Chat({ setRightBar }) {
     //SOCKET CHAT
     useEffect(() => {
         const handler = (chatMessage) => {
-            // if (chatMessage.message?.type_Msg === 0) {
-            //     Push.create(chatMessage.message?.content);
-            // }
+            if (chatMessage.isNewChat) {
+                window.setTimeout(function () {
+                    //add chat finish before get one second
+                    getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+                }, 1000);
+            }
 
-            setSendData((prev) => {
-                return [...prev, chatMessage];
-            });
-            getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+            if (chatMessage.sender === currentSenderId && chatMessage.receiver === currentUserId) {
+                setSendData((prev) => {
+                    return [...prev, chatMessage];
+                });
+            }
+
+            //displaying a notification
+            if (chatMessage.receiver === currentUserId) {
+                Push.create(chatMessage.senderName, {
+                    body: chatMessage.message.content,
+                    silent: true,
+                });
+                Push.clear();
+            }
         };
         if (user?.accessToken) {
             socket.current = io(url, {
@@ -219,7 +232,6 @@ function Chat({ setRightBar }) {
             });
 
             socket.current.on('user-chat', handler);
-
             return () => socket.current.off('user-chat', handler);
         }
     }, [sendData]);
@@ -309,11 +321,11 @@ function Chat({ setRightBar }) {
                     name="myImage"
                     accept="image/*"
                     className={cx('btn-chat', 'file')}
-                    onChange={(event) => {
+                    onChange={async (event) => {
                         const bodyFormData = new FormData();
                         bodyFormData.append('file', event.target.files[0]);
-                        uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
-                        addMsgImgWithInfo(urlImage);
+                        const image = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+                        addMsgImgWithInfo(image.url);
                     }}
                     style={{ display: 'none' }}
                 />

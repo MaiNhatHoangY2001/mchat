@@ -6,6 +6,7 @@ import { useState } from 'react';
 import 'w3-css/w3.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { IoPhonePortraitOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons/lib';
 import React from 'react';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -38,8 +39,10 @@ function ForgotPass() {
             <section className={cx('forgotpw-container')}>
                 <div className={cx('logo')}>
                     <img
-                        src={'https://raw.githubusercontent.com/Tuan2210/TH_CongNgheMoi/master/data%20MLine/logo-no-bg.png'}
-                        alt={'logo=MLine'}
+                        src={
+                            'https://raw.githubusercontent.com/Tuan2210/TH_CongNgheMoi/master/data%20MLine/logo-no-bg.png'
+                        }
+                        alt={'logoMLine'}
                     />
                     <div id={cx('line')}>LINE</div>
                 </div>
@@ -47,13 +50,22 @@ function ForgotPass() {
                 <form className={cx('formForgotPW')}>
                     <div className="col-lg-10">
                         <input
-                            className={cx('txtTkForgotPW')}
-                            type="text"
-                            placeholder="Tên tài khoản"
+                            className={cx('txtSdtForgotPW')}
+                            placeholder="Số điện thoại"
+                            type="number"
+                            min={0}
+                            max={9}
                             // onChange={(e) => {
                             //     setUserName(e.target.value);
                             // }}
                         />
+                        <span className="iconPhone">
+                            <IconContext.Provider value={{ color: '#D57AD4' }}>
+                                <i>
+                                    <IoPhonePortraitOutline size={30} />
+                                </i>
+                            </IconContext.Provider>
+                        </span>
                         <input
                             className={cx('txtNewPW')}
                             type={passwordType1}
@@ -66,7 +78,7 @@ function ForgotPass() {
                             name="password"
                         />
                         <span className="eye1">
-                            <div className="btn btn-outline-primary" onClick={togglePassword1}>
+                            <div className="btn btn-outline-info" onClick={togglePassword1}>
                                 <IconContext.Provider value={{ color: '#D57AD4' }}>
                                     {passwordType1 === 'password' ? (
                                         <i>
@@ -91,7 +103,7 @@ function ForgotPass() {
                             name="password"
                         />
                         <span className="eye2">
-                            <div className="btn btn-outline-primary" onClick={togglePassword2}>
+                            <div className="btn btn-outline-info" onClick={togglePassword2}>
                                 <IconContext.Provider value={{ color: '#D57AD4' }}>
                                     {passwordType2 === 'password' ? (
                                         <i>
