@@ -86,8 +86,8 @@ function Login() {
                 </div>
                 <form 
                     className={cx('formLogin')} 
-                    // onSubmit={handleSubmit(onSubmit)} //regex sđt
-                    onSubmit={handleLogin}
+                    onSubmit={handleSubmit(onSubmit)} //regex sđt
+                    //onSubmit={handleLogin}
                 >
                     <div className="col-lg-10">
                         <input
