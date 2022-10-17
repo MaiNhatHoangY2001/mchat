@@ -81,6 +81,7 @@ function Register() {
                             {/* <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SĐT:</label> */}
                             <input 
                                 type="text" 
+                                pattern='^(0[0-9]{9}$)'
                                 placeholder="Nhập số điện thoại" 
                                 className={cx('inputRegister')}
                                 onChange={(e) => setPhoneNumber(e.target.value)}/>
@@ -90,6 +91,7 @@ function Register() {
                             <input
                                 type={passwordType1}
                                 placeholder="Nhập mật khẩu"
+                                pattern="^[a-zA-Z0-9 ]{5,}$"
                                 className={cx('inputRegisterPass')}
                                 onChange={(e) => {  setPassword(e.target.value); 
                                                     setPasswordInputNewPW(e.target.value)}} 
@@ -156,7 +158,7 @@ function Register() {
                             {/* <label className={cx('margininput')}>&nbsp;Năm sinh:</label> */}
                             <input 
                                 type="date" 
-                                placeholder="dd/mm/yyyy" 
+                                // placeholder="dd/mm/yyyy" 
                                 className={cx('inputRegisterDate')}
                                 onChange={(e) => setDate(e.target.value)}/>
                             <br/>

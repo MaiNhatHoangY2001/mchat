@@ -47,9 +47,14 @@
     font-family: "Inter", sans-serif;
     border-radius: 4px;
     width: 85%;
-    padding-top: 5%;
-    padding-bottom: 4%;
+    margin-top: 3.5%;
     border-bottom: 1px solid lightgray;
+}
+input:placeholder-shown{
+    border-left: 5px solid red;
+}
+input:not(:placeholder-shown){
+    border-left: 5px solid greenyellow;
 }
 .inputRegisterDate{
     border: none;
