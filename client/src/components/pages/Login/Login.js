@@ -43,11 +43,6 @@ function Login() {
         }
     });
 
-    // const {register, handleSubmit, getValues, formState: {errors}} = useForm();
-    // const onSubmit = (data) => console.log(data);
-    // const onError = (errors, e) => console.log(errors, e);
-    // console.log(errors);
-
     //show-hide-pw
     const [passwordInput, setPasswordInput] = useState('');
     const [passwordType, setPasswordType] = useState('password');
@@ -59,28 +54,46 @@ function Login() {
         setPasswordType('password');
     };
 
-    const [errorMess, setErrorMess] = useState('');
+    //check regex sdt
+    const [errorMessSDT, setErrorMessSDT] = useState('');
     let isNum = /^\d+$/.test(phoneNumber);
     let regexPhoneNumber = /\+?(0|84)\d{9}/.test(phoneNumber);
-    function checkPhoneNumberAfterClickBtn() {
+    function checkPhoneNumber() {
         if(phoneNumber === '')
-            setErrorMess(errorMess => errorMess = 'Vui lòng nhập số điện thoại!');
+            setErrorMessSDT(errorMessSDT => errorMessSDT = 'Vui lòng nhập số điện thoại!');
         else if(!isNum)
-            setErrorMess(errorMess => errorMess = 'Vui lòng nhập lại số điện thoại!');
+            setErrorMessSDT(errorMessSDT => errorMessSDT = 'Vui lòng nhập lại số điện thoại!');
         else if(phoneNumber.length !== 10 )
-            setErrorMess(errorMess => errorMess = 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
+            setErrorMessSDT(errorMessSDT => errorMessSDT = 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
         else if(!regexPhoneNumber)
-            setErrorMess(errorMess => errorMess = 'SĐT không hợp lệ!');
+            setErrorMessSDT(errorMessSDT => errorMessSDT = 'SĐT không hợp lệ!');
         else
-            setErrorMess(errorMess => errorMess = '✅');
-        // if(phoneNumber !== '' && !isNum)
-        //     setErrorMess(errorMess => errorMess = 'Vui lòng nhập lại số điện thoại!');
-        // if(phoneNumber !== '' && isNum && phoneNumber.length !== 10 )
-        //     setErrorMess(errorMess => errorMess = 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
-        // if(phoneNumber !== '' && isNum && phoneNumber.length === 10 && !regexPhoneNumber)
-        //     setErrorMess(errorMess => errorMess = 'SĐT không hợp lệ!');
-        // if(phoneNumber !== '' && isNum && phoneNumber.length === 10 && regexPhoneNumber)
-        //     setErrorMess(errorMess => errorMess = '✅');
+            // setErrorMessSDT(errorMessSDT => errorMessSDT = '✅');
+            setErrorMessSDT(errorMessSDT => errorMessSDT = '');
+    }
+
+    //check input pw
+    const [errorMessPW, setErrorMessPW] = useState('');
+    function checkPW() {
+        if(password === '')
+            setErrorMessPW(errorMessPW => errorMessPW = 'Vui lòng nhập mật khẩu');
+        else setErrorMessPW(errorMessPW => errorMessPW = '');
+    }
+
+    //check data inputs
+    function checkDataInputs() {
+        checkPhoneNumber();
+        checkPW();
+        // if(!isLoading && phoneNumber!=='' && password!=='') {
+        //     setErrorMessSDT(errorMessSDT => errorMessSDT = '');
+        //     setErrorMessPW(errorMessPW => errorMessPW = 'SĐT hoặc mật khẩu không đúng!');
+        // }
+        // // if (isLoading===true) setErrorMessPW(errorMessPW => errorMessPW = '✅');
+        // if(isLoading) {
+        //     setIsLoading(true)
+        //     setErrorMessPW(errorMessPW => errorMessPW = '✅');
+        // }
+
     }
 
     return (
@@ -90,38 +103,12 @@ function Login() {
                     <img src={'https://raw.githubusercontent.com/Tuan2210/TH_CongNgheMoi/master/data%20MLine/logo-no-bg.png'} alt={'logoMLine'}/>
                     <div id={cx('line')}>LINE</div>
                 </div>
-                <form 
-                    className={cx('formLogin')} 
-                    //onSubmit={handleSubmit(onSubmit)} //regex sđt
-                    onSubmit={handleLogin}
-                >
+                <form className={cx('formLogin')} onSubmit={handleLogin}>
                     <div className="col-lg-10">
                         <input
                             className={cx('txtSDT')}
                             placeholder="Số điện thoại"
                             type="text"
-                            // pattern='\+?(0|84)\d{9}'
-                            // title='Nhập đúng 10 ký tự số điện thoại!'
-                            // min={0}
-                            // {...register('inputPhoneNumber', {
-                            //     // valueAsNumber: true,
-                            //     required: {
-                            //         value: true,
-                            //         message: 'Vui lòng nhập số điện thoại'
-                            //     },
-                            //     min: {
-                            //         value: 0,
-                            //         message: 'Vui lòng không nhập số âm!',
-                            //     },
-                            //     maxLength: {
-                            //         value: 10,
-                            //         message: 'Vui lòng nhập đủ 10 ký tự số điện thoại!',
-                            //     },
-                            //     pattern: {
-                            //         value: \+?(0|84)\d{9},
-                            //         message: 'SĐT không hợp lệ, vui lòng nhập lại!'
-                            //     }
-                            // })}
                             onChange={(e) => {
                                 setPhoneNumber(e.target.value);
                             }}
@@ -131,8 +118,8 @@ function Login() {
                                 <i><IoPhonePortraitOutline size={30}/></i>
                             </IconContext.Provider>
                         </span>
-                        {/* {errors.inputPhoneNumber && <p className={cx('errorMess')}>{errors.inputPhoneNumber.message}</p>} */}
-                        <p className={cx('errorMess')}>{errorMess}</p>
+                        {/* {errors.inputPhoneNumber && <p className={cx('errorMessSDT')}>{errors.inputPhoneNumber.message}</p>} */}
+                        <p className={cx('errorMess')}>{errorMessSDT}</p>
                         <input
                             className={cx('txtMK')}
                             type={passwordType}
@@ -151,7 +138,7 @@ function Login() {
                                 </IconContext.Provider>
                             </div>
                         </span>
-                        {/* <p className={cx('errorMess')}>Lỗi mk</p> */}
+                        <p className={cx('errorMess')}>{errorMessPW}</p>
                         <Link className={cx('forgotpw-link')} to="/forgotpass">
                             Bạn quên mật khẩu?{' '}
                         </Link>
@@ -162,7 +149,7 @@ function Login() {
                             <button 
                                 className={cx('btnLogin')} 
                                 type="submit"
-                                onClick={checkPhoneNumberAfterClickBtn}
+                                onClick={checkDataInputs}
                             >ĐĂNG NHẬP</button>
                     )}
                     <div className={cx('login-register')}>Bạn chưa có tài khoản?</div>
