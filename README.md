@@ -4,7 +4,7 @@ https://mchat-realtimechat-cnm.netlify.app/login
 ![image](https://user-images.githubusercontent.com/62861666/196596739-81581d9d-229e-469a-b14f-41586ca8948a.png)
 # Development
 ## Requirement
-.env and google-cloud-key.json in server folder before start server
+Download and copy file .env and google-cloud-key.json to server folder
 ## How to start web
 1. Open new terminal and run
 ```
