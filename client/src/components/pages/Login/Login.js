@@ -56,44 +56,31 @@ function Login() {
 
     //check regex sdt
     const [errorMessSDT, setErrorMessSDT] = useState('');
-    let isNum = /^\d+$/.test(phoneNumber);
-    let regexPhoneNumber = /\+?(0|84)\d{9}/.test(phoneNumber);
+    let isNum = /^\d+$/.test(phoneNumber.trim());
+    let regexPhoneNumber = /\+?(0|84)\d{9}/.test(phoneNumber.trim());
     function checkPhoneNumber() {
-        if(phoneNumber === '')
+        if(phoneNumber.trim() === '') 
             setErrorMessSDT(errorMessSDT => errorMessSDT = 'Vui lòng nhập số điện thoại!');
-        else if(!isNum)
-            setErrorMessSDT(errorMessSDT => errorMessSDT = 'Vui lòng nhập lại số điện thoại!');
-        else if(phoneNumber.length !== 10 )
-            setErrorMessSDT(errorMessSDT => errorMessSDT = 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
-        else if(!regexPhoneNumber)
-            setErrorMessSDT(errorMessSDT => errorMessSDT = 'SĐT không hợp lệ!');
+        else if(!isNum) setErrorMessSDT('Vui lòng nhập lại số điện thoại!');
+        else if(phoneNumber.trim().length !== 10 ) setErrorMessSDT('Vui lòng nhập đủ 10 ký tự số điện thoại!');
+        else if(!regexPhoneNumber) setErrorMessSDT('SĐT không hợp lệ!');
         else
             // setErrorMessSDT(errorMessSDT => errorMessSDT = '✅');
-            setErrorMessSDT(errorMessSDT => errorMessSDT = '');
+            setErrorMessSDT('');
     }
 
     //check input pw
     const [errorMessPW, setErrorMessPW] = useState('');
     function checkPW() {
-        if(password === '')
-            setErrorMessPW(errorMessPW => errorMessPW = 'Vui lòng nhập mật khẩu');
-        else setErrorMessPW(errorMessPW => errorMessPW = '');
+        if(password.trim() === '') setErrorMessPW('Vui lòng nhập mật khẩu');
+        else if(password.trim().length !== 6) setErrorMessPW('Mật khẩu phải đủ 6 ký tự');
+        else setErrorMessPW('');
     }
 
     //check data inputs
     function checkDataInputs() {
         checkPhoneNumber();
         checkPW();
-        // if(!isLoading && phoneNumber!=='' && password!=='') {
-        //     setErrorMessSDT(errorMessSDT => errorMessSDT = '');
-        //     setErrorMessPW(errorMessPW => errorMessPW = 'SĐT hoặc mật khẩu không đúng!');
-        // }
-        // // if (isLoading===true) setErrorMessPW(errorMessPW => errorMessPW = '✅');
-        // if(isLoading) {
-        //     setIsLoading(true)
-        //     setErrorMessPW(errorMessPW => errorMessPW = '✅');
-        // }
-
     }
 
     return (

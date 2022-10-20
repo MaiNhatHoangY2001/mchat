@@ -76,7 +76,7 @@ function ForgotPass() {
     const getOtp = async (e) => {
         e.preventDefault();
         
-        let phoneNumber = '+'+number;
+        let phoneNumber = '+'+number.trim();
         let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNumber);
         if (phoneNumber === '' || phoneNumber === undefined) return setErrorMess('Vui lòng nhập số điện thoại!');
         else if(!regexPhoneNumberVN) setErrorMess('SĐT không hợp lệ!');
@@ -99,8 +99,8 @@ function ForgotPass() {
     const verifyOtp = async (e)=>{
         e.preventDefault();
 
-        if(otp==='' || otp===undefined) setErrorMessOTP('Vui lòng nhập mã xác thực');
-        else if(otp.length!==6) setErrorMessOTP('Vui lòng nhập 6 ký tự');
+        if(otp==='' || otp===undefined) setErrorMessOTP('Vui lòng nhập mã xác thực!');
+        else if(otp.length!==6) setErrorMessOTP('Vui lòng nhập 6 ký tự!');
         else {
             setErrorMessOTP('');
             try {
@@ -120,6 +120,38 @@ function ForgotPass() {
         recaptchaVerifier.render();
         recaptchaVerifier.verify();
         return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
+    }
+
+    //check regex inputs new pw
+    const [errorMessNewPW1, setErrorMessNewPW1] = useState('');
+    const [errorMessNewPW2, setErrorMessNewPW2] = useState('');
+    const [errorMessNewPW3, setErrorMessNewPW3] = useState('');
+    const [phoneTabNewPW, setPhoneTabNewPW] = useState('');
+    let isNum = /^\d+$/.test(phoneTabNewPW.trim());
+    let regexPhoneNumber = /\+?(0|84)\d{9}/.test(phoneTabNewPW.trim());
+    function checkPhoneNumber() {
+        if(phoneTabNewPW.trim() === '') setErrorMessNewPW1('Vui lòng nhập số điện thoại!');
+        else if(!isNum) setErrorMessNewPW1('Vui lòng nhập lại số điện thoại!');
+        else if(phoneTabNewPW.trim().length !== 10 ) setErrorMessNewPW1('Vui lòng nhập đủ 10 ký tự số điện thoại!');
+        else if(!regexPhoneNumber) setErrorMessNewPW1('SĐT không hợp lệ!');
+        else
+            // setErrorMessNewPW('✅');
+            setErrorMessNewPW1('');
+    }
+    function checkNewPW() {
+        if(passwordInputNewPW.trim() === '') setErrorMessNewPW2('Vui lòng nhập mật khẩu mới!');
+        else setErrorMessNewPW2('');
+    }
+    function checkConfirmNewPW() {
+        if(passwordInputConfirmNewPW.trim() === '') setErrorMessNewPW3('Vui lòng nhập xác nhận mật khẩu mới!');
+        else if(!passwordInputConfirmNewPW.trim().test(passwordInputNewPW.trim()))
+            setErrorMessNewPW3('Mật khẩu xác nhận không đúng, vui lòng nhập lại!');
+        else setErrorMessNewPW3('');
+    }
+    function checkDataInputs() {
+        checkPhoneNumber();
+        checkNewPW();
+        checkConfirmNewPW();
     }
 
     return (
@@ -146,16 +178,6 @@ function ForgotPass() {
                             <div className="p-4 box">
                                 <Form onSubmit={getOtp} style={{ display: !flag ? 'block' : 'none' }}>
                                     <Form.Group className="mb-3" controlId="formBasicphonenumber">
-                                        {/* <PhoneInput
-                                            defaultCountry="VN"
-                                            // onlyCountries={['vn']}
-                                            value={number}
-                                            onChange={setNumber}
-                                            placeholder="Nhập số điện thoại"
-                                            style={{
-                                                width: 50,
-                                            }}
-                                        /> */}
                                         <Phone
                                             country={'vn'}
                                             // onlyCountries={['vn']}
@@ -170,7 +192,6 @@ function ForgotPass() {
                                             onChange={setNumber}
                                             style={{ marginLeft: 25 }}
                                         />
-
                                         <span className={cx('errorMess')}>{errorMess}</span>
                                         <div className={cx('btnsTabOTP')}>
                                             <button type="submit" className={cx('btnSendOTP')}>Gửi mã xác thực</button>
@@ -179,7 +200,7 @@ function ForgotPass() {
                                         <div id="recaptcha-container" style={{ marginLeft: 25 }}></div>
                                         <div className={cx('btnsTabOTP')}>
                                             <Link className={cx('comback-login')} to="/login">
-                                                ◀ Trở về{' '}
+                                                ◀ Trở về trang đăng nhập{' '}
                                             </Link>
                                         </div>
                                     </Form.Group>
@@ -199,8 +220,9 @@ function ForgotPass() {
                                             <button type="submit" className={cx('btnConfirmOTP')}>Xác nhận mã</button>
                                             <button 
                                                 className={cx('btnResendOTP')} 
-                                                onClick={()=> {window.location.reload();}}>
-                                                    Gửi lại mã xác thực
+                                                onClick={() => {window.location.reload();}}
+                                            >
+                                                Gửi lại mã xác thực
                                             </button>
                                         </div>
                                     </Form.Group>
@@ -213,21 +235,18 @@ function ForgotPass() {
                                     <input
                                         className={cx('txtSdtForgotPW')}
                                         placeholder="Số điện thoại"
-                                        type="number"
-                                        // min={0}
-                                        // max={9}
-                                        // onChange={(e) => {
-                                        //     setUserName(e.target.value);
-                                        // }}
+                                        type="text"
+                                        onChange={(e) => {
+                                            setPhoneTabNewPW(e.target.value);
+                                        }}
                                     />
                                     <span className="iconPhone">
                                         <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                            <i>
-                                                <IoPhonePortraitOutline size={30} />
-                                            </i>
+                                            <i><IoPhonePortraitOutline size={30} /></i>
                                         </IconContext.Provider>
                                     </span>
                                 </div>
+                                <p className={cx('errorMessNewPW')}>{errorMessNewPW1}</p>
                                 <div className={cx('rowInputs')}>
                                     <input
                                         className={cx('txtNewPW')}
@@ -244,18 +263,15 @@ function ForgotPass() {
                                         <div className="btn btn-outline-info" onClick={togglePassword1}>
                                             <IconContext.Provider value={{ color: '#D57AD4' }}>
                                                 {passwordType1 === 'password' ? (
-                                                    <i>
-                                                        <FaEyeSlash />
-                                                    </i>
+                                                    <i><FaEyeSlash/></i>
                                                 ) : (
-                                                    <i>
-                                                        <FaEye />
-                                                    </i>
+                                                    <i><FaEye/></i>
                                                 )}
                                             </IconContext.Provider>
                                         </div>
                                     </span>
                                 </div>
+                                <p className={cx('errorMessNewPW')}>{errorMessNewPW2}</p>
                                 <div className={cx('rowInputs')}>
                                     <input
                                         className={cx('txtConfirmNewPW')}
@@ -271,208 +287,23 @@ function ForgotPass() {
                                         <div className="btn btn-outline-info" onClick={togglePassword2}>
                                             <IconContext.Provider value={{ color: '#D57AD4' }}>
                                                 {passwordType2 === 'password' ? (
-                                                    <i>
-                                                        <FaEyeSlash />
-                                                    </i>
+                                                    <i><FaEyeSlash/></i>
                                                 ) : (
-                                                    <i>
-                                                        <FaEye />
-                                                    </i>
+                                                    <i><FaEye/></i>
                                                 )}
                                             </IconContext.Provider>
                                         </div>
                                     </span>
                                 </div>
+                                <p className={cx('errorMessNewPW')}>{errorMessNewPW3}</p>
                             </div>
-                            <div className={cx('contentTabPhone')}>
-                                <button className={cx('btnNewPW')} type="submit">
-                                    XÁC NHẬN
-                                </button>
-                                {/* <Link className={cx('comback-login')} to="/login">
-                                    ◀ Quay lại{' '}
-                                </Link> */}
+                            <div className={cx('contentTabPhone-btn')}>
+                                <p className={cx('combackTabOTP')} onClick={() => window.location.reload()}>◀ Trở về</p>
+                                <button className={cx('btnNewPW')} type="submit" onClick={checkDataInputs}>XÁC NHẬN</button>
                             </div>
                         </Tab>
                     </Tabs>
                 </div>
-
-                {/* <Tabs
-                    defaultActiveKey="tabOTP"
-                    transition={false}
-                    className={cx('formTwoTabs')}
-                    // inkBarStyle={{ background: 'red' }}
-                    // textColor="secondary"
-                    // indicatorColor="secondary"
-                    // aria-label="secondary tabs example"
-                    variant="pills"
-                    justify
-                >
-                    <Tab eventKey="tabOTP" title="Xác thực số điện thoại" className={cx('formTab')}>
-                        <form className={cx('formForgotPW')}>
-                            <div className="col-lg-10">
-                                <input
-                                    className={cx('txtSdtForgotPW')}
-                                    placeholder="OTP"
-                                    type="number"
-                                    min={0}
-                                    max={9}
-                                    // onChange={(e) => {
-                                    //     setUserName(e.target.value);
-                                    // }}
-                                />
-                                <span className="iconPhone">
-                                    <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                        <i>
-                                            <IoPhonePortraitOutline size={30} />
-                                        </i>
-                                    </IconContext.Provider>
-                                </span>
-                                <input
-                                    className={cx('txtNewPW')}
-                                    type={passwordType1}
-                                    placeholder="Mật khẩu mới"
-                                    onChange={(e) => {
-                                        // setPassword(e.target.value);
-                                        setPasswordInputNewPW(e.target.value);
-                                    }}
-                                    value={passwordInputNewPW}
-                                    name="password"
-                                />
-                                <span className="eye1">
-                                    <div className="btn btn-outline-info" onClick={togglePassword1}>
-                                        <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                            {passwordType1 === 'password' ? (
-                                                <i>
-                                                    <FaEyeSlash />
-                                                </i>
-                                            ) : (
-                                                <i>
-                                                    <FaEye />
-                                                </i>
-                                            )}
-                                        </IconContext.Provider>
-                                    </div>
-                                </span>
-                                <input
-                                    className={cx('txtConfirmNewPW')}
-                                    type={passwordType2}
-                                    placeholder="Xác nhận mật khẩu mới"
-                                    onChange={(e) => {
-                                        setPasswordInputConfirmNewPW(e.target.value);
-                                    }}
-                                    value={passwordInputConfirmNewPW}
-                                    name="password"
-                                />
-                                <span className="eye2">
-                                    <div className="btn btn-outline-info" onClick={togglePassword2}>
-                                        <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                            {passwordType2 === 'password' ? (
-                                                <i>
-                                                    <FaEyeSlash />
-                                                </i>
-                                            ) : (
-                                                <i>
-                                                    <FaEye />
-                                                </i>
-                                            )}
-                                        </IconContext.Provider>
-                                    </div>
-                                </span>
-                            </div>
-                            <button className={cx('btnNewPW')} type="submit">
-                                LẤY LẠI MẬT KHẨU
-                            </button>
-                            <Link className={cx('comback-login')} to="/login">
-                                ◀ Quay lại{' '}
-                            </Link>
-                        </form>
-                    </Tab>
-                    <Tab
-                        eventKey="tabNewPW"
-                        title="Mật khẩu mới"
-                        className={cx('formTab')}
-                        // disabled
-                    >
-                        <form className={cx('formForgotPW')}>
-                            <div className="col-lg-10">
-                                <input
-                                    className={cx('txtSdtForgotPW')}
-                                    placeholder="Số điện thoại"
-                                    type="number"
-                                    min={0}
-                                    max={9}
-                                    // onChange={(e) => {
-                                    //     setUserName(e.target.value);
-                                    // }}
-                                />
-                                <span className="iconPhone">
-                                    <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                        <i>
-                                            <IoPhonePortraitOutline size={30} />
-                                        </i>
-                                    </IconContext.Provider>
-                                </span>
-                                <input
-                                    className={cx('txtNewPW')}
-                                    type={passwordType1}
-                                    placeholder="Mật khẩu mới"
-                                    onChange={(e) => {
-                                        // setPassword(e.target.value);
-                                        setPasswordInputNewPW(e.target.value);
-                                    }}
-                                    value={passwordInputNewPW}
-                                    name="password"
-                                />
-                                <span className="eye1">
-                                    <div className="btn btn-outline-info" onClick={togglePassword1}>
-                                        <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                            {passwordType1 === 'password' ? (
-                                                <i>
-                                                    <FaEyeSlash />
-                                                </i>
-                                            ) : (
-                                                <i>
-                                                    <FaEye />
-                                                </i>
-                                            )}
-                                        </IconContext.Provider>
-                                    </div>
-                                </span>
-                                <input
-                                    className={cx('txtConfirmNewPW')}
-                                    type={passwordType2}
-                                    placeholder="Xác nhận mật khẩu mới"
-                                    onChange={(e) => {
-                                        setPasswordInputConfirmNewPW(e.target.value);
-                                    }}
-                                    value={passwordInputConfirmNewPW}
-                                    name="password"
-                                />
-                                <span className="eye2">
-                                    <div className="btn btn-outline-info" onClick={togglePassword2}>
-                                        <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                            {passwordType2 === 'password' ? (
-                                                <i>
-                                                    <FaEyeSlash />
-                                                </i>
-                                            ) : (
-                                                <i>
-                                                    <FaEye />
-                                                </i>
-                                            )}
-                                        </IconContext.Provider>
-                                    </div>
-                                </span>
-                            </div>
-                            <button className={cx('btnNewPW')} type="submit">
-                                LẤY LẠI MẬT KHẨU
-                            </button>
-                            <Link className={cx('comback-login')} to="/login">
-                                ◀ Quay lại{' '}
-                            </Link>
-                        </form>
-                    </Tab>
-                </Tabs> */}
             </section>
         </div>
     );

@@ -75,9 +75,7 @@
     // flex-direction: column;
     align-items: center;
     background-color: #fff;
-    // width: 400px;
     height: 340px;
-    // margin-left: 5%;
 }
 
 .formTabOTP {
@@ -90,10 +88,14 @@
     width: 300px;
 }
 
-.errorMess {
+.errorMess,
+.errorMessNewPW {
     font-size: 1rem;
     font-style: italic;
     color: red;
+}
+
+.errorMess {
     margin-left: 25px;
 }
 
@@ -141,15 +143,23 @@
     color: rgb(250, 139, 158);
 }
 
-.comback-login {
+.comback-login,
+.combackTabOTP {
     text-decoration: none;
     margin-top: 1rem;
     color: #D57AD4;
     font-weight: 700;
     font-size: 1rem;
+    cursor: pointer;
 }
 
-.comback-login:hover {
+.combackTabOTP {
+    margin-top: 55px;
+    margin-right: 20px;
+}
+
+.comback-login:hover,
+.combackTabOTP:hover {
     color: rgb(250, 139, 158);
 }
 
@@ -159,12 +169,17 @@
     align-items: center;
 }
 
-.contentTabPhone {
+.contentTabPhone,
+.contentTabPhone-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    // height: 340px;
-    // border: 1px solid black;
+}
+
+.contentTabPhone-btn {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: -11%;
 }
 
 .rowInputs {
@@ -199,19 +214,12 @@
     background-color: #d57ad328;
 }
 
-.lblTkForgotPW,
-.lblMKMoi,
-.lblXacNhanMK,
-.btnNewPW {
-    margin-top: 8%;
-}
-
 .btnNewPW {
     align-self: center;
     margin-top: 10%;
     font-size: 1rem;
-    padding: 3%;
-    width: 45%;
+    padding: 1.5%;
+    width: 25%;
     border: 1px solid #D57AD4;
     border-radius: 10%;
     color: white;
