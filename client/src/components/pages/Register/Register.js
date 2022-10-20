@@ -87,7 +87,7 @@ function Register() {
         // <body>
         <section className={cx('register-container')}>
             <form onSubmit={handleRegister} className={cx('register-form')}>
-                <h2> THÔNG TIN ĐĂNG KÝ </h2> <br />
+                <h2 className={cx('info')}> THÔNG TIN ĐĂNG KÝ </h2> <br />
                 <div className="col-lg-6">
                     {/* <label className={cx('margininput')}>Tài khoản:</label>
                             <input type="text" placeholder="Nhập tên tài khoản" 
