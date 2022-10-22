@@ -7,14 +7,19 @@
     position: fixed;
     margin: 0;
     padding: 0;
-
     //ko cho chuột bôi đen trừ input
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
 .forgotpw-container {
@@ -29,70 +34,192 @@
 }
 
 .logo {
-    width: 12%;
+    width: 150px;
     cursor: default;
     pointer-events: none;
 }
 
 .logo img {
-    width: 12vw;
+    width: 160px;
 }
 
 #line {
     text-align: center;
-    font-size: 6vh;
+    font-size: 2.5rem;
     font-weight: 900;
     color: rgb(250, 139, 158);
     margin-top: -12%;
 }
 
-.formForgotPW {
-    display: flex;
-    margin-top: 2rem;
+.boxTabs {
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: center;
+    align-items: center;
     font-size: 2.5vh;
     font-weight: 600;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 30%;
-    height: 80%;
+    width: 400px;
+    height: 400px;
+    // padding-bottom: 2%;
     background-color: #fff;
     box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
-    padding-bottom: 2%;
     border-radius: 5%;
+    margin-top: 1.5rem;
 }
 
-.txtTkForgotPW,
+.formTabOTP,
+.formTabPhone {
+    // border-end-start-radius: 5%;
+    // border-end-end-radius: 5%;
+    // display: flex;
+    // flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    height: 340px;
+}
+
+.formTabOTP {
+    padding-top: 10%;
+}
+
+.inputOTP {
+    border: 1px solid #D57AD4;
+    color: #fff;
+    width: 300px;
+}
+
+.errorMess,
+.errorMessNewPW {
+    font-size: 1rem;
+    font-style: italic;
+    color: red;
+}
+
+.errorMess {
+    margin-left: 25px;
+}
+
+.btnsTabOTP {
+    margin-top: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.btnSendOTP,
+.btnCancel,
+.btnConfirmOTP,
+.btnResendOTP {
+    background-color: #D57AD4;
+    border: 1px solid #D57AD4;
+    border-radius: 10px;
+    color: #fff;
+    padding: 2%;
+    margin-bottom: 15px;
+    height: 2.5rem;
+    font-size: 1rem;
+}
+
+.btnConfirmOTP,
+.btnResendOTP {
+    width: 110px;
+    height: 60px;
+}
+
+.btnSendOTP {
+    margin-right: 10px;
+}
+
+.btnConfirmOTP {
+    margin-right: 25px;
+}
+
+.btnSendOTP:hover,
+.btnCancel:hover,
+.btnConfirmOTP:hover,
+.btnResendOTP:hover {
+    background-color: #fff;
+    border: 1px solid rgb(250, 139, 158);
+    color: rgb(250, 139, 158);
+}
+
+.comback-login,
+.combackTabOTP {
+    text-decoration: none;
+    margin-top: 1rem;
+    color: #D57AD4;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.combackTabOTP {
+    margin-top: 55px;
+    margin-right: 20px;
+}
+
+.comback-login:hover,
+.combackTabOTP:hover {
+    color: rgb(250, 139, 158);
+}
+
+.formTabPhone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contentTabPhone,
+.contentTabPhone-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contentTabPhone-btn {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: -11%;
+}
+
+.rowInputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.75rem 0;
+    width: 330px;
+}
+
+.txtSdtForgotPW,
 .txtNewPW,
 .txtConfirmNewPW {
     border: none;
     padding: 0.35rem;
     font-family: "Inter", sans-serif;
+    font-size: 1rem;
     border-radius: 4px;
-    width: 87%;
+    width: 70%;
+    margin-right: 10px;
     border-bottom: 1px solid lightgray;
 }
 
-.txtTkForgotPW {
-    width: 100%;
+.txtSdtForgotPW {
+    margin-left: -5px;
+    margin-right: 15px;
 }
 
-.lblTkForgotPW,
-.lblMKMoi,
-.lblXacNhanMK,
-.txtTkForgotPW,
-.txtNewPW,
-.txtConfirmNewPW,
-.btnNewPW {
-    margin-top: 8%;
+.txtSdtForgotPW:hover,
+.txtNewPW:hover,
+.txtConfirmNewPW:hover {
+    background-color: #d57ad328;
 }
 
 .btnNewPW {
     align-self: center;
     margin-top: 10%;
     font-size: 1rem;
-    padding: 3%;
-    width: 45%;
+    padding: 1.5%;
+    width: 25%;
     border: 1px solid #D57AD4;
     border-radius: 10%;
     color: white;
@@ -102,16 +229,5 @@
 .btnNewPW:hover {
     background-color: #fff;
     border: 1px solid rgb(250, 139, 158);
-    color: rgb(250, 139, 158);
-}
-
-.comback-login {
-    text-decoration: none;
-    margin-top: 1rem;
-    color: #D57AD4;
-    font-weight: 700;
-}
-
-.comback-login:hover {
     color: rgb(250, 139, 158);
 }

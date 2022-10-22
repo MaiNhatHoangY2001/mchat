@@ -23,7 +23,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 40%;
+    width: 610px;
     background-color: #fff;
     box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
 //    margin: 0.75rem;
@@ -31,6 +31,7 @@
     border-radius: 15px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-width: 30%;
+    
 }
 .inputRegister{
     border: none;
@@ -40,6 +41,8 @@
     border-radius: 4px;
     width: 100%;
     border-bottom: 1px solid lightgray;
+    font-size: 1rem;
+
 }
 .inputRegisterPass{
     border: none;
@@ -47,9 +50,20 @@
     font-family: "Inter", sans-serif;
     border-radius: 4px;
     width: 85%;
-    padding-top: 5%;
-    padding-bottom: 4%;
+    margin-top: 3.5%;
     border-bottom: 1px solid lightgray;
+    font-size: 1rem;
+
+}
+.inputRegister:placeholder-shown,
+.inputRegisterPass:placeholder-shown,
+.inputRegisterDate:placeholder-shown{
+    border-left: 5px solid red;
+}
+.inputRegister:not(:placeholder-shown),
+.inputRegisterPass:not(:placeholder-shown),
+.inputRegisterDate:not(:placeholder-shown){
+    border-left: 5px solid green;
 }
 .inputRegisterDate{
     border: none;
@@ -68,6 +82,7 @@
 }
 .magrinbutton{
     margin: 1rem;
+    font-size: 1rem;
 }
 .login-link:hover{
     color: #D57AD4;
@@ -78,6 +93,7 @@
     margin-top: 1rem;
     color: #D57AD4;
     font-weight: 700;
+    font-size: 1rem;
 }
 .btnRegister {
     align-self: center;

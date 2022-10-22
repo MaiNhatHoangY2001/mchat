@@ -7,14 +7,19 @@
     position: fixed;
     margin: 0;
     padding: 0;
-
     //ko cho chuột bôi đen trừ input
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
 .login-container {
@@ -29,18 +34,18 @@
 }
 
 .logo {
-    width: 12%;
+    width: 150px;
     cursor: default;
     pointer-events: none;
 }
 
 .logo img {
-    width: 12vw;
+    width: 160px;
 }
 
 #line {
     text-align: center;
-    font-size: 6vh;
+    font-size: 2.5rem;
     font-weight: 900;
     color: rgb(250, 139, 158);
     margin-top: -12%;
@@ -48,37 +53,62 @@
 
 .formLogin {
     display: flex;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     font-size: 2.5vh;
     font-weight: 600;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 30%;
-    height: 80%;
+    width: 400px;
+    height: 400px;
     background-color: #fff;
     box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
+    padding-top: 2%;
     padding-bottom: 2%;
     border-radius: 5%;
 }
 
-.txtTK,
+.txtSDT,
 .txtMK {
     border: none;
     padding: 0.35rem;
     font-family: "Inter", sans-serif;
+    font-size: 1rem;
     margin: 0.75rem 0;
     border-radius: 4px;
-    width: 100%;
+    width: 83%;
     border-bottom: 1px solid lightgray;
 }
 
+.txtSDT {
+    margin-right: 13px;
+}
+
+.txtMK {
+    margin-right: 51px;
+}
+
+.txtSDT:hover,
+.txtMK:hover {
+    background-color: #d57ad328;
+}
+
+.txtMK::-ms-reveal,
+.txtMK::-ms-clear {
+    display: none; //hide eye in input type password
+}
+
+.iconPhone,
 .eyeLogin {
     margin-left: -13%;
 }
 
-.txtTK,
-.txtMK,
+.errorMess {
+    font-size: 1rem;
+    font-style: italic;
+    color: red;
+}
+
 .btnLogin,
 .currentLogin {
     margin-top: 8%;
@@ -86,7 +116,7 @@
 
 .btnLogin {
     align-self: center;
-    margin-top: 10% !important;
+    margin-top: 6% !important;
     font-size: 1rem;
     padding: 3% !important;
     width: 35%;
@@ -103,7 +133,7 @@
 }
 
 .login-register {
-    margin: 2rem 1rem 0 1rem;
+    margin: 1.2rem 1rem 0 1rem;
     font-size: 1rem;
 }
 
@@ -113,6 +143,7 @@
     text-decoration: none;
     color: #D57AD4;
     font-weight: 700;
+    font-size: 1rem;
 }
 
 .forgotpw-link {
