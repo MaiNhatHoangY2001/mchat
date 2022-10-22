@@ -19,17 +19,9 @@ body {
     line-height: 1.5;
     text-rendering: optimizeSpeed;
 }
-img {
-    width: 100%;
-    border-radius: 50%;
-}
 main {
     width: 100%;
     height: 100vh;
-}
-main > div {
-    height: 100%;
-    border: 1px solid black;
 }
 button {
     cursor: pointer;
