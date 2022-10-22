@@ -18,6 +18,5 @@
   },
   "homepage": "https://github.com/MaiNhatHoangY2001/Real-time-chat#readme",
   "dependencies": {
-    "react-tooltip": "^4.4.3"
   }
 }
