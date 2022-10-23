@@ -149,13 +149,17 @@ function ForgotPass() {
     }
     function checkNewPW() {
         if (passwordInputNewPW.trim() === '') setErrorMessNewPW2('Vui lòng nhập mật khẩu mới!');
+        else if (passwordInputNewPW.trim().length < 6) setErrorMessNewPW2('Vui lòng nhập tối thiểu 6 ký tự!');
         else setErrorMessNewPW2('');
     }
     function checkConfirmNewPW() {
         if (passwordInputConfirmNewPW.trim() === '') setErrorMessNewPW3('Vui lòng nhập xác nhận mật khẩu mới!');
-        else if (!passwordInputConfirmNewPW.trim().test(passwordInputNewPW.trim()))
+        else if (passwordInputConfirmNewPW.trim().length < 6) setErrorMessNewPW3('Vui lòng nhập tối thiểu 6 ký tự!');
+        else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
             setErrorMessNewPW3('Mật khẩu xác nhận không đúng, vui lòng nhập lại!');
-        else setErrorMessNewPW3('');
+        else {
+            setErrorMessNewPW3('');
+        }
     }
     function checkDataInputs() {
         checkPhoneNumber();
