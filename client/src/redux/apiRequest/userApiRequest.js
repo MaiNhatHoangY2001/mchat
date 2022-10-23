@@ -1,5 +1,13 @@
+import axios from 'axios';
 import { url } from '../createInstance';
-import { getUsersFailed, getUsersStart, getUsersSuccess } from '../userSlice';
+import {
+    changePassFailed,
+    changePassStart,
+    changePassSuccess,
+    getUsersFailed,
+    getUsersStart,
+    getUsersSuccess,
+} from '../userSlice';
 
 export const searchUser = async (accessToken, dispatch, search, axiosJWT) => {
     dispatch(getUsersStart());
@@ -10,5 +18,18 @@ export const searchUser = async (accessToken, dispatch, search, axiosJWT) => {
         dispatch(getUsersSuccess(res.data));
     } catch (error) {
         dispatch(getUsersFailed());
+    }
+};
+
+export const changePassword = async (account, dispatch, navigate) => {
+    dispatch(changePassStart());
+    try {
+        await axios.post(`${url}/api/user/changePassword`, account, {
+            withCredentials: true,
+        });
+        dispatch(changePassSuccess());
+        navigate('/');
+    } catch (error) {
+        dispatch(changePassFailed());
     }
 };

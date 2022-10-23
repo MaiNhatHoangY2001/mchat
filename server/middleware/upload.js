@@ -6,8 +6,8 @@ const maxSize = 2 * 1024 * 1024;
 //middleware
 let processFile = multer({
 	storage: multer.memoryStorage(),
-    limits:{fileSize: maxSize}
-}).single('file');
+    //limits:{fileSize: maxSize}
+}).array('file', 10);
 
 let processFileMiddleware = util.promisify(processFile);
 module.exports = processFileMiddleware;

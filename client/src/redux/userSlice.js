@@ -10,9 +10,25 @@ const userSlice = createSlice({
             allUsers: null,
             isFetching: false,
             error: false,
-        }
+        },
+        changePass: {
+            isFetching: false,
+            error: false,
+            success: false,
+        },
     },
     reducers: {
+        changePassStart: (state) => {
+            state.changePass.isFetching = true;
+        },
+        changePassSuccess: (state) => {
+            state.changePass.isFetching = false;
+            state.changePass.error = false;
+        },
+        changePassFailed: (state) => {
+            state.changePass.isFetching = false;
+            state.changePass.error = true;
+        },
         getUsersStart: (state) => {
             state.users.isFetching = true;
         },
@@ -27,9 +43,9 @@ const userSlice = createSlice({
         setSender: (state, action) => {
             state.sender.user = action.payload;
         },
-        clearSender:(state) => {
+        clearSender: (state) => {
             state.sender.user = null;
-        }
+        },
     },
 });
 
@@ -39,6 +55,9 @@ export const {
     getUsersFailed,
     setSender,
     clearSender,
+    changePassStart,
+    changePassFailed,
+    changePassSuccess,
 } = userSlice.actions;
 
 export default userSlice.reducer;

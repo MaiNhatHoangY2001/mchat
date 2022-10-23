@@ -31,6 +31,7 @@ export const loginUser = async (user, dispatch, navigate, setIsLoading) => {
     }
 };
 
+
 export const registerUser = async (user, dispatch, navigate, setIsLoading) => {
     dispatch(registerStart());
     try {
