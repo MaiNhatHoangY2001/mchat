@@ -2,10 +2,8 @@ import classNames from 'classnames/bind';
 import styles from '../Content.module.scss';
 import 'react-loading-skeleton/dist/skeleton.css';
 import io from 'socket.io-client';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { logOut } from '../../../../redux/apiRequest/authApiRequest';
 import { createAxios, url } from '../../../../redux/createInstance';
 import { loginSuccess, logoutSuccess } from '../../../../redux/authSlice';
 import {
@@ -20,6 +18,8 @@ import LoadingChat from '../../Loading/LoadingChat';
 import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
 import Push from 'push.js';
 import moment from 'moment';
+import Data from './DataHeaderButtonChat';
+import ReactTooltip from 'react-tooltip';
 
 const cx = classNames.bind(styles);
 
@@ -35,6 +35,7 @@ function Chat({ setRightBar }) {
     // const urlImage = useSelector((state) => state.file?.upload?.url.url);
 
     const socket = useRef();
+    const bottomRef = useRef(null);
 
     const [individualChatId, setIndividualChatId] = useState('');
     const [message, setMessage] = useState('');
@@ -49,22 +50,16 @@ function Chat({ setRightBar }) {
         },
     ]);
 
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const currentUserId = user?._id;
     const currentSenderId = sender?._id;
     const accessToken = user?.accessToken;
 
-    let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
 
     const callPopupFunction = () => {
         popupCenter({ url: '../call', title: 'xtf', w: 500, h: 650 });
-    };
-
-    const handleLogout = () => {
-        logOut(dispatch, navigate, currentUserId, accessToken, axiosJWTLogout);
     };
 
     const handleSubmit = (e) => {
@@ -235,92 +230,118 @@ function Chat({ setRightBar }) {
             return () => socket.current.off('user-chat', handler);
         }
     }, [sendData]);
+
+    useEffect(() => {
+        // 👇️ scroll to bottom every time messages change
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [sendData]);
+
     return (
         <>
             <div className={cx('headerChat')}>
                 <div className={cx('infoFriend')}>
                     <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt="avata" />
                     <div className={cx('infoText')}>
-                        {<p>{sender?.profileName}</p>}
-                        <span>Active</span>
+                        {<p className={cx('name')}>{sender?.profileName}</p>}
+                        <span className={cx('active')}>Đang hoạt động</span>
                     </div>
                 </div>
 
-                <div className={cx('flex-row', 'btn-event')}>
-                    <button onClick={() => callPopupFunction()}>Call</button>
-                    <button onClick={() => callPopupFunction()}>Video</button>
-                    <button className="navbar-logout" onClick={() => handleLogout()}>
-                        {' '}
-                        Log out
-                    </button>
-                    <button onClick={setRightBar.handleClickSetRightBar}>Info</button>
-                </div>
+                <ul className={cx('ListButton')}>
+                    {Data.map((item, index) => {
+                        const image = item.urc;
+                        const toolTip = item.title;
+                        const alt = item.alt;
+
+                        return (
+                            <React.Fragment key={index}>
+                                <li
+                                    data-tip={toolTip}
+                                    data-for="button"
+                                    data-iscapture="true"
+                                    className={cx('button')}
+                                    onClick={() => callPopupFunction()}
+                                >
+                                    <img src={image} alt={alt} />
+                                </li>
+                                <ReactTooltip id="button" place="left" />
+                            </React.Fragment>
+                        );
+                    })}
+                </ul>
             </div>
 
-            <div className={cx('flex-column', 'scroller-column', 'body-center')}>
-                <div className={cx('space-big-height')}></div>
-                <div className={cx('flex-column', 'info-friend-chat')}>
+            <div className={cx('bodyCenter')}>
+                <div className={cx('infoFriendChat')}>
                     <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt="avata" />
                     <p>{sender?.profileName}</p>
-                    <span>Hãy nói gì đó với tôi</span>
                 </div>
-                <div className={cx('space-big-height')}></div>
 
-                <div className={cx('flex-column', 'contain-chat')}>
+                <div className={cx('containChat')}>
+                    <div className={cx('timeChat')}>
+                        <p className={cx('time')}>19:53, 7 Tháng 10, 2022</p>
+                    </div>
                     {sendData === null ? (
                         <LoadingChat />
                     ) : (
                         sendData?.map((mess, index) => {
                             return (
-                                <div key={index} className={cx('flex-column')}>
-                                    <div
-                                        className={cx(
-                                            'flex-row',
-                                            mess.sender === currentUserId ? 'user-send' : 'friend-send',
+                                <div
+                                    key={index}
+                                    className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}
+                                >
+                                    <img
+                                        className={cx('imgChat')}
+                                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                        alt="avata"
+                                    />
+                                    <div className={cx('boxTextChat')}>
+                                        {mess.message?.type_Msg === TYPE_MSG ? (
+                                            <p className={cx('textChat')}>{mess.message.content}</p>
+                                        ) : (
+                                            <img alt="not fount" width={'20px'} src={mess.message.content} />
                                         )}
-                                    >
-                                        <img
-                                            className={cx('img-chat')}
-                                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                            alt="avata"
-                                        />
-                                        <div className={cx('box-text-chat', 'tooltip')}>
-                                            {/* <p className={cx('text-chat')}>{mess.message.content}</p> */}
-                                            {mess.message?.type_Msg === TYPE_MSG ? (
-                                                <p className={cx('text-chat')}>{mess.message.content}</p>
-                                            ) : (
-                                                <img alt="not fount" width={'20px'} src={mess.message.content} />
-                                            )}
-
-                                            <span
-                                                className={cx(
-                                                    'box-tooltip',
-                                                    mess.sender === currentUserId
-                                                        ? 'tooltiptextUser'
-                                                        : 'tooltiptextFriend',
-                                                )}
-                                            >
-                                                {convertTime(mess.message.time)}
-                                            </span>
-                                        </div>
+                                        {/* {convertTime(mess.message.time)} */}
                                     </div>
-                                    <div className={cx('space-height')}></div>
                                 </div>
                             );
                         })
                     )}
-
-                    <div className={cx('space-height')}></div>
+                    <div className={cx('friendSend')}>
+                        <img
+                            className={cx('imgChat')}
+                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                            alt="avata"
+                        />
+                        <div className={cx('boxTextChat')}>
+                            <p className={cx('textChat')}>abc</p>
+                        </div>
+                    </div>
+                    <div className={cx('userSend')}>
+                        <img
+                            className={cx('imgChat')}
+                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                            alt="avata"
+                        />
+                        <div className={cx('boxTextChat')}>
+                            <img
+                                src={
+                                    'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715210/samples/imagecon-group.jpg'
+                                }
+                                alt="hinhanh"
+                            />
+                        </div>
+                    </div>
+                    <div ref={bottomRef} />
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className={cx('flex-row', 'input-chat')}>
+            <form onSubmit={handleSubmit} className={cx('inputChat')}>
                 <input
                     type="file"
                     id="selectedFile"
                     name="myImage"
                     accept="image/*"
-                    className={cx('btn-chat', 'file')}
                     onChange={async (event) => {
                         const bodyFormData = new FormData();
                         bodyFormData.append('file', event.target.files[0]);
@@ -329,24 +350,32 @@ function Chat({ setRightBar }) {
                     }}
                     style={{ display: 'none' }}
                 />
-                <input
+                <div
+                    className={cx('buttonInput')}
                     type="button"
                     value="Browse..."
                     onClick={() => document.getElementById('selectedFile').click()}
-                />
-
-                <div className={cx('input-text')}>
-                    <input
-                        type="text"
-                        placeholder="Input chat ...."
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
+                >
+                    <img
+                        src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666526090/samples/Icon/photo_yn6nra.png`}
+                        alt="avata"
                     />
                 </div>
 
-                <button type="submit" className={cx('btn-chat', 'send')}>
-                    Gửi
-                </button>
+                <input
+                    className={cx('inputText')}
+                    type="text"
+                    placeholder="Aa"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                />
+
+                <div type="submit" className={cx('buttonInput')}>
+                    <img
+                        src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666528392/samples/Icon/like1_tz3tql.png`}
+                        alt="avata"
+                    />
+                </div>
             </form>
         </>
     );
