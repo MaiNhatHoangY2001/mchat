@@ -15,6 +15,9 @@ router.post('/', userController.addUser);
 //router.delete('/:id', middlewareController.verifyTokenAndAdminAuth, userController.deleteUser);
 
 //SEARCH USER
-router.get('/search', middlewareController.verifyTokenAndUserAuth,userController.searchUser);
+router.get('/search', middlewareController.verifyTokenAndUserAuth, userController.searchUser);
+
+//CHANGE USER PASSWORD
+router.post('/changePassword', userController.changePasswordWithPhoneNumber);
 
 module.exports = router;
