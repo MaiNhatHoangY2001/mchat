@@ -78,6 +78,7 @@ const individualChatController = {
 						'message.content': 1,
 						'message.time': 1,
 						'message.type_Msg': 1,
+						'message.imageContent': 1,
 						sender: '$user',
 						_id: 0,
 					},

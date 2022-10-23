@@ -130,7 +130,7 @@ export default function ListFriend() {
                                 <p>{actor?.sender?.profileName || actor?.groupName}</p>
                                 <p className={cx('supchat')}>Tin nhắn mới nhất</p>
                             </div>
-                            <span className={cx('active')}></span>
+                            <span className={cx('dot', actor?.status === 'Active' ? 'active' : 'disable')}></span>
                         </button>
                     );
                 })}

@@ -111,11 +111,11 @@ function ForgotPass() {
                 await confirmObj.confirm(otp);
                 console.log(otp);
                 //  CHANGE PASSWORD
-                // const account = {
-                //     phoneNumber: '0986439506',
-                //     newPassword: '1234567',
-                // };
-                // changePassword(account, dispatch, navigate);
+                const account = {
+                    phoneNumber: '0986439506',
+                    newPassword: '1234567',
+                };
+                changePassword(account, dispatch, navigate);
             } catch (err) {
                 // setErrorMessOTP(err.message);
                 console.log(err.message);

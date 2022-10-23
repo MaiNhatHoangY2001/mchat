@@ -87,12 +87,18 @@
                 }
             }
 
-            .active {
+            .dot {
                 width: 10px;
                 height: 10px;
 
-                background: #00ff66;
                 border-radius: 50%;
+            }
+
+            .active {
+                background: #00ff66;
+            }
+            .disable {
+                background: #c4c4c4;
             }
         }
     }

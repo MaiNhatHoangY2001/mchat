@@ -46,6 +46,7 @@ function Chat({ setRightBar }) {
             message: {
                 content: null,
                 time: null,
+                imageContent: [],
             },
         },
     ]);
@@ -65,16 +66,16 @@ function Chat({ setRightBar }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (message !== '') {
-            createChat(TYPE_MSG, message);
+            createChat(TYPE_MSG, message, []);
             setMessage('');
         }
     };
 
     const addMsgImgWithInfo = (url) => {
-        createChat(TYPE_IMG, url);
+        createChat(TYPE_IMG, '', url);
     };
 
-    const createChat = (typeChat, mess) => {
+    const createChat = (typeChat, mess, imageContent) => {
         const time = new Date();
         const newChat = {
             sender: currentUserId,
@@ -82,6 +83,7 @@ function Chat({ setRightBar }) {
             message: {
                 type_Msg: typeChat,
                 content: mess,
+                imageContent: imageContent,
                 time: time,
             },
             isNewChat: false,
@@ -92,7 +94,7 @@ function Chat({ setRightBar }) {
             newChat.isNewChat = true;
         }
 
-        addMsg(typeChat, mess);
+        addMsg(typeChat, mess, imageContent);
 
         socket.current.emit('on-chat', newChat);
         //delete receiver property
@@ -103,23 +105,24 @@ function Chat({ setRightBar }) {
         setSendData((prev) => [...prev, newChat]);
     };
 
-    const addMsg = (typeChat, mess) => {
+    const addMsg = (typeChat, mess, imageContent) => {
         if (!isGroupChat) {
             if (sendData.length <= 0) {
-                addChat4NewUser(typeChat, mess);
+                addChat4NewUser(typeChat, mess, imageContent);
             } else {
-                addMsgWithInfo(typeChat, mess);
+                addMsgWithInfo(typeChat, mess, imageContent);
             }
         } else {
-            addMsgWithInfoGroupChat(typeChat, mess);
+            addMsgWithInfoGroupChat(typeChat, mess, imageContent);
         }
     };
 
     //
-    const addChat4NewUser = (typeChat, mess) => {
+    const addChat4NewUser = (typeChat, mess, imageContent) => {
         const msg = {
             type_Msg: typeChat,
             content: mess,
+            imageContent: imageContent,
         };
         const indiviSender = {
             sender: currentUserId,
@@ -141,10 +144,11 @@ function Chat({ setRightBar }) {
         }, 1000);
     };
 
-    const addMsgWithInfoGroupChat = (typeChat, mess) => {
+    const addMsgWithInfoGroupChat = (typeChat, mess, imageContent) => {
         const msg = {
             type_Msg: typeChat,
             content: mess,
+            imageContent: imageContent,
             groupChat: currentSenderId,
             userGroupChat: currentUserId,
         };
@@ -152,10 +156,11 @@ function Chat({ setRightBar }) {
         addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
 
-    const addMsgWithInfo = (typeChat, mess) => {
+    const addMsgWithInfo = (typeChat, mess, imageContent) => {
         const msg = {
             type_Msg: typeChat,
             content: mess,
+            imageContent: imageContent,
             individualChat: individualChatId,
         };
 
@@ -299,7 +304,11 @@ function Chat({ setRightBar }) {
                                         {mess.message?.type_Msg === TYPE_MSG ? (
                                             <p className={cx('textChat')}>{mess.message.content}</p>
                                         ) : (
-                                            <img alt="not fount" width={'20px'} src={mess.message.content} />
+                                            <>
+                                                {mess.message?.imageContent.length > 0 ? console.log("run") :  (mess.message?.imageContent).map((img, index) => {
+                                                        return <img key={index} alt="not fount" width={'20px'} src={img} />;
+                                                    })}
+                                            </>
                                         )}
                                         {/* {convertTime(mess.message.time)} */}
                                     </div>
@@ -336,16 +345,18 @@ function Chat({ setRightBar }) {
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className={cx('inputChat')}>
+            <form onSubmit={handleSubmit} className={cx('inputChat')} encType={'multipart/form-data'}>
                 <input
                     type="file"
                     id="selectedFile"
                     name="myImage"
                     accept="image/*"
+                    multiple
                     onChange={async (event) => {
                         const bodyFormData = new FormData();
                         bodyFormData.append('file', event.target.files[0]);
                         const image = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+                        console.log(image);
                         addMsgImgWithInfo(image.url);
                     }}
                     style={{ display: 'none' }}
