@@ -237,10 +237,10 @@ function Chat({ setRightBar }) {
     }, [sendData]);
     return (
         <>
-            <div className={cx('flex-row', 'header-center')}>
-                <div className={cx('flex-row', 'info-friend')}>
+            <div className={cx('headerChat')}>
+                <div className={cx('infoFriend')}>
                     <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt="avata" />
-                    <div className={cx('flex-column', 'info-content')}>
+                    <div className={cx('infoText')}>
                         {<p>{sender?.profileName}</p>}
                         <span>Active</span>
                     </div>

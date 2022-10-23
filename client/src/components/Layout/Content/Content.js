@@ -61,10 +61,8 @@ function Content() {
 
     const sender = useSelector((state) => state.user.sender?.user);
     return (
-        <div className={cx('flex-row', 'container-center')}>
-            <div className={cx('flex-column', 'fix-height-screen', 'main-center')}>
-                {sender !== null ? <Chat setRightBar={{ isRightBar, handleClickSetRightBar }} /> : <Blank />}
-            </div>
+        <div className={cx('containerCenter')}>
+            {sender !== null ? <Chat setRightBar={{ isRightBar, handleClickSetRightBar }} /> : <Blank />}
         </div>
     );
 }

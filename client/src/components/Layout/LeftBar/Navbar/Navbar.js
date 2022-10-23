@@ -1,13 +1,31 @@
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Data from './Data';
 import styles from './Navbar.scss';
 import ReactTooltip from 'react-tooltip';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut } from '../../../../redux/apiRequest/authApiRequest';
+import { useNavigate } from 'react-router-dom';
+import { createAxios } from '../../../../redux/createInstance';
+import { logoutSuccess } from '../../../../redux/authSlice';
 
 const cx = classNames.bind(styles);
 
 export default function Navbar({ setContainer }) {
     const [select, setSelect] = useState(0);
+
+    const user = useSelector((state) => state.auth.login?.currentUser);
+    const userId = user?._id;
+    const accessToken = user?.accessToken;
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
+
+    const handleLogout = () => {
+        logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
+    };
 
     return (
         <div className={cx('container')}>
@@ -31,22 +49,22 @@ export default function Navbar({ setContainer }) {
                     const toolTip = item.toolTip;
 
                     return (
-                        <>
+                        <React.Fragment key={index}>
                             <li
                                 data-tip={toolTip}
                                 data-for="background"
                                 data-iscapture="true"
-                                key={index}
                                 className={cx(background)}
                                 onClick={() => {
                                     setSelect(index);
                                     setContainer(index);
+                                    if (index === 3) handleLogout();
                                 }}
                             >
                                 <img className={cx('iconButon')} src={imgae} alt={'icon-message'} />
                             </li>
                             <ReactTooltip id="background" place="right" />
-                        </>
+                        </React.Fragment>
                     );
                 })}
             </ul>
