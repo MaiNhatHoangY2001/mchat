@@ -65,7 +65,6 @@ function Content() {
             <div className={cx('flex-column', 'fix-height-screen', 'main-center')}>
                 {sender !== null ? <Chat setRightBar={{ isRightBar, handleClickSetRightBar }} /> : <Blank />}
             </div>
-            {isRightBar ? <RightBar setRightBar={{ isSwitch1, handleClickSetRightBar }} /> : <></>}
         </div>
     );
 }

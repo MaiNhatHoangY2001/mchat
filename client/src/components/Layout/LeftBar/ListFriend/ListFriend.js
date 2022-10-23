@@ -32,7 +32,7 @@ export default function ListFriend() {
     let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
 
     const activeButtonStyles = {
-        backgroundColor: 'rgb(242, 153, 227)',
+        backgroundColor: 'rgba(243, 163, 173, 1)',
         color: 'white',
         pointerEvents: 'none',
         userSelect: 'none',
@@ -82,30 +82,28 @@ export default function ListFriend() {
 
     return (
         <div className={cx('containerListFriend')}>
-            <div className={cx('flex-column', 'avata-search')}>
-                <div className={cx('flex-row', 'input-search')}>
-                    <div className={cx('search')}>
-                        <AutoComplete
-                            currentUser={currentUser}
-                            users={usersSearch}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Search input"
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        type: 'search',
-                                        onChange: (e) => {
-                                            setTextSearchUser(e.target.value);
-                                        },
-                                    }}
-                                />
-                            )}
+            <div className={cx('search')}>
+                <p className={cx('titleSearch')}>Tìm kiếm người dùng</p>
+                <AutoComplete
+                    currentUser={currentUser}
+                    users={usersSearch}
+                    renderInput={(params) => (
+                        <TextField
+                            style={{ fontSize: 16 }}
+                            {...params}
+                            label="Nhập tên người dùng"
+                            InputProps={{
+                                ...params.InputProps,
+                                type: 'search',
+                                onChange: (e) => {
+                                    setTextSearchUser(e.target.value);
+                                },
+                            }}
                         />
-                    </div>
-                </div>
+                    )}
+                />
             </div>
-            <div className={cx('flex-column', 'scroller-column', 'list-item')}>
+            <div className={cx('list-item')}>
                 {chatActors?.map((actor, index) => {
                     const isActorSenderActive = currentSender?._id === (actor?.sender?._id || actor?._id);
                     const isGroupChat = actor?.sender?._id === undefined;
@@ -121,16 +119,18 @@ export default function ListFriend() {
                             onClick={() =>
                                 handleClick(actor?._id, actor?.sender || actorGroupChat, actor?.user, isGroupChat)
                             }
-                            className={cx('flex-row', 'item')}
+                            className={cx('item')}
                             style={isActorSenderActive ? activeButtonStyles : {}}
                         >
                             <img
                                 src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                                 alt={'avata'}
                             />
-                            <div className={cx('flex-column', 'content-item')}>
+                            <div className={cx('content-item')}>
                                 <p>{actor?.sender?.profileName || actor?.groupName}</p>
+                                <p className={cx('supchat')}>Tin nhắn mới nhất</p>
                             </div>
+                            <span className={cx('active')}></span>
                         </button>
                     );
                 })}

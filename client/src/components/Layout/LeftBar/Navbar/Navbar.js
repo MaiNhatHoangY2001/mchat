@@ -49,7 +49,6 @@ export default function Navbar({ setContainer }) {
                         </>
                     );
                 })}
-                ;
             </ul>
         </div>
     );
