@@ -316,7 +316,7 @@ function Chat({ setRightBar }) {
                             );
                         })
                     )}
-                    <div className={cx('friendSend')}>
+                    {/* <div className={cx('friendSend')}>
                         <img
                             className={cx('imgChat')}
                             src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
@@ -340,7 +340,7 @@ function Chat({ setRightBar }) {
                                 alt="hinhanh"
                             />
                         </div>
-                    </div>
+                    </div> */}
                     <div ref={bottomRef} />
                 </div>
             </div>
