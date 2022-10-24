@@ -80,6 +80,7 @@ function ForgotPass() {
     const [otp, setOtp] = useState('');
     const [errorMess, setErrorMess] = useState('');
     const [errorMessOTP, setErrorMessOTP] = useState('');
+    const [changeTabMess, setchangeTabMess] = useState('');
     const [flag, setFlag] = useState(false);
     const [confirmObj, setConfirmObj] = useState('');
     const getOtp = async (e) => {
@@ -115,19 +116,19 @@ function ForgotPass() {
             try {
                 await confirmObj.confirm(otp);
                 console.log(otp);
-
+                
                 setActiveTab(2);
                 // setHandleMoveTab(2);
                 setDisableTab1(true);
                 setDisableTab2(false);
-                
+                setchangeTabMess("Đã xác thực, vui lòng chuyển đến tab 'Mật khẩu mới'");
 
                 //  CHANGE PASSWORD
-                // const account = {
-                //     phoneNumber: '0986439506',
-                //     newPassword: '1234567',
-                // };
-                // changePassword(account, dispatch, navigate);
+                const account = {
+                    phoneNumber: phoneTabNewPW.trim(),
+                    newPassword: passwordInputNewPW.trim(),
+                };
+                changePassword(account, dispatch, navigate);
             } catch (err) {
                 // setErrorMessOTP(err.message);
                 console.log(err.message);
@@ -247,6 +248,7 @@ function ForgotPass() {
                                             ></Form.Control>
                                         </div>
                                         <span className={cx('errorMess')}>{errorMessOTP}</span>
+                                        <span className={cx('changeTabMess')}>{changeTabMess}</span>
                                         <div className={cx('btnsTabOTP')}>
                                             <button
                                                 type="submit"
@@ -268,12 +270,7 @@ function ForgotPass() {
                                 </Form>
                             </div>
                         </Tab>
-                        <Tab
-                            eventKey={2}
-                            title="Mật khẩu mới"
-                            className={cx('formTabPhone')}
-                            disabled={disableTab2}
-                        >
+                        <Tab eventKey={2} title="Mật khẩu mới" className={cx('formTabPhone')} disabled={disableTab2}>
                             <div className={cx('contentTabPhone')}>
                                 <div className={cx('rowInputs')}>
                                     <input

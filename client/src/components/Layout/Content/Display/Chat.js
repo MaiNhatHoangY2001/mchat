@@ -286,6 +286,7 @@ function Chat({ setRightBar }) {
                     <div className={cx('timeChat')}>
                         <p className={cx('time')}>19:53, 7 Tháng 10, 2022</p>
                     </div>
+
                     {sendData === null ? (
                         <LoadingChat />
                     ) : (
@@ -322,6 +323,7 @@ function Chat({ setRightBar }) {
                             );
                         })
                     )}
+
                     {/* <div className={cx('friendSend')}>
                         <img
                             className={cx('imgChat')}
