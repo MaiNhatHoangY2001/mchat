@@ -1,6 +1,6 @@
 import styles from './ForgotPass.module.scss';
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 import 'w3-css/w3.css';
@@ -13,7 +13,7 @@ import React from 'react';
 
 //npm i react-bootstrap
 //https://react-bootstrap.github.io/components/tabs/
-import {Tab, Tabs, Form} from 'react-bootstrap';
+import { Tab, Tabs, Form } from 'react-bootstrap';
 
 //link firebase doc: https://firebase.google.com/docs/auth/web/phone-auth
 import auth from '../../../firebase-config';
@@ -29,11 +29,15 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import styled from 'styled-components/macro';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-
+import { changePassword } from '../../../redux/apiRequest/userApiRequest';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function ForgotPass() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     //show-hide-pw
     const [passwordInputNewPW, setPasswordInputNewPW] = useState('');
     const [passwordInputConfirmNewPW, setPasswordInputConfirmNewPW] = useState('');
@@ -54,7 +58,7 @@ function ForgotPass() {
         setPasswordType2('password');
     };
 
-    //custom phonenumber-input 
+    //custom phonenumber-input
     const Wrapper = ({ className, ...props }) => (
         <div className={className}>
             <PhoneInput {...props} />
@@ -66,7 +70,12 @@ function ForgotPass() {
         }
     `;
 
-    //OTP firebase 
+    //OTP firebase
+    const [activeTab, setActiveTab] = useState(1); //active tab
+    const [disableTab1, setDisableTab1] = useState(false);
+    const [disableTab2, setDisableTab2] = useState(true);
+    // const [handleMoveTab, setHandleMoveTab] = useState({ activeTab });
+    //
     const [number, setNumber] = useState('');
     const [otp, setOtp] = useState('');
     const [errorMess, setErrorMess] = useState('');
@@ -75,11 +84,11 @@ function ForgotPass() {
     const [confirmObj, setConfirmObj] = useState('');
     const getOtp = async (e) => {
         e.preventDefault();
-        
-        let phoneNumber = '+'+number.trim();
+
+        let phoneNumber = '+' + number.trim();
         let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNumber);
         if (phoneNumber === '' || phoneNumber === undefined) return setErrorMess('Vui lòng nhập số điện thoại!');
-        else if(!regexPhoneNumberVN) setErrorMess('SĐT không hợp lệ!');
+        else if (!regexPhoneNumberVN) setErrorMess('SĐT không hợp lệ!');
         else {
             setErrorMess('');
             // console.log(number);
@@ -94,24 +103,37 @@ function ForgotPass() {
                 console.log(err.message);
             }
         }
-    }
+    };
 
-    const verifyOtp = async (e)=>{
+    const verifyOtp = async (e) => {
         e.preventDefault();
 
-        if(otp==='' || otp===undefined) setErrorMessOTP('Vui lòng nhập mã xác thực!');
-        else if(otp.length!==6) setErrorMessOTP('Vui lòng nhập 6 ký tự!');
+        if (otp === '' || otp === undefined) setErrorMessOTP('Vui lòng nhập mã xác thực!');
+        else if (otp.length !== 6) setErrorMessOTP('Vui lòng nhập 6 ký tự!');
         else {
             setErrorMessOTP('');
             try {
                 await confirmObj.confirm(otp);
                 console.log(otp);
+
+                setActiveTab(2);
+                // setHandleMoveTab(2);
+                setDisableTab1(true);
+                setDisableTab2(false);
+                
+
+                //  CHANGE PASSWORD
+                // const account = {
+                //     phoneNumber: '0986439506',
+                //     newPassword: '1234567',
+                // };
+                // changePassword(account, dispatch, navigate);
             } catch (err) {
                 // setErrorMessOTP(err.message);
                 console.log(err.message);
             }
         }
-    }
+    };
 
     function setUpRecaptcha(phoneNumber) {
         //link sub language: https://firebase.google.com/docs/reference/android/com/google/firebase/ml/naturallanguage/translate/FirebaseTranslateLanguage
@@ -130,23 +152,26 @@ function ForgotPass() {
     let isNum = /^\d+$/.test(phoneTabNewPW.trim());
     let regexPhoneNumber = /\+?(0|84)\d{9}/.test(phoneTabNewPW.trim());
     function checkPhoneNumber() {
-        if(phoneTabNewPW.trim() === '') setErrorMessNewPW1('Vui lòng nhập số điện thoại!');
-        else if(!isNum) setErrorMessNewPW1('Vui lòng nhập lại số điện thoại!');
-        else if(phoneTabNewPW.trim().length !== 10 ) setErrorMessNewPW1('Vui lòng nhập đủ 10 ký tự số điện thoại!');
-        else if(!regexPhoneNumber) setErrorMessNewPW1('SĐT không hợp lệ!');
-        else
-            // setErrorMessNewPW('✅');
-            setErrorMessNewPW1('');
+        if (phoneTabNewPW.trim() === '') setErrorMessNewPW1('Vui lòng nhập số điện thoại!');
+        else if (!isNum) setErrorMessNewPW1('Vui lòng nhập lại số điện thoại!');
+        else if (phoneTabNewPW.trim().length !== 10) setErrorMessNewPW1('Vui lòng nhập đủ 10 ký tự số điện thoại!');
+        else if (!regexPhoneNumber) setErrorMessNewPW1('SĐT không hợp lệ!');
+        // setErrorMessNewPW('✅');
+        else setErrorMessNewPW1('');
     }
     function checkNewPW() {
-        if(passwordInputNewPW.trim() === '') setErrorMessNewPW2('Vui lòng nhập mật khẩu mới!');
+        if (passwordInputNewPW.trim() === '') setErrorMessNewPW2('Vui lòng nhập mật khẩu mới!');
+        else if (passwordInputNewPW.trim().length < 6) setErrorMessNewPW2('Vui lòng nhập tối thiểu 6 ký tự!');
         else setErrorMessNewPW2('');
     }
     function checkConfirmNewPW() {
-        if(passwordInputConfirmNewPW.trim() === '') setErrorMessNewPW3('Vui lòng nhập xác nhận mật khẩu mới!');
-        else if(!passwordInputConfirmNewPW.trim().test(passwordInputNewPW.trim()))
+        if (passwordInputConfirmNewPW.trim() === '') setErrorMessNewPW3('Vui lòng nhập xác nhận mật khẩu mới!');
+        else if (passwordInputConfirmNewPW.trim().length < 6) setErrorMessNewPW3('Vui lòng nhập tối thiểu 6 ký tự!');
+        else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
             setErrorMessNewPW3('Mật khẩu xác nhận không đúng, vui lòng nhập lại!');
-        else setErrorMessNewPW3('');
+        else {
+            setErrorMessNewPW3('');
+        }
     }
     function checkDataInputs() {
         checkPhoneNumber();
@@ -168,13 +193,13 @@ function ForgotPass() {
                 <div className={cx('boxTabs')}>
                     <Tabs
                         className={cx('formTwoTabs')}
-                        defaultActiveKey="tabOTP"
+                        defaultActiveKey={activeTab}
                         transition={false}
                         variant="pills"
                         style={{ fontSize: '1rem' }}
                         fill
                     >
-                        <Tab eventKey="tabOTP" title="Xác thực SĐT" className={cx('formTabOTP')}>
+                        <Tab eventKey={1} title="Xác thực SĐT" className={cx('formTabOTP')} disabled={disableTab1}>
                             <div className="p-4 box">
                                 <Form onSubmit={getOtp} style={{ display: !flag ? 'block' : 'none' }}>
                                     <Form.Group className="mb-3" controlId="formBasicphonenumber">
@@ -194,8 +219,12 @@ function ForgotPass() {
                                         />
                                         <span className={cx('errorMess')}>{errorMess}</span>
                                         <div className={cx('btnsTabOTP')}>
-                                            <button type="submit" className={cx('btnSendOTP')}>Gửi mã xác thực</button>
-                                            <button className={cx('btnCancel')} onClick={() => setNumber('')}>Hủy</button>
+                                            <button type="submit" className={cx('btnSendOTP')}>
+                                                Gửi mã xác thực
+                                            </button>
+                                            <button className={cx('btnCancel')} onClick={() => setNumber('')}>
+                                                Hủy
+                                            </button>
                                         </div>
                                         <div id="recaptcha-container" style={{ marginLeft: 25 }}></div>
                                         <div className={cx('btnsTabOTP')}>
@@ -207,7 +236,9 @@ function ForgotPass() {
                                 </Form>
                                 <Form onSubmit={verifyOtp} style={{ display: !flag ? 'none' : 'block' }}>
                                     <Form.Group className="mb-3">
-                                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                        <div
+                                            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}
+                                        >
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Nhập mã xác nhận"
@@ -217,10 +248,18 @@ function ForgotPass() {
                                         </div>
                                         <span className={cx('errorMess')}>{errorMessOTP}</span>
                                         <div className={cx('btnsTabOTP')}>
-                                            <button type="submit" className={cx('btnConfirmOTP')}>Xác nhận mã</button>
-                                            <button 
-                                                className={cx('btnResendOTP')} 
-                                                onClick={() => {window.location.reload();}}
+                                            <button
+                                                type="submit"
+                                                className={cx('btnConfirmOTP')}
+                                                // onClick={() => setHandleMoveTab(2)}
+                                            >
+                                                Xác nhận mã
+                                            </button>
+                                            <button
+                                                className={cx('btnResendOTP')}
+                                                onClick={() => {
+                                                    window.location.reload();
+                                                }}
                                             >
                                                 Gửi lại mã xác thực
                                             </button>
@@ -229,7 +268,12 @@ function ForgotPass() {
                                 </Form>
                             </div>
                         </Tab>
-                        <Tab eventKey="tabNewPW" title="Mật khẩu mới" className={cx('formTabPhone')}>
+                        <Tab
+                            eventKey={2}
+                            title="Mật khẩu mới"
+                            className={cx('formTabPhone')}
+                            disabled={disableTab2}
+                        >
                             <div className={cx('contentTabPhone')}>
                                 <div className={cx('rowInputs')}>
                                     <input
@@ -242,7 +286,9 @@ function ForgotPass() {
                                     />
                                     <span className="iconPhone">
                                         <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                            <i><IoPhonePortraitOutline size={30} /></i>
+                                            <i>
+                                                <IoPhonePortraitOutline size={30} />
+                                            </i>
                                         </IconContext.Provider>
                                     </span>
                                 </div>
@@ -263,9 +309,13 @@ function ForgotPass() {
                                         <div className="btn btn-outline-info" onClick={togglePassword1}>
                                             <IconContext.Provider value={{ color: '#D57AD4' }}>
                                                 {passwordType1 === 'password' ? (
-                                                    <i><FaEyeSlash/></i>
+                                                    <i>
+                                                        <FaEyeSlash />
+                                                    </i>
                                                 ) : (
-                                                    <i><FaEye/></i>
+                                                    <i>
+                                                        <FaEye />
+                                                    </i>
                                                 )}
                                             </IconContext.Provider>
                                         </div>
@@ -287,9 +337,13 @@ function ForgotPass() {
                                         <div className="btn btn-outline-info" onClick={togglePassword2}>
                                             <IconContext.Provider value={{ color: '#D57AD4' }}>
                                                 {passwordType2 === 'password' ? (
-                                                    <i><FaEyeSlash/></i>
+                                                    <i>
+                                                        <FaEyeSlash />
+                                                    </i>
                                                 ) : (
-                                                    <i><FaEye/></i>
+                                                    <i>
+                                                        <FaEye />
+                                                    </i>
                                                 )}
                                             </IconContext.Provider>
                                         </div>
@@ -298,8 +352,12 @@ function ForgotPass() {
                                 <p className={cx('errorMessNewPW')}>{errorMessNewPW3}</p>
                             </div>
                             <div className={cx('contentTabPhone-btn')}>
-                                <p className={cx('combackTabOTP')} onClick={() => window.location.reload()}>◀ Trở về</p>
-                                <button className={cx('btnNewPW')} type="submit" onClick={checkDataInputs}>XÁC NHẬN</button>
+                                <p className={cx('combackTabOTP')} onClick={() => window.location.reload()}>
+                                    ◀ Trở về
+                                </p>
+                                <button className={cx('btnNewPW')} type="submit" onClick={checkDataInputs}>
+                                    XÁC NHẬN
+                                </button>
                             </div>
                         </Tab>
                     </Tabs>

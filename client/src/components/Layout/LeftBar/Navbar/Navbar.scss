@@ -1,0 +1,68 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    width: 60px;
+    height: 100%;
+
+    background: #f3bba0;
+
+    .avata {
+        padding: 30px 4px;
+
+        .contain-avata {
+            cursor: pointer;
+
+            .image-avata {
+                width: 100%;
+                border-radius: 50%;
+            }
+        }
+    }
+
+    .list-button {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+
+        .button {
+            list-style: none;
+            cursor: pointer;
+            padding: 14px;
+
+            width: 100%;
+            height: 60px;
+
+            &:hover {
+                background-color: #e3babf;
+            }
+
+            img {
+                width: 100%;
+            }
+        }
+
+        .buttonSelect {
+            list-style: none;
+            cursor: pointer;
+            padding: 14px;
+
+            width: 100%;
+            height: 60px;
+
+            background-color: #f3a3ad;
+
+            img {
+                width: 100%;
+            }
+        }
+    }
+}
+
+.test {
+    width: 100px;
+    height: 100%;
+}
