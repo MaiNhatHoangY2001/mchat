@@ -305,9 +305,9 @@ function Chat({ setRightBar }) {
                                             <p className={cx('textChat')}>{mess.message.content}</p>
                                         ) : (
                                             <>
-                                                {mess.message?.imageContent.length > 0 ? console.log("run") :  (mess.message?.imageContent).map((img, index) => {
-                                                        return <img key={index} alt="not fount" width={'20px'} src={img} />;
-                                                    })}
+                                                {mess.message?.imageContent.length > 0 ? (mess.message?.imageContent).map((img, index) => {
+                                                    return <img key={index} alt="not fount" width={'20px'} src={img} />;
+                                                }) : <img key={index} alt="not fount" width={'20px'} src={""} />}
                                             </>
                                         )}
                                         {/* {convertTime(mess.message.time)} */}
@@ -354,9 +354,12 @@ function Chat({ setRightBar }) {
                     multiple
                     onChange={async (event) => {
                         const bodyFormData = new FormData();
-                        bodyFormData.append('file', event.target.files[0]);
+                        const files = event.target.files;
+
+                        for (let index = 0; index < files.length; index++) {
+                            bodyFormData.append('file', files[index]);
+                        }
                         const image = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
-                        console.log(image);
                         addMsgImgWithInfo(image.url);
                     }}
                     style={{ display: 'none' }}
