@@ -188,7 +188,7 @@ function Register() {
                                                         <div id={cx('line')}>LINE</div>
                                                     </div> 
                                             </div>
-                                            <h2 className={cx('info')} style={{marginTop:-50}}>VUI LÒNG NHẬP SỐ ĐIỆN THOẠI</h2> <br />
+                                            <h2 className={cx('info')} style={{marginTop:-50 }}>VUI LÒNG NHẬP SỐ ĐIỆN THOẠI</h2> <br />
                                             <Phone
                                                 country={'vn'}
                                                 // onlyCountries={['vn']}
