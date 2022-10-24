@@ -305,7 +305,11 @@ function Chat({ setRightBar }) {
                                             src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                                             alt="avata"
                                         />
-                                        <div data-tip data-for="registerTip" className={cx('boxTextChat')}>
+                                        <div
+                                            data-tip={convertTime(mess.message.time)}
+                                            data-for="registerTip"
+                                            className={cx('boxTextChat')}
+                                        >
                                             {mess.message?.type_Msg === TYPE_MSG ? (
                                                 <p className={cx('textChat')}>{mess.message.content}</p>
                                             ) : (
@@ -314,6 +318,7 @@ function Chat({ setRightBar }) {
                                             {/* {convertTime(mess.message.time)} */}
                                         </div>
                                     </div>
+                                    <ReactTooltip id="registerTip" place="left" effect="solid" />
                                 </React.Fragment>
                             );
                         })
