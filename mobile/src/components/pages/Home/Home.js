@@ -7,7 +7,10 @@ function Home() {
             <Text>GROW</Text>
             <Text>YOUR BUSINESS</Text>
             <Link to="/login">
-                <Text> Đăng ký ngay </Text>
+                <Text> Đăng nhập ngay </Text>
+            </Link>
+            <Link to="/Register">
+                <Text> Đăng ký ngay </Text>
             </Link>
         </View>
     );

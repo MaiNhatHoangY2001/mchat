@@ -6,8 +6,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../../../redux/apiRequest/authApiRequest';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
-const cx = classNames.bind(styles);
 
+import 'w3-css/w3.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Tab, Tabs, Form } from 'react-bootstrap';
+
+import auth from '../../../firebase-config';
+import {RecaptchaVerifier, signInWithPhoneNumber} from 'firebase/auth'
+import styled from 'styled-components/macro';
+import PhoneInput from 'react-phone-input-2';
+
+
+const cx = classNames.bind(styles);
 function Register() {
     const user = useSelector((state) => state.auth.login?.currentUser);
 
@@ -83,145 +93,274 @@ function Register() {
         setPasswordType2('password');
     };
 
+    const [activeTab, setActiveTab] = useState(1);
+    const [disableTab1, setDisableTab1] = useState(false);
+    const [disableTab2, setDisableTab2] = useState(true);
+
+    const [otp, setOtp] = useState('')
+    const [errorMessOTP, setErrorMessOTP] = useState('')
+    const [changeTabMess, setchangeTabMess] = useState('')
+    const [errorMess, setErrorMess] = useState('')
+    const [flag, setFlag] = useState(false);
+    const [confirmObj, setConfirmObj] = useState('');
+    
+    const getOtp = async (e) =>{
+        e.preventDefault();
+
+        let phoneNum = '+' + phoneNumber.trim()
+        let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNum)
+        if(phoneNum === '' || phoneNum === undefined)
+            return setErrorMess("Vui lòng nhập số điện thoại")
+        else if (!regexPhoneNumberVN)
+            setErrorMess("Số điện thoại không hợp lệ")
+        else{
+            setErrorMess('')
+            try{
+                const response = await setUpRecaptcha(phoneNum)
+                setConfirmObj(response)
+                setFlag(true)
+            }catch(err){
+                console.log(err.message)
+            }
+        }
+    }
+    function setUpRecaptcha(phoneNumber) {
+        //link sub language: https://firebase.google.com/docs/reference/android/com/google/firebase/ml/naturallanguage/translate/FirebaseTranslateLanguage
+        // auth.setLanguageCode('vi');
+        const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
+        recaptchaVerifier.render();
+        recaptchaVerifier.verify();
+        return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
+    }
+    const Wrapper = ({ className, ...props }) => (
+        <div className={className}>
+            <PhoneInput {...props} />
+        </div>
+    );
+    const Phone = styled(Wrapper)`
+        #phone-input {
+            border: 1px solid #d57ad4 !important;
+        }
+    `;
+    const verifyOtp = async (e) => {
+        e.preventDefault();
+
+        if (otp === '' || otp === undefined) setErrorMessOTP('Vui lòng nhập mã xác thực!');
+        else if (otp.length !== 6) setErrorMessOTP('Vui lòng nhập 6 ký tự!');
+        else {
+            setErrorMessOTP('');
+            try {
+                await confirmObj.confirm(otp);
+                console.log(otp);
+                
+                setActiveTab(2);
+                // setHandleMoveTab(2);
+                setDisableTab1(true);
+                setDisableTab2(false);
+                setchangeTabMess("Đã xác thực, vui lòng điền thông tin đăng ký'");
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
+    };
     return (
         // <body>
         <section className={cx('register-container')}>
-            <form onSubmit={handleRegister} className={cx('register-form')}>
-                <h2 className={cx('info')}> THÔNG TIN ĐĂNG KÝ </h2> <br />
-                <div className="col-lg-6">
-                    {/* <label className={cx('margininput')}>Tài khoản:</label>
-                            <input type="text" placeholder="Nhập tên tài khoản" 
-                               id="userName" name="userName"
-                                onChange={(e) => setUserName(e.target.value)} />                            */}
-                    {/* <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SĐT:</label> */}
-                    <input
-                        type="text"
-                        pattern="^(0[0-9]{9}$)"
-                        placeholder="Nhập số điện thoại"
-                        className={cx('inputRegister')}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                    />
-
-                    {/* <div className={cx('row-register')}> */}
-                    {/* <label className={cx('margininput')}>Mật khẩu:</label>   */}
-                    <input
-                        type={passwordType1}
-                        placeholder="Nhập mật khẩu"
-                        pattern="^[a-zA-Z0-9 ]{5,}$"
-                        className={cx('inputRegisterPass')}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            setPasswordInputNewPW(e.target.value);
-                        }}
-                        value={passwordInputNewPW}
-                        name="password"
-                    />
-                    {/* </div> */}
-                    <span className="eye1">
-                        <div className="btn btn-outline-primary" onClick={togglePassword1}>
-                            <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                {passwordType1 === 'password' ? (
-                                    <i>
-                                        <FaEyeSlash />
-                                    </i>
-                                ) : (
-                                    <i>
-                                        <FaEye />
-                                    </i>
-                                )}
-                            </IconContext.Provider>
+            <div className={cx('boxTabs')}>
+            <Tabs
+                //className={cx('boxTabs')}
+                defaultActiveKey={activeTab}
+                transition={false}
+                variant="pills"
+                fill>
+                <Tab eventKey={1}  className={cx('TabOTP')} disabled={disableTab1}>
+                    <div >
+                                    <Form onSubmit={getOtp}  style={{ display: !flag ? 'block' : 'none' }} >
+                                        <Form.Group className="mb-3" controlId="formBasicphonenumber">
+                                            <div
+                                                    style={{width:300,marginLeft:150, flexDirection: 'row', justifyContent: 'center' }}
+                                                >
+                                                    <div className={cx('logo')}>
+                                                        <img
+                                                            src="https://raw.githubusercontent.com/Tuan2210/TH_CongNgheMoi/master/data%20MLine/logo-no-bg.png"
+                                                            alt="logoMLine"
+                                                        />
+                                                        <div id={cx('line')}>LINE</div>
+                                                    </div> 
+                                            </div>
+                                            <h2 className={cx('info')} style={{marginTop:-50}}>VUI LÒNG NHẬP SỐ ĐIỆN THOẠI</h2> <br />
+                                            <Phone
+                                                country={'vn'}
+                                                // onlyCountries={['vn']}
+                                                // placeholder="Vui lòng chọn vùng và nhập SĐT"
+                                                inputProps={{
+                                                    id: 'phone-input',
+                                                    required: true,
+                                                    autoFocus: true,
+                                                }}
+                                                className={cx('inputSDTOTP')}
+                                                autoFormat="true"
+                                                value={phoneNumber}
+                                                onChange={setPhoneNumber}
+                                                style={{ marginLeft: 25 }}
+                                            />
+                                            <span className={cx('errorMess')}>{errorMess}</span>
+                                            <div className={cx('btnsTabOTP')} style={{marginTop:-10}}>
+                                                <button type="submit" className={cx('btnSendOTP')}>
+                                                    Gửi mã xác thực
+                                                </button>
+                                                <button className={cx('btnCancel')} onClick={() => setPhoneNumber('')}>
+                                                    Hủy
+                                                </button>
+                                            </div>
+                                            <div id="recaptcha-container" style={{ marginLeft: 25 }}></div>
+                                            <div className={cx('btnsTabOTP')} >
+                                                <Link className={cx('comback-login')} to="/login"> 
+                                                    Quay lại{' '}
+                                                </Link>
+                                            </div>
+                                        </Form.Group>
+                                    </Form>
+                                    <Form onSubmit={verifyOtp} style={{ display: !flag ? 'none' : 'block' }}>
+                                        <Form.Group className="mb-3">
+                                            <div
+                                                style={{width:300,marginLeft:150, flexDirection: 'row', justifyContent: 'center' }}
+                                            >
+                                                <div className={cx('logo')}>
+                                                    <img
+                                                        src="https://raw.githubusercontent.com/Tuan2210/TH_CongNgheMoi/master/data%20MLine/logo-no-bg.png"
+                                                        alt="logoMLine"
+                                                    />
+                                                    <div id={cx('line')}>LINE</div>
+                                                </div>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Nhập mã xác nhận"
+                                                    onChange={(e) => setOtp(e.target.value)}
+                                                    className={cx('inputmaOTP')}
+                                                ></Form.Control>
+                                            </div>
+                                            <span className={cx('errorMess')}>{errorMessOTP}</span>
+                                            <span className={cx('changeTabMess')}>{changeTabMess}</span>
+                                            <div className={cx('btnsTabOTP')}>
+                                                <button
+                                                    type="submit"
+                                                    className={cx('btnConfirmOTP')}
+                                                    // onClick={() => setHandleMoveTab(2)}
+                                                >
+                                                    Xác nhận mã
+                                                </button>
+                                                <button
+                                                    className={cx('btnResendOTP')}
+                                                    onClick={() => {
+                                                        window.location.reload();
+                                                    }}
+                                                >
+                                                    Gửi lại mã xác thực
+                                                </button>
+                                            </div>
+                                        </Form.Group>
+                                    </Form>
+                            </div>
+                </Tab>
+                <Tab eventKey={2} disabled={disableTab2}>
+                    <div>
+                        <form onSubmit={handleRegister} className={cx('register-form')}>
+                        <h2 className={cx('info1')}> THÔNG TIN ĐĂNG KÝ </h2> <br />
+                        <div className="col-lg-6">
+                            <input
+                                type="text"
+                                pattern="^(0[0-9]{9}$)"
+                                placeholder="Nhập số điện thoại"
+                                className={cx('inputRegister')}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                            />
+                            <input
+                                type={passwordType1}
+                                placeholder="Nhập mật khẩu"
+                                pattern="^[a-zA-Z0-9 ]{5,}$"
+                                className={cx('inputRegisterPass')}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    setPasswordInputNewPW(e.target.value);
+                                }}
+                                value={passwordInputNewPW}
+                                name="password"
+                            />
+                            <span className="eye1">
+                                <div className="btn btn-outline-primary" onClick={togglePassword1}>
+                                    <IconContext.Provider value={{ color: '#D57AD4' }}>
+                                        {passwordType1 === 'password' ? (
+                                            <i>
+                                                <FaEyeSlash />
+                                            </i>
+                                        ) : (
+                                            <i>
+                                                <FaEye />
+                                            </i>
+                                        )}
+                                    </IconContext.Provider>
+                                </div>
+                            </span>
+                            <input
+                                type={passwordType2}
+                                placeholder="Nhập lại mật khẩu"
+                                className={cx('inputRegisterPass')}
+                                onChange={(e) => {
+                                    setRePass(e.target.value);
+                                    setPasswordInputConfirmNewPW(e.target.value);
+                                }}
+                                value={passwordInputConfirmNewPW}
+                                name="password"
+                            />
+                            <span className="eye2">
+                                <div className="btn btn-outline-primary" onClick={togglePassword2}>
+                                    <IconContext.Provider value={{ color: '#D57AD4' }}>
+                                        {passwordType2 === 'password' ? (
+                                            <i>
+                                                <FaEyeSlash />
+                                            </i>
+                                        ) : (
+                                            <i>
+                                                <FaEye />
+                                            </i>
+                                        )}
+                                    </IconContext.Provider>
+                                </div>
+                            </span>
+                            <br />
+                            <input
+                                type="text"
+                                placeholder="Nhập họ và tên"
+                                className={cx('inputRegister')}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                            <input
+                                type="date"
+                                // placeholder="dd/mm/yyyy"
+                                className={cx('inputRegisterDate')}
+                                onChange={(e) => setDate(e.target.value)}
+                            />
+                            <br />
+                            <br />
+                            <label className={cx('marginbutton')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bạn đã có tài khoản?</label>
+                            <Link to="/login" className={cx('login-link')}>
+                                <label>&nbsp;&nbsp;Đăng nhập ngay!</label>
+                            </Link>
                         </div>
-                    </span>
-                    {/* <div className={cx('row-register')}> */}
-                    {/* <label className={cx('margininput')}>&nbsp;Xác nhận:</label>  */}
-                    <input
-                        type={passwordType2}
-                        placeholder="Nhập lại mật khẩu"
-                        className={cx('inputRegisterPass')}
-                        onChange={(e) => {
-                            setRePass(e.target.value);
-                            setPasswordInputConfirmNewPW(e.target.value);
-                        }}
-                        value={passwordInputConfirmNewPW}
-                        name="password"
-                    />
-                    <span className="eye2">
-                        <div className="btn btn-outline-primary" onClick={togglePassword2}>
-                            <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                {passwordType2 === 'password' ? (
-                                    <i>
-                                        <FaEyeSlash />
-                                    </i>
-                                ) : (
-                                    <i>
-                                        <FaEye />
-                                    </i>
-                                )}
-                            </IconContext.Provider>
-                        </div>
-                    </span>
-                    <br />
-                    {/* </div> */}
-
-                    {/* <div className={cx('row-register')}> */}
-                    {/* <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Họ tên:</label>  */}
-                    <input
-                        type="text"
-                        placeholder="Nhập họ và tên"
-                        className={cx('inputRegister')}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-
-                    {/* </div> */}
-
-                    {/* <div className={cx('row-register')}> */}
-                    {/* <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tên:</label>
-                            <input 
-                                type="text" 
-                                placeholder="Nhập tên" 
-                                // className={cx('input-register')}
-                                onChange={(e) => setLastName(e.target.value)}/> */}
-                    {/* </div> */}
-
-                    {/* <div className={cx('row-register')}> */}
-                    {/* <label className={cx('margininput')}>&nbsp;Năm sinh:</label> */}
-                    <input
-                        type="date"
-                        // placeholder="dd/mm/yyyy"
-                        className={cx('inputRegisterDate')}
-                        onChange={(e) => setDate(e.target.value)}
-                    />
-                    <br />
-                    {/* </div> */}
-
-                    {/* <div className={cx('row-register')}> */}
-                    {/* <label className={cx('margininput')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email:</label>
-                            <input 
-                                type="email" 
-                                placeholder="nhom6@congnghemoi.IT" 
-                                // className={cx('input-register')}
-                                onChange={(e) => setEmailID(e.target.value)}/>    */}
-                    {/* </div> */}
-                    {/* <div className={cx('row-register')}> */}
-
-                    {/* </div>  */}
-                    <br />
-                    {/* <div className={cx('row-register')}> */}
-                    <label className={cx('marginbutton')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bạn đã có tài khoản?</label>
-                    <Link to="/login" className={cx('login-link')}>
-                        <label>&nbsp;&nbsp;Đăng nhập ngay!</label>
-                    </Link>
-                    {/* </div> */}
-                </div>
-                {isLoading ? (
-                    <p>Đang tạo tài khoản, vui lòng chờ trong giây lát</p>
-                ) : (
-                    <button type="submit" className={cx('btnRegister')}>
-                        {' '}
-                        ĐĂNG KÝ
-                    </button>
-                )}
-            </form>
+                        {isLoading ? (
+                            <p>Đang tạo tài khoản, vui lòng chờ trong giây lát</p>
+                        ) : (
+                            <button type="submit" className={cx('btnRegister')}>
+                                {' '}
+                                ĐĂNG KÝ
+                            </button>
+                        )}
+                        </form>
+                    </div>
+                </Tab>
+            </Tabs>
+            </div>
         </section>
     );
 }
