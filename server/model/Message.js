@@ -12,8 +12,12 @@ const messageSchema = new mongoose.Schema({
 	},
 	content: {
 		type: String,
-		required: true,
 	},
+	imageContent: [
+		{
+			type: String,
+		},
+	],
 	userGroupChat: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',

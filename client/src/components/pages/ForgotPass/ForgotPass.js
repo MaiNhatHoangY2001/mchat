@@ -71,10 +71,16 @@ function ForgotPass() {
     `;
 
     //OTP firebase
+    const [activeTab, setActiveTab] = useState(1); //active tab
+    const [disableTab1, setDisableTab1] = useState(false);
+    const [disableTab2, setDisableTab2] = useState(true);
+    // const [handleMoveTab, setHandleMoveTab] = useState({ activeTab });
+    //
     const [number, setNumber] = useState('');
     const [otp, setOtp] = useState('');
     const [errorMess, setErrorMess] = useState('');
     const [errorMessOTP, setErrorMessOTP] = useState('');
+    const [changeTabMess, setchangeTabMess] = useState('');
     const [flag, setFlag] = useState(false);
     const [confirmObj, setConfirmObj] = useState('');
     const getOtp = async (e) => {
@@ -110,6 +116,13 @@ function ForgotPass() {
             try {
                 await confirmObj.confirm(otp);
                 console.log(otp);
+                
+                setActiveTab(2);
+                // setHandleMoveTab(2);
+                setDisableTab1(true);
+                setDisableTab2(false);
+                setchangeTabMess("Đã xác thực, vui lòng chuyển đến tab 'Mật khẩu mới'");
+
                 //  CHANGE PASSWORD
                 // const account = {
                 //     phoneNumber: '0986439506',
@@ -149,13 +162,17 @@ function ForgotPass() {
     }
     function checkNewPW() {
         if (passwordInputNewPW.trim() === '') setErrorMessNewPW2('Vui lòng nhập mật khẩu mới!');
+        else if (passwordInputNewPW.trim().length < 6) setErrorMessNewPW2('Vui lòng nhập tối thiểu 6 ký tự!');
         else setErrorMessNewPW2('');
     }
     function checkConfirmNewPW() {
         if (passwordInputConfirmNewPW.trim() === '') setErrorMessNewPW3('Vui lòng nhập xác nhận mật khẩu mới!');
-        else if (!passwordInputConfirmNewPW.trim().test(passwordInputNewPW.trim()))
+        else if (passwordInputConfirmNewPW.trim().length < 6) setErrorMessNewPW3('Vui lòng nhập tối thiểu 6 ký tự!');
+        else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
             setErrorMessNewPW3('Mật khẩu xác nhận không đúng, vui lòng nhập lại!');
-        else setErrorMessNewPW3('');
+        else {
+            setErrorMessNewPW3('');
+        }
     }
     function checkDataInputs() {
         checkPhoneNumber();
@@ -177,13 +194,13 @@ function ForgotPass() {
                 <div className={cx('boxTabs')}>
                     <Tabs
                         className={cx('formTwoTabs')}
-                        defaultActiveKey="tabOTP"
+                        defaultActiveKey={activeTab}
                         transition={false}
                         variant="pills"
                         style={{ fontSize: '1rem' }}
                         fill
                     >
-                        <Tab eventKey="tabOTP" title="Xác thực SĐT" className={cx('formTabOTP')}>
+                        <Tab eventKey={1} title="Xác thực SĐT" className={cx('formTabOTP')} disabled={disableTab1}>
                             <div className="p-4 box">
                                 <Form onSubmit={getOtp} style={{ display: !flag ? 'block' : 'none' }}>
                                     <Form.Group className="mb-3" controlId="formBasicphonenumber">
@@ -231,8 +248,13 @@ function ForgotPass() {
                                             ></Form.Control>
                                         </div>
                                         <span className={cx('errorMess')}>{errorMessOTP}</span>
+                                        <span className={cx('changeTabMess')}>{changeTabMess}</span>
                                         <div className={cx('btnsTabOTP')}>
-                                            <button type="submit" className={cx('btnConfirmOTP')}>
+                                            <button
+                                                type="submit"
+                                                className={cx('btnConfirmOTP')}
+                                                // onClick={() => setHandleMoveTab(2)}
+                                            >
                                                 Xác nhận mã
                                             </button>
                                             <button
@@ -248,7 +270,7 @@ function ForgotPass() {
                                 </Form>
                             </div>
                         </Tab>
-                        <Tab eventKey="tabNewPW" title="Mật khẩu mới" className={cx('formTabPhone')}>
+                        <Tab eventKey={2} title="Mật khẩu mới" className={cx('formTabPhone')} disabled={disableTab2}>
                             <div className={cx('contentTabPhone')}>
                                 <div className={cx('rowInputs')}>
                                     <input

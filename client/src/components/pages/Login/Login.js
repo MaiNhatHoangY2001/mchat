@@ -73,7 +73,7 @@ function Login() {
     const [errorMessPW, setErrorMessPW] = useState('');
     function checkPW() {
         if(password.trim() === '') setErrorMessPW('Vui lòng nhập mật khẩu');
-        else if(password.trim().length !== 6) setErrorMessPW('Mật khẩu phải đủ 6 ký tự');
+        else if(password.trim().length < 6) setErrorMessPW('Mật khẩu phải tối thiểu 6 ký tự');
         else setErrorMessPW('');
     }
 
