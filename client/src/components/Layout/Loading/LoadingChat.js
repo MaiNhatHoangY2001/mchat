@@ -5,51 +5,32 @@ const cx = classNames.bind(styles);
 
 function LoadingChat() {
     return (
-        <div className={cx('flex-column')}>
-            <div className={cx('flex-row', 'friend-send')}>
-                <Skeleton
-                    width={40}
-                    height={30}
-                    className={cx('img-chat')}
-                    circle
-                    containerClassName="avatar-skeleton"
-                />
-                <Skeleton className={cx('box-text-chat')} width={350} />
+        <>
+            <div className={cx('userSend')}>
+                <Skeleton className={cx('imgChat')} circle containerClassName="avatar-skeleton" />
+                <div className={cx('boxTextChat')}>
+                    <Skeleton className={cx('textChat')} width={350} />
+                </div>
             </div>
-            <div className={cx('space-height')}></div>
-            <div className={cx('flex-row', 'user-send')}>
-                <Skeleton
-                    width={40}
-                    height={30}
-                    className={cx('img-chat')}
-                    circle
-                    containerClassName="avatar-skeleton"
-                />
-                <Skeleton className={cx('box-text-chat')} width={350} />
+            <div className={cx('friendSend')}>
+                <Skeleton className={cx('imgChat')} circle containerClassName="avatar-skeleton" />
+                <div className={cx('boxTextChat')}>
+                    <Skeleton className={cx('textChat')} width={350} />
+                </div>
             </div>
-            <div className={cx('space-height')}></div>
-            <div className={cx('flex-row', 'friend-send')}>
-                <Skeleton
-                    width={40}
-                    height={30}
-                    className={cx('img-chat')}
-                    circle
-                    containerClassName="avatar-skeleton"
-                />
-                <Skeleton className={cx('box-text-chat')} width={350} />
+            <div className={cx('userSend')}>
+                <Skeleton className={cx('imgChat')} circle containerClassName="avatar-skeleton" />
+                <div className={cx('boxTextChat')}>
+                    <Skeleton className={cx('textChat')} width={350} />
+                </div>
             </div>
-            <div className={cx('space-height')}></div>
-            <div className={cx('flex-row', 'user-send')}>
-                <Skeleton
-                    width={40}
-                    height={30}
-                    className={cx('img-chat')}
-                    circle
-                    containerClassName="avatar-skeleton"
-                />
-                <Skeleton className={cx('box-text-chat')} width={350} />
+            <div className={cx('friendSend')}>
+                <Skeleton className={cx('imgChat')} circle containerClassName="avatar-skeleton" />
+                <div className={cx('boxTextChat')}>
+                    <Skeleton className={cx('textChat')} width={350} />
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

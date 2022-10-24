@@ -124,11 +124,11 @@ function ForgotPass() {
                 setchangeTabMess("Đã xác thực, vui lòng chuyển đến tab 'Mật khẩu mới'");
 
                 //  CHANGE PASSWORD
-                // const account = {
-                //     phoneNumber: '0986439506',
-                //     newPassword: '1234567',
-                // };
-                // changePassword(account, dispatch, navigate);
+                const account = {
+                    phoneNumber: phoneTabNewPW.trim(),
+                    newPassword: passwordInputNewPW.trim(),
+                };
+                changePassword(account, dispatch, navigate);
             } catch (err) {
                 // setErrorMessOTP(err.message);
                 console.log(err.message);

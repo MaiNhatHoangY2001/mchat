@@ -286,61 +286,58 @@ function Chat({ setRightBar }) {
                     <div className={cx('timeChat')}>
                         <p className={cx('time')}>19:53, 7 Tháng 10, 2022</p>
                     </div>
+
                     {sendData === null ? (
                         <LoadingChat />
                     ) : (
                         sendData?.map((mess, index) => {
                             return (
-                                <div
-                                    key={index}
-                                    className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}
-                                >
-                                    <img
-                                        className={cx('imgChat')}
-                                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                        alt="avata"
-                                    />
-                                    <div className={cx('boxTextChat')}>
-                                        {mess.message?.type_Msg === TYPE_MSG ? (
-                                            <p className={cx('textChat')}>{mess.message.content}</p>
-                                        ) : (
-                                            <>
-                                                {mess.message?.imageContent.length > 0 ? (mess.message?.imageContent).map((img, index) => {
-                                                    return <img key={index} alt="not fount" width={'20px'} src={img} />;
-                                                }) : <img key={index} alt="not fount" width={'20px'} src={""} />}
-                                            </>
-                                        )}
-                                        {/* {convertTime(mess.message.time)} */}
+                                <React.Fragment key={index}>
+                                    <div className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}>
+                                        <img
+                                            className={cx('imgChat')}
+                                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                            alt="avata"
+                                        />
+                                        <div
+                                            data-tip={convertTime(mess.message.time)}
+                                            data-for="registerTip"
+                                            className={cx('boxTextChat')}
+                                        >
+                                            {mess.message?.type_Msg === TYPE_MSG ? (
+                                                <p className={cx('textChat')}>{mess.message.content}</p>
+                                            ) : (
+                                                <>
+                                                    {mess.message?.imageContent.length > 0 ? (
+                                                        (mess.message?.imageContent).map((img, index) => {
+                                                            return (
+                                                                <img
+                                                                    key={index}
+                                                                    alt="not fount"
+                                                                    width={'20px'}
+                                                                    src={img}
+                                                                />
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <img key={index} alt="not fount" width={'20px'} src={''} />
+                                                    )}
+                                                </>
+                                            )}
+                                            {/* {convertTime(mess.message.time)} */}
+                                        </div>
+                                        <div className={cx('boxEdite')}>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
                                     </div>
-                                </div>
+                                    <ReactTooltip id="registerTip" place="left" effect="solid" />
+                                </React.Fragment>
                             );
                         })
                     )}
-                    {/* <div className={cx('friendSend')}>
-                        <img
-                            className={cx('imgChat')}
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                            alt="avata"
-                        />
-                        <div className={cx('boxTextChat')}>
-                            <p className={cx('textChat')}>abc</p>
-                        </div>
-                    </div>
-                    <div className={cx('userSend')}>
-                        <img
-                            className={cx('imgChat')}
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                            alt="avata"
-                        />
-                        <div className={cx('boxTextChat')}>
-                            <img
-                                src={
-                                    'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715210/samples/imagecon-group.jpg'
-                                }
-                                alt="hinhanh"
-                            />
-                        </div>
-                    </div> */}
+
                     <div ref={bottomRef} />
                 </div>
             </div>
