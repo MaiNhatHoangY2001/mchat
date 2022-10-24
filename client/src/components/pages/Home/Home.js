@@ -33,6 +33,22 @@ function Home() {
         }
     }, [user]);
 
+    // useEffect(() => {
+    //     const handleTabClose = event => {
+    //         event.preventDefault();
+
+    //         console.log('beforeunload event triggered');
+
+    //         return (event.returnValue = 'Are you sure you want to exit?');
+    //     };
+
+    //     window.addEventListener('beforeunload', handleTabClose);
+
+    //     return () => {
+    //         window.removeEventListener('beforeunload', handleTabClose);
+    //     };
+    // }, []);
+
     return (
         <main className={cx('flex-row')}>
             <LeftBar />

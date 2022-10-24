@@ -291,12 +291,6 @@ function Chat({ setRightBar }) {
                         <LoadingChat />
                     ) : (
                         sendData?.map((mess, index) => {
-                            const renderEditText = (
-                                <div>
-                                    <p style={{ margin: 0 }}>Edit Text</p>
-                                </div>
-                            );
-
                             return (
                                 <React.Fragment key={index}>
                                     <div className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}>
@@ -313,7 +307,22 @@ function Chat({ setRightBar }) {
                                             {mess.message?.type_Msg === TYPE_MSG ? (
                                                 <p className={cx('textChat')}>{mess.message.content}</p>
                                             ) : (
-                                                <img alt="not fount" width={'20px'} src={mess.message.content} />
+                                                <>
+                                                    {mess.message?.imageContent.length > 0 ? (
+                                                        (mess.message?.imageContent).map((img, index) => {
+                                                            return (
+                                                                <img
+                                                                    key={index}
+                                                                    alt="not fount"
+                                                                    width={'20px'}
+                                                                    src={img}
+                                                                />
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <img key={index} alt="not fount" width={'20px'} src={''} />
+                                                    )}
+                                                </>
                                             )}
                                             {/* {convertTime(mess.message.time)} */}
                                         </div>
@@ -329,31 +338,6 @@ function Chat({ setRightBar }) {
                         })
                     )}
 
-                    {/* <div className={cx('friendSend')}>
-                        <img
-                            className={cx('imgChat')}
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                            alt="avata"
-                        />
-                        <div className={cx('boxTextChat')}>
-                            <p className={cx('textChat')}>abc</p>
-                        </div>
-                    </div>
-                    <div className={cx('userSend')}>
-                        <img
-                            className={cx('imgChat')}
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                            alt="avata"
-                        />
-                        <div className={cx('boxTextChat')}>
-                            <img
-                                src={
-                                    'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715210/samples/imagecon-group.jpg'
-                                }
-                                alt="hinhanh"
-                            />
-                        </div>
-                    </div> */}
                     <div ref={bottomRef} />
                 </div>
             </div>
