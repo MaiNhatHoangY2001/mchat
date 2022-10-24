@@ -71,6 +71,11 @@ function ForgotPass() {
     `;
 
     //OTP firebase
+    const [activeTab, setActiveTab] = useState(1); //active tab
+    const [disableTab1, setDisableTab1] = useState(false);
+    const [disableTab2, setDisableTab2] = useState(true);
+    // const [handleMoveTab, setHandleMoveTab] = useState({ activeTab });
+    //
     const [number, setNumber] = useState('');
     const [otp, setOtp] = useState('');
     const [errorMess, setErrorMess] = useState('');
@@ -110,12 +115,19 @@ function ForgotPass() {
             try {
                 await confirmObj.confirm(otp);
                 console.log(otp);
+
+                setActiveTab(2);
+                // setHandleMoveTab(2);
+                setDisableTab1(true);
+                setDisableTab2(false);
+                
+
                 //  CHANGE PASSWORD
-                const account = {
-                    phoneNumber: '0986439506',
-                    newPassword: '1234567',
-                };
-                changePassword(account, dispatch, navigate);
+                // const account = {
+                //     phoneNumber: '0986439506',
+                //     newPassword: '1234567',
+                // };
+                // changePassword(account, dispatch, navigate);
             } catch (err) {
                 // setErrorMessOTP(err.message);
                 console.log(err.message);
@@ -181,13 +193,13 @@ function ForgotPass() {
                 <div className={cx('boxTabs')}>
                     <Tabs
                         className={cx('formTwoTabs')}
-                        defaultActiveKey="tabOTP"
+                        defaultActiveKey={activeTab}
                         transition={false}
                         variant="pills"
                         style={{ fontSize: '1rem' }}
                         fill
                     >
-                        <Tab eventKey="tabOTP" title="Xác thực SĐT" className={cx('formTabOTP')}>
+                        <Tab eventKey={1} title="Xác thực SĐT" className={cx('formTabOTP')} disabled={disableTab1}>
                             <div className="p-4 box">
                                 <Form onSubmit={getOtp} style={{ display: !flag ? 'block' : 'none' }}>
                                     <Form.Group className="mb-3" controlId="formBasicphonenumber">
@@ -236,7 +248,11 @@ function ForgotPass() {
                                         </div>
                                         <span className={cx('errorMess')}>{errorMessOTP}</span>
                                         <div className={cx('btnsTabOTP')}>
-                                            <button type="submit" className={cx('btnConfirmOTP')}>
+                                            <button
+                                                type="submit"
+                                                className={cx('btnConfirmOTP')}
+                                                // onClick={() => setHandleMoveTab(2)}
+                                            >
                                                 Xác nhận mã
                                             </button>
                                             <button
@@ -252,7 +268,12 @@ function ForgotPass() {
                                 </Form>
                             </div>
                         </Tab>
-                        <Tab eventKey="tabNewPW" title="Mật khẩu mới" className={cx('formTabPhone')}>
+                        <Tab
+                            eventKey={2}
+                            title="Mật khẩu mới"
+                            className={cx('formTabPhone')}
+                            disabled={disableTab2}
+                        >
                             <div className={cx('contentTabPhone')}>
                                 <div className={cx('rowInputs')}>
                                     <input
