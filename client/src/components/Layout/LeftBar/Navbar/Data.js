@@ -1,6 +1,6 @@
 const Data = [
     {
-        toolTip: 'Tin Nhấn',
+        toolTip: 'Tin nhắn',
         urc: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666440248/samples/Icon/speech-bubble_qzd7rh.png',
         urcSelect: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666440247/samples/Icon/chat_vpy7ea.png',
         background: 'button',
@@ -14,7 +14,7 @@ const Data = [
         backgroundSelect: 'buttonSelect',
     },
     {
-        toolTip: 'Clound của bạn',
+        toolTip: 'Cloud của bạn',
         urc: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666440003/samples/Icon/cloud2_nryfj6.png',
         urcSelect: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666439927/samples/Icon/cloud_m7mndv.png',
         background: 'button',

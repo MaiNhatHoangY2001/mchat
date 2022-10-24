@@ -361,15 +361,24 @@ function Chat({ setRightBar }) {
                     }}
                     style={{ display: 'none' }}
                 />
+
+                {/* Button image */}
                 <div
                     className={cx('buttonInput')}
                     type="button"
-                    value="Browse..."
                     onClick={() => document.getElementById('selectedFile').click()}
                 >
                     <img
                         src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666526090/samples/Icon/photo_yn6nra.png`}
-                        alt="avata"
+                        alt="file"
+                    />
+                </div>
+
+                {/* Butotn file */}
+                <div className={cx('buttonInput')} type="button">
+                    <img
+                        src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666602452/samples/Icon/document_mzbsif.png`}
+                        alt="file"
                     />
                 </div>
 
@@ -382,10 +391,17 @@ function Chat({ setRightBar }) {
                 />
 
                 <div type="submit" className={cx('buttonInput')}>
-                    <img
-                        src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666528392/samples/Icon/like1_tz3tql.png`}
-                        alt="avata"
-                    />
+                    {message === '' ? (
+                        <img
+                            src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666528392/samples/Icon/like1_tz3tql.png`}
+                            alt="like and send"
+                        />
+                    ) : (
+                        <img
+                            src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666602121/samples/Icon/send2_llk6si.png`}
+                            alt="like and send"
+                        />
+                    )}
                 </div>
             </form>
         </>
