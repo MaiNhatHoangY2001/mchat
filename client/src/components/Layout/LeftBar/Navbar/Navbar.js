@@ -2,12 +2,12 @@ import classNames from 'classnames/bind';
 import React, { useState } from 'react';
 import Data from './Data';
 import styles from './Navbar.scss';
-import ReactTooltip from 'react-tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from '../../../../redux/apiRequest/authApiRequest';
 import { useNavigate } from 'react-router-dom';
 import { createAxios } from '../../../../redux/createInstance';
 import { logoutSuccess } from '../../../../redux/authSlice';
+import { Tooltip } from '@mui/material';
 
 const cx = classNames.bind(styles);
 
@@ -30,17 +30,15 @@ export default function Navbar({ setContainer }) {
     return (
         <div className={cx('container')}>
             <div className={cx('avata')}>
-                <div className={cx('contain-avata')}>
-                    <img
-                        data-tip="Mai Ngọc Long"
-                        data-for="avata"
-                        data-iscapture="true"
-                        className={cx('image-avata')}
-                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                        alt={'avata'}
-                    />
-                    <ReactTooltip id="avata" place="right" />
-                </div>
+                <Tooltip title="Tên người dùng" placement="right" disableInteractive arrow>
+                    <div className={cx('contain-avata')}>
+                        <img
+                            className={cx('image-avata')}
+                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                            alt={'avata'}
+                        />
+                    </div>
+                </Tooltip>
             </div>
             <ul className={cx('list-button')}>
                 {Data.map((item, index) => {
@@ -49,11 +47,8 @@ export default function Navbar({ setContainer }) {
                     const toolTip = item.toolTip;
 
                     return (
-                        <React.Fragment key={index}>
+                        <Tooltip key={index} title={toolTip} placement="right" disableInteractive arrow>
                             <li
-                                data-tip={toolTip}
-                                data-for="background"
-                                data-iscapture="true"
                                 className={cx(background)}
                                 onClick={() => {
                                     setSelect(index);
@@ -63,8 +58,7 @@ export default function Navbar({ setContainer }) {
                             >
                                 <img className={cx('iconButon')} src={imgae} alt={'icon-message'} />
                             </li>
-                            <ReactTooltip id="background" place="right" />
-                        </React.Fragment>
+                        </Tooltip>
                     );
                 })}
             </ul>

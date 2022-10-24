@@ -11,6 +11,8 @@ import { setSender } from '../../../../redux/userSlice';
 import { getMsgs, getMsgsGroupChat } from '../../../../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../../../../redux/authSlice';
 import { setIsGroupChat } from '../../../../redux/groupChatSlice';
+import ReactTooltip from 'react-tooltip';
+import { Box, Button, Modal, Tooltip, Typography } from '@mui/material';
 
 const cx = classNames.bind(styles);
 
@@ -25,6 +27,7 @@ export default function ListFriend() {
     const [textSearchUser, setTextSearchUser] = useState('');
     const [chatActors, setChatActors] = useState([]);
     const [isShowMenu, setIsShowMenu] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
 
     const dispatch = useDispatch();
     const accessToken = currentUser?.accessToken;
@@ -57,18 +60,6 @@ export default function ListFriend() {
 
         dispatch(setSender(sender));
     };
-
-    // const newMessage = (message) => {
-    //     switch (message?.type_Msg) {
-    //         case 0:
-    //             return message.content;
-    //         case 1:
-    //             return 'Tin nhắn hình ảnh';
-    //         default:
-    //             break;
-    //     }
-    // };
-
     const menuPopUp = () => {
         setIsShowMenu((prev) => !prev);
     };
@@ -95,24 +86,76 @@ export default function ListFriend() {
         <div className={cx('containerListFriend')}>
             <div className={cx('search')}>
                 <p className={cx('titleSearch')}>Tìm kiếm người dùng</p>
-                <AutoComplete
-                    currentUser={currentUser}
-                    users={usersSearch}
-                    renderInput={(params) => (
-                        <TextField
-                            style={{ fontSize: 16 }}
-                            {...params}
-                            label="Nhập tên người dùng"
-                            InputProps={{
-                                ...params.InputProps,
-                                type: 'search',
-                                onChange: (e) => {
-                                    setTextSearchUser(e.target.value);
-                                },
-                            }}
-                        />
-                    )}
-                />
+                <div className={cx('actionSearch')}>
+                    <AutoComplete
+                        currentUser={currentUser}
+                        users={usersSearch}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Nhập tên người dùng"
+                                InputProps={{
+                                    ...params.InputProps,
+                                    type: 'search',
+                                    onChange: (e) => {
+                                        setTextSearchUser(e.target.value);
+                                    },
+                                }}
+                                defaultValue="Small"
+                                size="small"
+                            />
+                        )}
+                    />
+                    <Tooltip title="Tạo nhóm" placement="right" disableInteractive arrow>
+                        <div className={cx('buttonGroup')} onClick={() => setOpenModal(true)}>
+                            <img
+                                src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666439594/samples/Icon/group_og7rhr.png`}
+                                alt={'avata'}
+                            />
+                        </div>
+                    </Tooltip>
+                    <Modal
+                        open={openModal}
+                        onClose={() => setOpenModal(false)}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box className={cx('modalGroup')}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                <div className={cx('headerModal')}>
+                                    <p>Tạo nhóm</p>
+                                </div>
+                            </Typography>
+                            <Typography id="modal-modal-description" className={cx('content')}>
+                                <div className={cx('bodyModal')}>
+                                    <div className={cx('boxTextInput')}>
+                                        <TextField
+                                            className={cx('groupName')}
+                                            id="standard-basic"
+                                            label="Tên nhóm"
+                                            size="small"
+                                            variant="standard"
+                                        />
+                                        <TextField
+                                            className={cx('groupName')}
+                                            id="standard-basic"
+                                            label="Tìm kiếm bạn bè"
+                                            size="small"
+                                        />
+                                    </div>
+                                </div>
+                                <form action="" className={cx('footerModal')}>
+                                    <Button color="error" onClick={() => setOpenModal(false)}>
+                                        <p>Hủy</p>
+                                    </Button>
+                                    <Button color="success">
+                                        <p>Tạo nhóm</p>
+                                    </Button>
+                                </form>
+                            </Typography>
+                        </Box>
+                    </Modal>
+                </div>
             </div>
             <div className={cx('list-item')}>
                 {chatActors?.map((actor, index) => {
