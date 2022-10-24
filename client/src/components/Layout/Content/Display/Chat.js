@@ -281,32 +281,39 @@ function Chat({ setRightBar }) {
                     <div className={cx('timeChat')}>
                         <p className={cx('time')}>19:53, 7 Tháng 10, 2022</p>
                     </div>
+
                     {sendData === null ? (
                         <LoadingChat />
                     ) : (
                         sendData?.map((mess, index) => {
-                            return (
-                                <div
-                                    key={index}
-                                    className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}
-                                >
-                                    <img
-                                        className={cx('imgChat')}
-                                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                        alt="avata"
-                                    />
-                                    <div className={cx('boxTextChat')}>
-                                        {mess.message?.type_Msg === TYPE_MSG ? (
-                                            <p className={cx('textChat')}>{mess.message.content}</p>
-                                        ) : (
-                                            <img alt="not fount" width={'20px'} src={mess.message.content} />
-                                        )}
-                                        {/* {convertTime(mess.message.time)} */}
-                                    </div>
+                            const renderEditText = (
+                                <div>
+                                    <p style={{ margin: 0 }}>Edit Text</p>
                                 </div>
+                            );
+
+                            return (
+                                <React.Fragment key={index}>
+                                    <div className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}>
+                                        <img
+                                            className={cx('imgChat')}
+                                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                            alt="avata"
+                                        />
+                                        <div data-tip data-for="registerTip" className={cx('boxTextChat')}>
+                                            {mess.message?.type_Msg === TYPE_MSG ? (
+                                                <p className={cx('textChat')}>{mess.message.content}</p>
+                                            ) : (
+                                                <img alt="not fount" width={'20px'} src={mess.message.content} />
+                                            )}
+                                            {/* {convertTime(mess.message.time)} */}
+                                        </div>
+                                    </div>
+                                </React.Fragment>
                             );
                         })
                     )}
+
                     {/* <div className={cx('friendSend')}>
                         <img
                             className={cx('imgChat')}
