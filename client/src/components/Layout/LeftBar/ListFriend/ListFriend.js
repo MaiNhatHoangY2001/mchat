@@ -58,6 +58,17 @@ export default function ListFriend() {
         dispatch(setSender(sender));
     };
 
+    // const newMessage = (message) => {
+    //     switch (message?.type_Msg) {
+    //         case 0:
+    //             return message.content;
+    //         case 1:
+    //             return 'Tin nhắn hình ảnh';
+    //         default:
+    //             break;
+    //     }
+    // };
+
     const menuPopUp = () => {
         setIsShowMenu((prev) => !prev);
     };
@@ -128,7 +139,7 @@ export default function ListFriend() {
                             />
                             <div className={cx('content-item')}>
                                 <p>{actor?.sender?.profileName || actor?.groupName}</p>
-                                <p className={cx('supchat')}>Tin nhắn mới nhất</p>
+                                <p className={cx('supchat')}>{/* {newMessage(actor?.message[0])} */}</p>
                             </div>
                             <span className={cx('dot', actor?.status === 'Active' ? 'active' : 'disable')}></span>
                         </button>

@@ -305,9 +305,15 @@ function Chat({ setRightBar }) {
                                             <p className={cx('textChat')}>{mess.message.content}</p>
                                         ) : (
                                             <>
-                                                {mess.message?.imageContent.length > 0 ? (mess.message?.imageContent).map((img, index) => {
-                                                    return <img key={index} alt="not fount" width={'20px'} src={img} />;
-                                                }) : <img key={index} alt="not fount" width={'20px'} src={""} />}
+                                                {mess.message?.imageContent.length > 0 ? (
+                                                    (mess.message?.imageContent).map((img, index) => {
+                                                        return (
+                                                            <img key={index} alt="not fount" width={'20px'} src={img} />
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <img key={index} alt="not fount" width={'20px'} src={''} />
+                                                )}
                                             </>
                                         )}
                                         {/* {convertTime(mess.message.time)} */}
