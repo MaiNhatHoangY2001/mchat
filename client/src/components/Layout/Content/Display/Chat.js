@@ -317,6 +317,11 @@ function Chat({ setRightBar }) {
                                             )}
                                             {/* {convertTime(mess.message.time)} */}
                                         </div>
+                                        <div className={cx('boxEdite')}>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
                                     </div>
                                     <ReactTooltip id="registerTip" place="left" effect="solid" />
                                 </React.Fragment>
