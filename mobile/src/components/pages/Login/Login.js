@@ -100,8 +100,9 @@ function Login() {
                         </View>
                         <Text style={styles.errorMess}>Lỗi mk</Text>
                         <Link 
-                            // to="ForgotPass" 
-                            style={{ alignSelf: 'flex-end', marginRight: 22 }}>
+                            to="/forgotPass"
+                            style={{ alignSelf: 'flex-end', marginRight: 22 }}
+                        >
                             <Text
                                 style={{
                                     color: 'rgb(250, 139, 158)',
