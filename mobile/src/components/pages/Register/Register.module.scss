@@ -3,7 +3,6 @@
     flex: 1;
     justify-content: space-around;
     align-items: center;
-<<<<<<< HEAD
     background-repeat: no-repeat;
     background-size: cover;
     margin: 0;
@@ -24,128 +23,12 @@
     align-self: center;
     margin-top: -180px;
     margin-left: 165px;
-=======
-    justify-content: center;
-    margin-top: 1rem;
-    border-radius: 2px;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    //position: fixed;
-    margin: 0;
-    padding: 0;
-    //font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    //ko cho chuột bôi đen trừ input
-    -webkit-touch-callout: none;
-    /* iOS Safari */
-    -webkit-user-select: none;
-    /* Safari */
-    -khtml-user-select: none;
-    /* Konqueror HTML */
-    -moz-user-select: none;
-    /* Old versions of Firefox */
-    -ms-user-select: none;
-    /* Internet Explorer/Edge */
-    user-select: none;
-    /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
-}
-.registerform {
-    display: flex;
-    margin-top: 1rem;
-    font-size: 2vh;
-    font-weight: 600;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 610px;
-    background-color: #fff;
-    // box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
-    //    margin: 0.75rem;
-    height: 80%;
-    border-radius: 15px;
-    //font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    min-width: 30%;
-}
-.inputRegister {
-    border: none;
-    padding: 0.35rem;
-    //font-family: "Inter", sans-serif;
-    margin: 0.75rem 0;
-    border-radius: 4px;
-    width: 100%;
-    border-bottom: 1px solid lightgray;
-    font-size: 1rem;
-}
-.inputRegisterPass {
-    border: none;
-    padding: 0.35rem;
-    //font-family: "Inter", sans-serif;
-    border-radius: 4px;
-    width: 85%;
-    margin-top: 3.5%;
-    border-bottom: 1px solid lightgray;
-    font-size: 1rem;
-}
-.inputRegister:placeholder-shown,
-.inputRegisterPass:placeholder-shown,
-.inputRegisterDate:placeholder-shown {
-    border-left: 5px solid red;
-}
-.inputRegister:not(:placeholder-shown),
-.inputRegisterPass:not(:placeholder-shown),
-.inputRegisterDate:not(:placeholder-shown) {
-    border-left: 5px solid green;
-}
-.inputRegisterDate {
-    border: none;
-    padding: 0.35rem;
-    //font-family: "Inter", sans-serif;
-    border-radius: 4px;
-    width: 100%;
-    padding-top: 5%;
-    padding-bottom: 4%;
-    border-bottom: 1px solid lightgray;
-    opacity: 0.5;
-}
-.margininput {
-    margin: 0.75rem;
-    text-align: boild;
-}
-.magrinbutton {
-    margin: 1rem;
-    font-size: 1rem;
-}
-.login-link:hover {
-    color: #d57ad4;
-}
-.login-link {
-    text-decoration: none;
-    margin-top: 1rem;
-    color: #d57ad4;
-    font-weight: 700;
-    font-size: 1rem;
-}
-.info {
-    pointer-events: none;
-}
-.btnRegister {
-    align-self: center;
-    margin-top: 3.5% !important;
-    font-size: 1rem;
-    padding: 3%; //!important;
-    width: 35%;
-    border: 1px solid #d57ad4;
-    border-radius: 10%;
-    color: white;
-    background-color: #d57ad4;
->>>>>>> 506785f2de0e2682012a520fd3121770516e4829
 }
 .tittle{
     margin: 80px;
     font-size: 20;
     font-weight:600;
 }
-<<<<<<< HEAD
 .info{
     margin-left: 45;
     margin-top: -70px;
@@ -163,24 +46,6 @@
 }
 .viewbot{
     padding-top: 200px;
-=======
-// .register-container {
-//     width: 50%;
-//     display: flex;
-//     flex-direction: column;
-//     //align-items: center;
-//     //justify-content: center;
-//     margin-top: 3rem;
-//     border-radius: 12px;
-//     height: 650px;
-//     min-width: 20%;
-//     background-color: white;
-//     background-image: none;
-//     text-align: center;
-
-// }
-.divRow {
->>>>>>> 506785f2de0e2682012a520fd3121770516e4829
     flex-direction: row;
     justify-content: space-between;
     margin: 50px;
