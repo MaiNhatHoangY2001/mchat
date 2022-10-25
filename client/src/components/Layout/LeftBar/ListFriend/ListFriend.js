@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './ListFriend.scss';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AutoComplete from '../AutoComplete';
 import TextField from '@mui/material/TextField';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,8 +11,22 @@ import { setSender } from '../../../../redux/userSlice';
 import { getMsgs, getMsgsGroupChat } from '../../../../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../../../../redux/authSlice';
 import { setIsGroupChat } from '../../../../redux/groupChatSlice';
-import ReactTooltip from 'react-tooltip';
-import { Box, Button, Modal, Tooltip, Typography } from '@mui/material';
+import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
+import {
+    Avatar,
+    Box,
+    Button,
+    Checkbox,
+    IconButton,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Modal,
+    Tooltip,
+} from '@mui/material';
 
 const cx = classNames.bind(styles);
 
@@ -26,11 +40,13 @@ export default function ListFriend() {
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
     const [chatActors, setChatActors] = useState([]);
-    const [isShowMenu, setIsShowMenu] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [searchGroup, setSearchGroup] = useState('');
 
     const dispatch = useDispatch();
     const accessToken = currentUser?.accessToken;
+
+    const [selectData, setSelectData] = useState([]);
 
     let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
 
@@ -39,6 +55,47 @@ export default function ListFriend() {
         color: 'white',
         pointerEvents: 'none',
         userSelect: 'none',
+    };
+
+    const dataList = [
+        {
+            id: 0,
+            name: 'Mai Ngọc Long',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715205/samples/people/boy-snow-hoodie.jpg',
+            sdt: '001',
+        },
+        {
+            id: 1,
+            name: 'Phạm Minh Hùng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715203/samples/people/smiling-man.jpg',
+            sdt: '002',
+        },
+        {
+            id: 2,
+            name: 'Mai Nhật Hoàng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
+            sdt: '003',
+        },
+    ];
+
+    const setDataSelect = (event) => {
+        setSearchGroup(event.target.value);
+    };
+
+    const handleToggle = (item) => () => {
+        const currentIndex = selectData
+            .map((item1) => {
+                return item1.id;
+            })
+            .indexOf(item.id);
+        const newData = [...selectData];
+
+        if (currentIndex === -1) {
+            newData.push(item);
+        } else {
+            newData.splice(currentIndex, 1);
+        }
+        setSelectData(newData);
     };
 
     const handleClick = async (individualId, sender, userId, isGroupChat) => {
@@ -59,9 +116,6 @@ export default function ListFriend() {
         }
 
         dispatch(setSender(sender));
-    };
-    const menuPopUp = () => {
-        setIsShowMenu((prev) => !prev);
     };
 
     useEffect(() => {
@@ -114,19 +168,13 @@ export default function ListFriend() {
                             />
                         </div>
                     </Tooltip>
-                    <Modal
-                        open={openModal}
-                        onClose={() => setOpenModal(false)}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box className={cx('modalGroup')}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                <div className={cx('headerModal')}>
-                                    <p>Tạo nhóm</p>
-                                </div>
-                            </Typography>
-                            <Typography id="modal-modal-description" className={cx('content')}>
+
+                    <Modal open={openModal} onClose={() => setOpenModal(false)}>
+                        <div className={cx('modalGroup')}>
+                            <div className={cx('headerModal')}>
+                                <p>Tạo nhóm</p>
+                            </div>
+                            <div className={cx('content')}>
                                 <div className={cx('bodyModal')}>
                                     <div className={cx('boxTextInput')}>
                                         <TextField
@@ -135,25 +183,98 @@ export default function ListFriend() {
                                             label="Tên nhóm"
                                             size="small"
                                             variant="standard"
+                                            placeholder="Nhập tên nhóm"
                                         />
                                         <TextField
                                             className={cx('groupName')}
                                             id="standard-basic"
                                             label="Tìm kiếm bạn bè"
                                             size="small"
+                                            onChange={setDataSelect}
+                                            placeholder="Nhập tên hoặc số điện thoại"
                                         />
                                     </div>
+                                    <div className={cx('addUserGroup')}>
+                                        <div className={cx('listFriendModal')}>
+                                            <p>Danh sách bạn bè</p>
+                                            <List className={cx('listItem')}>
+                                                {dataList.map((item, index) => {
+                                                    const name = item.name;
+                                                    return name.toLowerCase().includes(searchGroup.toLowerCase()) ? (
+                                                        <ListItem key={index} disablePadding>
+                                                            <ListItemButton
+                                                                role={undefined}
+                                                                onClick={handleToggle(item)}
+                                                                dense
+                                                            >
+                                                                <ListItemIcon>
+                                                                    <Checkbox
+                                                                        edge="start"
+                                                                        checked={
+                                                                            selectData
+                                                                                .map((item1) => {
+                                                                                    return item1.id;
+                                                                                })
+                                                                                .indexOf(item.id) !== -1
+                                                                        }
+                                                                        tabIndex={-1}
+                                                                        disableRipple
+                                                                    />
+                                                                </ListItemIcon>
+                                                                <ListItemAvatar>
+                                                                    <Avatar>
+                                                                        <img src={item.avata} alt="avata" />
+                                                                    </Avatar>
+                                                                </ListItemAvatar>
+                                                                <ListItemText primary={item.name} />
+                                                            </ListItemButton>
+                                                        </ListItem>
+                                                    ) : (
+                                                        <React.Fragment key={index}></React.Fragment>
+                                                    );
+                                                })}
+                                            </List>
+                                        </div>
+                                        <div className={cx('listFriendSelectModal')}>
+                                            <p>Danh sách bạn bè đã chọn {selectData.length}/100</p>
+                                            <List className={cx('listItem')}>
+                                                {selectData.map((item, index) => {
+                                                    return (
+                                                        <ListItem
+                                                            key={index}
+                                                            secondaryAction={
+                                                                <IconButton
+                                                                    edge="end"
+                                                                    aria-label="comments"
+                                                                    onClick={handleToggle(item)}
+                                                                >
+                                                                    <HighlightOffOutlinedIcon />
+                                                                </IconButton>
+                                                            }
+                                                        >
+                                                            <ListItemAvatar>
+                                                                <Avatar>
+                                                                    <img src={item.avata} alt="avata" />
+                                                                </Avatar>
+                                                            </ListItemAvatar>
+                                                            <ListItemText primary={item.name} />
+                                                        </ListItem>
+                                                    );
+                                                })}
+                                            </List>
+                                        </div>
+                                    </div>
                                 </div>
-                                <form action="" className={cx('footerModal')}>
+                                <div className={cx('footerModal')}>
                                     <Button color="error" onClick={() => setOpenModal(false)}>
                                         <p>Hủy</p>
                                     </Button>
                                     <Button color="success">
                                         <p>Tạo nhóm</p>
                                     </Button>
-                                </form>
-                            </Typography>
-                        </Box>
+                                </div>
+                            </div>
+                        </div>
                     </Modal>
                 </div>
             </div>

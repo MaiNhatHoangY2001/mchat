@@ -182,7 +182,7 @@
                 flex-direction: column;
                 align-items: flex-start;
                 padding: 0 10px 20px;
-                gap: 10px;
+                gap: 20px;
 
                 width: 100%;
 
@@ -191,9 +191,34 @@
                 .groupName {
                     width: 100%;
                 }
+            }
 
-                .css-1p5q5e5-MuiStack-root {
-                    width: 100%;
+            .addUserGroup {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+
+                width: 100%;
+                height: 100%;
+
+                .listFriendModal {
+                    flex: 1;
+
+                    p {
+                        font-size: 18px;
+                        font-weight: 500px;
+                        margin: 0;
+                    }
+                }
+
+                .listFriendSelectModal {
+                    flex: 1;
+
+                    p {
+                        font-size: 18px;
+                        font-weight: 500px;
+                        margin: 0;
+                    }
                 }
             }
         }
