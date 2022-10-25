@@ -20,6 +20,7 @@ import Push from 'push.js';
 import moment from 'moment';
 import Data from './DataHeaderButtonChat';
 import ReactTooltip from 'react-tooltip';
+import Skeleton from 'react-loading-skeleton';
 
 const cx = classNames.bind(styles);
 
@@ -309,7 +310,14 @@ function Chat({ setRightBar }) {
                                                 {mess.message?.imageContent.length > 0 ? (
                                                     (mess.message?.imageContent).map((img, index) => {
                                                         return (
-                                                            <img key={index} alt="not fount" width={'20px'} src={img} />
+                                                            (
+                                                                <img
+                                                                    key={index}
+                                                                    alt="not fount"
+                                                                    width={'20px'}
+                                                                    src={img}
+                                                                />
+                                                            ) || <Skeleton />
                                                         );
                                                     })
                                                 ) : (
@@ -368,7 +376,10 @@ function Chat({ setRightBar }) {
                             bodyFormData.append('file', files[index]);
                         }
                         const image = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
-                        addMsgImgWithInfo(image.url);
+                        window.setTimeout(function () {
+                            //wait upload image on google cloud
+                            addMsgImgWithInfo(image.url);
+                        }, 1000);
                     }}
                     style={{ display: 'none' }}
                 />

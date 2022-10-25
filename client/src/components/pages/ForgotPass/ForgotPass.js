@@ -123,12 +123,12 @@ function ForgotPass() {
                 setDisableTab2(false);
                 setchangeTabMess("Đã xác thực, vui lòng chuyển đến tab 'Mật khẩu mới'");
 
-                //  CHANGE PASSWORD
-                const account = {
-                    phoneNumber: phoneTabNewPW.trim(),
-                    newPassword: passwordInputNewPW.trim(),
-                };
-                changePassword(account, dispatch, navigate);
+                // //  CHANGE PASSWORD
+                // const account = {
+                //     phoneNumber: phoneTabNewPW.trim(),
+                //     newPassword: passwordInputNewPW.trim(),
+                // };
+                // changePassword(account, dispatch, navigate);
             } catch (err) {
                 // setErrorMessOTP(err.message);
                 console.log(err.message);
@@ -270,7 +270,7 @@ function ForgotPass() {
                                 </Form>
                             </div>
                         </Tab>
-                        <Tab eventKey={2} title="Mật khẩu mới" className={cx('formTabPhone')} disabled={disableTab2}>
+                        <Tab eventKey={2} title="Mật khẩu mới" className={cx('formTabPhone')} >
                             <div className={cx('contentTabPhone')}>
                                 <div className={cx('rowInputs')}>
                                     <input
