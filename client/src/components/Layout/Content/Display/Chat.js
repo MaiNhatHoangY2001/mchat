@@ -20,6 +20,8 @@ import Push from 'push.js';
 import moment from 'moment';
 import Data from './DataHeaderButtonChat';
 import ReactTooltip from 'react-tooltip';
+import Skeleton from 'react-loading-skeleton';
+import Picker from 'emoji-picker-react';
 
 const cx = classNames.bind(styles);
 
@@ -172,7 +174,13 @@ function Chat({ setRightBar }) {
 
         return formattedDate;
     };
-
+    //POP THE EMOJI PICKER UP
+    const [inputStr, setInputStr] = useState('');
+    const [showPicker, setShowPicker] = useState(false);
+    const emojiPicker = (event, emojiObject) => {
+        setInputStr((prevInput) => prevInput + emojiObject.emoji);
+        setShowPicker(false);
+    };
     //SAVE MSG WHEN RELOAD PAGE
     useEffect(() => {
         if (!isGroupChat) {
@@ -357,7 +365,10 @@ function Chat({ setRightBar }) {
                             bodyFormData.append('file', files[index]);
                         }
                         const image = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
-                        addMsgImgWithInfo(image.url);
+                        window.setTimeout(function () {
+                            //wait upload image on google cloud
+                            addMsgImgWithInfo(image.url);
+                        }, 1000);
                     }}
                     style={{ display: 'none' }}
                 />
@@ -381,14 +392,21 @@ function Chat({ setRightBar }) {
                         alt="file"
                     />
                 </div>
-
-                <input
-                    className={cx('inputText')}
-                    type="text"
-                    placeholder="Aa"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
+                <div className={cx('inputText')}>
+                    <input type="text" placeholder="Aa" value={message} onChange={(e) => setMessage(e.target.value)} />
+                    <img
+                        className={cx('iconPicker')}
+                        src={`https://res.cloudinary.com/dxwhrjno5/image/upload/v1666631419/Images/220-2207946_png-file-svg-white-emoji-icon-png-transparent_pr7qbl.jpg`}
+                        alt="file"
+                        onClick={() => setShowPicker((val) => !val)}
+                    />
+                    {showPicker && (
+                        <Picker
+                            pickerStyle={{ width: '25%', position: 'absolute', top: 5 }}
+                            onEmojiClick={{ emojiPicker }}
+                        />
+                    )}
+                </div>
 
                 <div type="submit" className={cx('buttonInput')}>
                     {message === '' ? (

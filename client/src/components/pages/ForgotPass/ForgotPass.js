@@ -123,12 +123,12 @@ function ForgotPass() {
                 setDisableTab2(false);
                 setchangeTabMess("Đã xác thực, vui lòng chuyển đến tab 'Mật khẩu mới'");
 
-                //  CHANGE PASSWORD
-                const account = {
-                    phoneNumber: phoneTabNewPW.trim(),
-                    newPassword: passwordInputNewPW.trim(),
-                };
-                changePassword(account, dispatch, navigate);
+                // //  CHANGE PASSWORD
+                // const account = {
+                //     phoneNumber: phoneTabNewPW.trim(),
+                //     newPassword: passwordInputNewPW.trim(),
+                // };
+                // changePassword(account, dispatch, navigate);
             } catch (err) {
                 // setErrorMessOTP(err.message);
                 console.log(err.message);

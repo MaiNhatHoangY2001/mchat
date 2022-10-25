@@ -1,11 +1,11 @@
-import { Home, Login, Register } from "../components/pages";
+import { ForgotPass, Home, Login, Register } from '../components/pages';
 
 const publicRoutes = [
-  { path: "/", component: Home },
-  { path: '/Register', component: Register },
-  { path: "/login", component: Login },
-  // { path: '/forgotPass', component: ForgotPass },
-  // { path: '/call', component: Call },
+    { path: '/', component: Home },
+    { path: '/register', component: Register },
+    { path: '/login', component: Login },
+    { path: '/forgotPass', component: ForgotPass },
+    // { path: '/call', component: Call },
 ];
 
 const privateRoutes = [];

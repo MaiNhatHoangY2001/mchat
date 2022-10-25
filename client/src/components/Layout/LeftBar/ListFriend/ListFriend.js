@@ -155,7 +155,6 @@ export default function ListFriend() {
                                         setTextSearchUser(e.target.value);
                                     },
                                 }}
-                                defaultValue="Small"
                                 size="small"
                             />
                         )}

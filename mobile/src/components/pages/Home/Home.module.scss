@@ -1,5 +1,35 @@
-.title {
-  text-align: center;
-  align-items: center;
-  margin-top: 30rem;
+// .title {
+//   text-align: center;
+//   align-items: center;
+//   margin-top: 30rem;
+// }
+.container {
+    margin: 0;
+    padding: 0;
+}
+
+.imgBG {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.txtLine {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: rgb(250, 139, 158);
+    margin-top: -30px;
+    align-self: center;
+}
+
+.btnLoginByPhone {
+    background-color: rgb(250, 139, 158);
+    border-radius: 10px;
+    padding: 3%;
 }

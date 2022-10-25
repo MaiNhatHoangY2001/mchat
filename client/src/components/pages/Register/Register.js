@@ -124,14 +124,7 @@ function Register() {
             }
         }
     }
-    function setUpRecaptcha(phoneNumber) {
-        //link sub language: https://firebase.google.com/docs/reference/android/com/google/firebase/ml/naturallanguage/translate/FirebaseTranslateLanguage
-        // auth.setLanguageCode('vi');
-        const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
-        recaptchaVerifier.render();
-        recaptchaVerifier.verify();
-        return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
-    }
+    
     const Wrapper = ({ className, ...props }) => (
         <div className={className}>
             <PhoneInput {...props} />
@@ -157,12 +150,22 @@ function Register() {
                 // setHandleMoveTab(2);
                 setDisableTab1(true);
                 setDisableTab2(false);
-                setchangeTabMess("Đã xác thực, vui lòng điền thông tin đăng ký'");
+                setchangeTabMess("Đã xác thực, vui lòng chờ trong giây lát!'");
+               // navigate('/register')
             } catch (err) {
                 console.log(err.message);
             }
         }
     };
+    function setUpRecaptcha(phoneNumber) {
+        const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
+        recaptchaVerifier.render();
+        recaptchaVerifier.verify();
+        return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
+    }
+    const handleChangeTab = (e) =>{
+        setActiveTab(2)
+    }
     return (
         // <body>
         <section className={cx('register-container')}>
@@ -172,8 +175,9 @@ function Register() {
                 defaultActiveKey={activeTab}
                 transition={false}
                 variant="pills"
-                fill>
-                <Tab eventKey={1}  className={cx('TabOTP')} disabled={disableTab1}>
+                fill
+                onSelect ={(key) => handleChangeTab(key)}>
+                <Tab eventKey={1}  className={cx('TabOTP')} disabled={disableTab1} >
                     <div >
                                     <Form onSubmit={getOtp}  style={{ display: !flag ? 'block' : 'none' }} >
                                         <Form.Group className="mb-3" controlId="formBasicphonenumber">
@@ -223,9 +227,7 @@ function Register() {
                                     </Form>
                                     <Form onSubmit={verifyOtp} style={{ display: !flag ? 'none' : 'block' }}>
                                         <Form.Group className="mb-3">
-                                            <div
-                                                style={{width:300,marginLeft:150, flexDirection: 'row', justifyContent: 'center' }}
-                                            >
+                                            <div style={{width:300,marginLeft:150, flexDirection: 'row', justifyContent: 'center' }}>
                                                 <div className={cx('logo')}>
                                                     <img
                                                         src="https://raw.githubusercontent.com/Tuan2210/TH_CongNgheMoi/master/data%20MLine/logo-no-bg.png"
@@ -238,7 +240,7 @@ function Register() {
                                                     placeholder="Nhập mã xác nhận"
                                                     onChange={(e) => setOtp(e.target.value)}
                                                     className={cx('inputmaOTP')}
-                                                ></Form.Control>
+                                                />
                                             </div>
                                             <span className={cx('errorMess')}>{errorMessOTP}</span>
                                             <span className={cx('changeTabMess')}>{changeTabMess}</span>
@@ -246,18 +248,13 @@ function Register() {
                                                 <button
                                                     type="submit"
                                                     className={cx('btnConfirmOTP')}
-                                                    // onClick={() => setHandleMoveTab(2)}
-                                                >
-                                                    Xác nhận mã
-                                                </button>
+                                                >Xác nhận mã</button>
                                                 <button
                                                     className={cx('btnResendOTP')}
                                                     onClick={() => {
                                                         window.location.reload();
                                                     }}
-                                                >
-                                                    Gửi lại mã xác thực
-                                                </button>
+                                                >Gửi lại mã xác thực</button>
                                             </div>
                                         </Form.Group>
                                     </Form>
