@@ -14,10 +14,24 @@
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        //ko cho chuột bôi đen trừ input
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Safari */
+        -khtml-user-select: none;
+        /* Konqueror HTML */
+        -moz-user-select: none;
+        /* Old versions of Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    
 }
 .register-form{
     display: flex;
-    margin-top: 1rem;
+    margin-top: 1.5px;
     font-size: 2.0vh;
     font-weight: 600;
     flex-direction: column;
@@ -27,12 +41,34 @@
     background-color: #fff;
     box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
 //    margin: 0.75rem;
-    height: 80%;
     border-radius: 15px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-width: 30%;
     
 }
+.boxTabs{
+    // display: flex;
+    // margin-top: 1rem;
+    // font-size: 2.0vh;
+    // font-weight: 600;
+    // flex-direction: column;
+    // justify-content: center;
+    //align-items: center;
+    width: 610px;
+    background-color: #fff;
+    box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
+//    margin: 0.75rem;
+    height: 70%;
+    border-radius: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-width: 30%;
+}
+// .TabOTP{
+//     align-items: center;
+//     align-items: center;
+//     background-color: #fff;
+//     height: 340px;
+// }
 .inputRegister{
     border: none;
     padding: 0.35rem;
@@ -43,6 +79,118 @@
     border-bottom: 1px solid lightgray;
     font-size: 1rem;
 
+}
+.inputSDTOTP{
+    display: flex;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    padding: 0.35rem;
+    font-family: "Inter", sans-serif;
+    margin: 0.75rem 0;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 1rem;
+    margin-left: 120px;
+}
+.inputMaOTP{
+    display: flex;
+    width: -50%;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    padding: 0.35rem;
+    font-family: "Inter", sans-serif;
+    margin: 0.75rem 0;
+    border-radius: 4px;
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+    font-size: 1rem;
+    margin-top: 50px;
+}
+
+.btnsTabOTP {
+    margin-top: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.btnSendOTP,
+.btnCancel,
+.btnConfirmOTP,
+.btnResendOTP {
+    background-color: #D57AD4;
+    border: 1px solid #D57AD4;
+    border-radius: 10px;
+    color: #fff;
+    padding: 1%;
+    margin-bottom: 15px;
+    height: 2.5rem;
+    font-size: 1rem;
+}
+
+.btnConfirmOTP,
+.btnResendOTP {
+    width: 110px;
+    height: 60px;
+}
+
+.btnSendOTP {
+    margin-right: 10px;
+}
+
+.btnConfirmOTP {
+    margin-right: 25px;
+}
+
+.btnSendOTP:hover,
+.btnCancel:hover,
+.btnConfirmOTP:hover,
+.btnResendOTP:hover {
+    background-color: #fff;
+    border: 1px solid rgb(250, 139, 158);
+    color: rgb(250, 139, 158);
+}
+
+.comback-login,
+.combackTabOTP {
+    text-decoration: none;
+    margin-top: -2rem;
+    color: #D57AD4;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.combackTabOTP {
+    margin-top: 55px;
+    margin-right: 20px;
+}
+
+.comback-login:hover,
+.combackTabOTP:hover {
+    color: rgb(250, 139, 158);
+}
+
+.formTabPhone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contentTabPhone,
+.contentTabPhone-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contentTabPhone-btn {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: -11%;
 }
 .inputRegisterPass{
     border: none;
@@ -55,16 +203,16 @@
     font-size: 1rem;
 
 }
-.inputRegister:placeholder-shown,
-.inputRegisterPass:placeholder-shown,
-.inputRegisterDate:placeholder-shown{
-    border-left: 5px solid red;
-}
-.inputRegister:not(:placeholder-shown),
-.inputRegisterPass:not(:placeholder-shown),
-.inputRegisterDate:not(:placeholder-shown){
-    border-left: 5px solid green;
-}
+// .inputRegister:placeholder-shown,
+// .inputRegisterPass:placeholder-shown,
+// .inputRegisterDate:placeholder-shown{
+//     border-left: 5px solid red;
+// }
+// .inputRegister:not(:placeholder-shown),
+// .inputRegisterPass:not(:placeholder-shown),
+// .inputRegisterDate:not(:placeholder-shown){
+//     border-left: 5px solid green;
+// }
 .inputRegisterDate{
     border: none;
     padding: 0.35rem;
@@ -81,7 +229,7 @@
     text-align: boild;
 }
 .magrinbutton{
-    margin: 1rem;
+    margin: 1.5rem;
     font-size: 1rem;
 }
 .login-link:hover{
@@ -95,9 +243,18 @@
     font-weight: 700;
     font-size: 1rem;
 }
+.info{
+    pointer-events: none;
+    padding-left: 70px;
+}
+.info1{
+    pointer-events: none;
+    margin: 30px;
+}
 .btnRegister {
     align-self: center;
     margin-top: 3.5% !important;
+    margin-bottom: 10px;
     font-size: 1rem;
     padding: 3% !important;
     width: 35%;
@@ -138,4 +295,41 @@
     margin-top: 1rem;
     align-self: center;
     color: rgb(255, 0, 55);
+}
+.logo {
+    flex-direction: row;
+    width: 400px;
+    cursor: default;
+    pointer-events: none;
+    margin-top: 50px;
+    margin-bottom: 100px;
+    margin-left: 20px;
+}
+
+.logo img {
+    width: 160px;
+}
+
+#line {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgb(250, 139, 158);
+    margin-top: -23%;
+}
+.errorMess,
+.errorMessNewPW {
+    font-size: 1rem;
+    font-style: italic;
+    color: red;
+}
+
+.errorMess {
+    margin-left: 152px;
+}
+
+.changeTabMess {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: yellowgreen;
 }

@@ -21,6 +21,7 @@ import moment from 'moment';
 import Data from './DataHeaderButtonChat';
 import ReactTooltip from 'react-tooltip';
 import Skeleton from 'react-loading-skeleton';
+import Picker from 'emoji-picker-react';
 
 const cx = classNames.bind(styles);
 
@@ -173,7 +174,13 @@ function Chat({ setRightBar }) {
 
         return formattedDate;
     };
-
+    //POP THE EMOJI PICKER UP
+    const [inputStr, setInputStr] = useState('');
+    const [showPicker, setShowPicker] = useState(false);
+    const emojiPicker = (event, emojiObject) => {
+        setInputStr((prevInput) => prevInput + emojiObject.emoji);
+        setShowPicker(false);
+    };
     //SAVE MSG WHEN RELOAD PAGE
     useEffect(() => {
         if (!isGroupChat) {
@@ -293,70 +300,52 @@ function Chat({ setRightBar }) {
                     ) : (
                         sendData?.map((mess, index) => {
                             return (
-                                <div
-                                    key={index}
-                                    className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}
-                                >
-                                    <img
-                                        className={cx('imgChat')}
-                                        src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                        alt="avata"
-                                    />
-                                    <div className={cx('boxTextChat')}>
-                                        {mess.message?.type_Msg === TYPE_MSG ? (
-                                            <p className={cx('textChat')}>{mess.message.content}</p>
-                                        ) : (
-                                            <>
-                                                {mess.message?.imageContent.length > 0 ? (
-                                                    (mess.message?.imageContent).map((img, index) => {
-                                                        return (
-                                                            (
+                                <React.Fragment key={index}>
+                                    <div className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}>
+                                        <img
+                                            className={cx('imgChat')}
+                                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                            alt="avata"
+                                        />
+                                        <div
+                                            data-tip={convertTime(mess.message.time)}
+                                            data-for="registerTip"
+                                            className={cx('boxTextChat')}
+                                        >
+                                            {mess.message?.type_Msg === TYPE_MSG ? (
+                                                <p className={cx('textChat')}>{mess.message.content}</p>
+                                            ) : (
+                                                <>
+                                                    {mess.message?.imageContent.length > 0 ? (
+                                                        (mess.message?.imageContent).map((img, index) => {
+                                                            return (
                                                                 <img
                                                                     key={index}
                                                                     alt="not fount"
                                                                     width={'20px'}
                                                                     src={img}
                                                                 />
-                                                            ) || <Skeleton />
-                                                        );
-                                                    })
-                                                ) : (
-                                                    <img key={index} alt="not fount" width={'20px'} src={''} />
-                                                )}
-                                            </>
-                                        )}
-                                        {/* {convertTime(mess.message.time)} */}
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <img key={index} alt="not fount" width={'20px'} src={''} />
+                                                    )}
+                                                </>
+                                            )}
+                                            {/* {convertTime(mess.message.time)} */}
+                                        </div>
+                                        <div className={cx('boxEdite')}>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
                                     </div>
-                                </div>
+                                    <ReactTooltip id="registerTip" place="left" effect="solid" />
+                                </React.Fragment>
                             );
                         })
                     )}
 
-                    {/* <div className={cx('friendSend')}>
-                        <img
-                            className={cx('imgChat')}
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                            alt="avata"
-                        />
-                        <div className={cx('boxTextChat')}>
-                            <p className={cx('textChat')}>abc</p>
-                        </div>
-                    </div>
-                    <div className={cx('userSend')}>
-                        <img
-                            className={cx('imgChat')}
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                            alt="avata"
-                        />
-                        <div className={cx('boxTextChat')}>
-                            <img
-                                src={
-                                    'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715210/samples/imagecon-group.jpg'
-                                }
-                                alt="hinhanh"
-                            />
-                        </div>
-                    </div> */}
                     <div ref={bottomRef} />
                 </div>
             </div>
@@ -383,31 +372,54 @@ function Chat({ setRightBar }) {
                     }}
                     style={{ display: 'none' }}
                 />
+
+                {/* Button image */}
                 <div
                     className={cx('buttonInput')}
                     type="button"
-                    value="Browse..."
                     onClick={() => document.getElementById('selectedFile').click()}
                 >
                     <img
                         src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666526090/samples/Icon/photo_yn6nra.png`}
-                        alt="avata"
+                        alt="file"
                     />
                 </div>
 
-                <input
-                    className={cx('inputText')}
-                    type="text"
-                    placeholder="Aa"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
+                {/* Butotn file */}
+                <div className={cx('buttonInput')} type="button">
+                    <img
+                        src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666602452/samples/Icon/document_mzbsif.png`}
+                        alt="file"
+                    />
+                </div>
+                <div className={cx('inputText')}>
+                    <input type="text" placeholder="Aa" value={message} onChange={(e) => setMessage(e.target.value)} />
+                    <img
+                        className={cx('iconPicker')}
+                        src={`https://res.cloudinary.com/dxwhrjno5/image/upload/v1666631419/Images/220-2207946_png-file-svg-white-emoji-icon-png-transparent_pr7qbl.jpg`}
+                        alt="file"
+                        onClick={() => setShowPicker((val) => !val)}
+                    />
+                    {showPicker && (
+                        <Picker
+                            pickerStyle={{ width: '25%', position: 'absolute', top: 5 }}
+                            onEmojiClick={{ emojiPicker }}
+                        />
+                    )}
+                </div>
 
                 <div type="submit" className={cx('buttonInput')}>
-                    <img
-                        src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666528392/samples/Icon/like1_tz3tql.png`}
-                        alt="avata"
-                    />
+                    {message === '' ? (
+                        <img
+                            src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666528392/samples/Icon/like1_tz3tql.png`}
+                            alt="like and send"
+                        />
+                    ) : (
+                        <img
+                            src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666602121/samples/Icon/send2_llk6si.png`}
+                            alt="like and send"
+                        />
+                    )}
                 </div>
             </form>
         </>

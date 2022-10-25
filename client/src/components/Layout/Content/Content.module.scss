@@ -128,6 +128,8 @@
         .containChat {
             display: flex;
             flex-direction: column;
+            flex: 1;
+            justify-content: flex-end;
             align-items: flex-start;
             gap: 10px;
 
@@ -274,6 +276,8 @@
         }
 
         .inputText {
+            display:flex ;
+            align-items: center;
             flex: 1;
             padding: 8px 20px;
             font-weight: 400;
@@ -283,10 +287,23 @@
 
             border: 1px solid #c4c4c4;
             border-radius: 50px;
-
+            
             &:hover {
                 border: 1px solid #000;
             }
+            .iconPicker {
+                width: 24px;
+                height: 24px;
+            }
+            input{
+                flex:1;
+                border: none;
+                &:focus-visible{
+                    outline: none;
+                };
+
+            }
         }
+        
     }
 }
