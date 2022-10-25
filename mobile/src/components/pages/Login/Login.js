@@ -14,7 +14,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 function Login() {
     // const [flag, setFlag] = useState(false);
-    const [animationName, setAnimationName] = useState('');
+    // const [animationName, setAnimationName] = useState('');
     return (
         <SafeAreaView style={styles.container}>
             <Animatable.View animation="fadeInDown">
@@ -28,6 +28,12 @@ function Login() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-around',
+                            shadowColor: 'rgba(0,0,0, .4)', // IOS
+                            shadowOffset: { height: 1, width: 1 }, // IOS
+                            shadowOpacity: 2, // IOS
+                            shadowRadius: 2, //IOS
+                            elevation: 10, // Android
+                            borderRadius: 20,
                         }}
                     >
                         <View style={{ flexDirection: 'row' }}>
