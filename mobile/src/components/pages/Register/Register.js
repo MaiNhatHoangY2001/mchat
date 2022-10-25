@@ -7,6 +7,7 @@ import { Link } from 'react-router-native';
 
 function Register() {
     return (
+<<<<<<< HEAD
         <SafeAreaView style={{margin:0, padding:0}}>
             <View style={styles.registercontainer}>
                 <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={styles.ImageBackground}>
@@ -34,6 +35,14 @@ function Register() {
                         </View>
                     </View>
                 </ImageBackground>
+=======
+        <View style={styles.registercontainer}>
+            <View>
+                <Text>Thông tin đăng ký</Text>
+                {/* <Link to="/">
+                    <Text> Home </Text>
+                </Link> */}
+>>>>>>> 506785f2de0e2682012a520fd3121770516e4829
             </View>
         </SafeAreaView>
     );

@@ -32,9 +32,19 @@
 .styleInput {
     background-color: rgba(211, 211, 211, 0.404);
     // border: 1px solid #D57AD4;
-    width: 220px;
+    width: 210px;
     height: 40px;
     padding: 10px;
     font-size: 17px;
-    margin: 10px;
+    margin: 5px 0 5px 0;
+}
+
+.errorMess {
+    color: red;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 1.1rem;
+    align-self: flex-start;
+    margin-left: 8%;
+    margin-top: -5%;
 }

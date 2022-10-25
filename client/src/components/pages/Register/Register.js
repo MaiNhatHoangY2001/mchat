@@ -125,8 +125,6 @@ function Register() {
         }
     }
     function setUpRecaptcha(phoneNumber) {
-        //link sub language: https://firebase.google.com/docs/reference/android/com/google/firebase/ml/naturallanguage/translate/FirebaseTranslateLanguage
-        // auth.setLanguageCode('vi');
         const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
         recaptchaVerifier.render();
         recaptchaVerifier.verify();
@@ -158,6 +156,7 @@ function Register() {
                 setDisableTab1(true);
                 setDisableTab2(false);
                 setchangeTabMess("Đã xác thực, vui lòng điền thông tin đăng ký'");
+                //navigate('/register')
             } catch (err) {
                 console.log(err.message);
             }
