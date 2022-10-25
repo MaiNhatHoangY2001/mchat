@@ -20,7 +20,6 @@ import Push from 'push.js';
 import moment from 'moment';
 import Data from './DataHeaderButtonChat';
 import ReactTooltip from 'react-tooltip';
-import Skeleton from 'react-loading-skeleton';
 import Picker from 'emoji-picker-react';
 
 const cx = classNames.bind(styles);

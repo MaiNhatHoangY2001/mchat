@@ -204,10 +204,17 @@
                 .listFriendModal {
                     flex: 1;
 
+                    height: 100%;
+
                     p {
                         font-size: 18px;
                         font-weight: 500px;
                         margin: 0;
+                    }
+
+                    .listItem {
+                        overflow-y: scroll;
+                        height: 420px;
                     }
                 }
 
@@ -218,6 +225,11 @@
                         font-size: 18px;
                         font-weight: 500px;
                         margin: 0;
+                    }
+
+                    .listItem {
+                        overflow-y: scroll;
+                        height: 420px;
                     }
                 }
             }

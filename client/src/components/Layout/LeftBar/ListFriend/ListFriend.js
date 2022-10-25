@@ -76,6 +76,48 @@ export default function ListFriend() {
             avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
             sdt: '003',
         },
+        {
+            id: 3,
+            name: 'Mai Nhật Hoàng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
+            sdt: '003',
+        },
+        {
+            id: 4,
+            name: 'Mai Nhật Hoàng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
+            sdt: '003',
+        },
+        {
+            id: 5,
+            name: 'Mai Nhật Hoàng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
+            sdt: '003',
+        },
+        {
+            id: 6,
+            name: 'Mai Nhật Hoàng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
+            sdt: '003',
+        },
+        {
+            id: 7,
+            name: 'Mai Nhật Hoàng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
+            sdt: '003',
+        },
+        {
+            id: 8,
+            name: 'Mai Nhật Hoàng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
+            sdt: '003',
+        },
+        {
+            id: 9,
+            name: 'Mai Nhật Hoàng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
+            sdt: '003',
+        },
     ];
 
     const setDataSelect = (event) => {
