@@ -5,6 +5,8 @@ import { Link } from 'react-router-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import * as Animatable from 'react-native-animatable';
+
 //link all icons react-native: https://oblador.github.io/react-native-vector-icons/
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -157,7 +159,7 @@ function Login() {
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <Text>Bạn chưa có tài khoản?</Text>
-                            {/* <Link to="/Register"> */}
+                            <Link to="/Register">
                                 <Text
                                     style={{
                                         color: 'rgb(250, 139, 158)',
@@ -168,7 +170,7 @@ function Login() {
                                 >
                                     Đăng ký ngay
                                 </Text>
-                            {/* </Link> */}
+                            </Link>
                         </View>
                     </View>
                 </ImageBackground>

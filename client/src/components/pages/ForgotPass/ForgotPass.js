@@ -270,7 +270,7 @@ function ForgotPass() {
                                 </Form>
                             </div>
                         </Tab>
-                        <Tab eventKey={2} title="Mật khẩu mới" className={cx('formTabPhone')} >
+                        <Tab eventKey={2} title="Mật khẩu mới" className={cx('formTabPhone')} disabled={disableTab2}>
                             <div className={cx('contentTabPhone')}>
                                 <div className={cx('rowInputs')}>
                                     <input
