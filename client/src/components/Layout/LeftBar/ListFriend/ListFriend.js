@@ -210,7 +210,13 @@ export default function ListFriend() {
                         </div>
                     </Tooltip>
 
-                    <Modal open={openModal} onClose={() => setOpenModal(false)}>
+                    <Modal
+                        open={openModal}
+                        onClose={() => {
+                            setOpenModal(false);
+                            setSelectData([]);
+                        }}
+                    >
                         <div className={cx('modalGroup')}>
                             <div className={cx('headerModal')}>
                                 <p>Tạo nhóm</p>
@@ -307,7 +313,13 @@ export default function ListFriend() {
                                     </div>
                                 </div>
                                 <div className={cx('footerModal')}>
-                                    <Button color="error" onClick={() => setOpenModal(false)}>
+                                    <Button
+                                        color="error"
+                                        onClick={() => {
+                                            setOpenModal(false);
+                                            setSelectData([]);
+                                        }}
+                                    >
                                         <p>Hủy</p>
                                     </Button>
                                     <Button color="success">
