@@ -5,56 +5,19 @@ import { Link } from 'react-router-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+//link all name animations: https://github.com/oblador/react-native-animatable
+//link how to code animation: https://blog.bitsrc.io/top-5-animation-libraries-in-react-native-d00ec8ddfc8d
 import * as Animatable from 'react-native-animatable';
 
 //link all icons react-native: https://oblador.github.io/react-native-vector-icons/
 import Icon from 'react-native-vector-icons/Ionicons';
 
 function Login() {
-    const [flag, setFlag] = useState(false);
+    // const [flag, setFlag] = useState(false);
+    const [animationName, setAnimationName] = useState('');
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{ display: !flag ? 'flex' : 'none' }}>
-                <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={styles.imgBG}>
-                    <View>
-                        <Image
-                            source={require('../../../../assets/logo-no-bg.png')}
-                            style={{ width: 180, height: 150, resizeMode: 'contain' }}
-                        />
-                        <Text style={styles.txtLine}>LINE</Text>
-                    </View>
-                    <View>
-                        <Image
-                            source={require('../../../../assets/Illustration.png')}
-                            style={{ height: 270, resizeMode: 'contain' }}
-                        />
-                    </View>
-                    <View>
-                        <TouchableOpacity
-                            style={{
-                                shadowColor: 'rgba(0,0,0, .4)', // IOS
-                                shadowOffset: { height: 1, width: 1 }, // IOS
-                                shadowOpacity: 2, // IOS
-                                shadowRadius: 1, //IOS
-                                backgroundColor: '#fff',
-                                elevation: 4, // Android
-                                backgroundColor: '#fff',
-                                borderRadius: 12,
-                                borderColor: 'rgb(250, 139, 158)',
-                                borderWidth: 2,
-                                borderStyle: 'solid',
-                                padding: '3%',
-                            }}
-                            onPress={() => setFlag(true)}
-                        >
-                            <Text style={{ color: 'rgb(250, 139, 158)', fontSize: 17, fontWeight: 'bold' }}>
-                                Đăng nhập bằng số điện thoại
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </ImageBackground>
-            </View>
-            <View style={{ display: !flag ? 'none' : 'flex' }}>
+            <Animatable.View animation="fadeInDown">
                 <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={styles.imgBG}>
                     <View
                         style={{
@@ -101,10 +64,7 @@ function Login() {
                             </TouchableOpacity>
                         </View>
                         <Text style={styles.errorMess}>Lỗi mk</Text>
-                        <Link 
-                            to="/forgotPass"
-                            style={{ alignSelf: 'flex-end', marginRight: 22 }}
-                        >
+                        <Link to="/forgotPass" style={{ alignSelf: 'flex-end', marginRight: 22 }}>
                             <Text
                                 style={{
                                     color: 'rgb(250, 139, 158)',
@@ -117,7 +77,8 @@ function Login() {
                             </Text>
                         </Link>
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                            <TouchableOpacity
+                            <Link
+                                to="/"
                                 style={{
                                     shadowColor: 'rgba(0,0,0, .4)', // IOS
                                     shadowOffset: { height: 1, width: 1 }, // IOS
@@ -133,10 +94,10 @@ function Login() {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}
-                                onPress={() => setFlag(false)}
+                                // onPress={() => {setFlag(false); setAnimationName('zoomIn');}}
                             >
                                 <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>Trở về</Text>
-                            </TouchableOpacity>
+                            </Link>
                             <TouchableOpacity
                                 style={{
                                     shadowColor: 'rgba(0,0,0, .4)', // IOS
@@ -174,7 +135,7 @@ function Login() {
                         </View>
                     </View>
                 </ImageBackground>
-            </View>
+            </Animatable.View>
         </SafeAreaView>
     );
 }
