@@ -9,7 +9,7 @@ function Home() {
             <Link to="/login">
                 <Text> Đăng nhập ngay </Text>
             </Link>
-            <Link to="/Register">
+            <Link to="/register">
                 <Text> Đăng ký ngay </Text>
             </Link>
         </View>

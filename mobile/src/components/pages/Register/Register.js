@@ -6,9 +6,9 @@ function Register() {
         <View style={styles.registercontainer}>
             <View>
                 <Text>Thông tin đăng ký</Text>
-                <Link to="/">
+                {/* <Link to="/">
                     <Text> Home </Text>
-                </Link>
+                </Link> */}
             </View>
         </View>
     );

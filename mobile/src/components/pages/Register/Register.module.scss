@@ -10,44 +10,42 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    position: fixed;
+    //position: fixed;
     margin: 0;
     padding: 0;
     //font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        //ko cho chuột bôi đen trừ input
-        -webkit-touch-callout: none;
-        /* iOS Safari */
-        -webkit-user-select: none;
-        /* Safari */
-        -khtml-user-select: none;
-        /* Konqueror HTML */
-        -moz-user-select: none;
-        /* Old versions of Firefox */
-        -ms-user-select: none;
-        /* Internet Explorer/Edge */
-        user-select: none;
-        /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
-    
+    //ko cho chuột bôi đen trừ input
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
-.registerform{
+.registerform {
     display: flex;
     margin-top: 1rem;
-    font-size: 2.0vh;
+    font-size: 2vh;
     font-weight: 600;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 610px;
     background-color: #fff;
-   // box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
-//    margin: 0.75rem;
+    // box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
+    //    margin: 0.75rem;
     height: 80%;
     border-radius: 15px;
     //font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-width: 30%;
-    
 }
-.inputRegister{
+.inputRegister {
     border: none;
     padding: 0.35rem;
     //font-family: "Inter", sans-serif;
@@ -56,9 +54,8 @@
     width: 100%;
     border-bottom: 1px solid lightgray;
     font-size: 1rem;
-
 }
-.inputRegisterPass{
+.inputRegisterPass {
     border: none;
     padding: 0.35rem;
     //font-family: "Inter", sans-serif;
@@ -67,19 +64,18 @@
     margin-top: 3.5%;
     border-bottom: 1px solid lightgray;
     font-size: 1rem;
-
 }
 .inputRegister:placeholder-shown,
 .inputRegisterPass:placeholder-shown,
-.inputRegisterDate:placeholder-shown{
+.inputRegisterDate:placeholder-shown {
     border-left: 5px solid red;
 }
 .inputRegister:not(:placeholder-shown),
 .inputRegisterPass:not(:placeholder-shown),
-.inputRegisterDate:not(:placeholder-shown){
+.inputRegisterDate:not(:placeholder-shown) {
     border-left: 5px solid green;
 }
-.inputRegisterDate{
+.inputRegisterDate {
     border: none;
     padding: 0.35rem;
     //font-family: "Inter", sans-serif;
@@ -90,26 +86,25 @@
     border-bottom: 1px solid lightgray;
     opacity: 0.5;
 }
-.margininput{
+.margininput {
     margin: 0.75rem;
     text-align: boild;
 }
-.magrinbutton{
+.magrinbutton {
     margin: 1rem;
     font-size: 1rem;
 }
-.login-link:hover{
-    color: #D57AD4;
+.login-link:hover {
+    color: #d57ad4;
 }
 .login-link {
-
     text-decoration: none;
     margin-top: 1rem;
-    color: #D57AD4;
+    color: #d57ad4;
     font-weight: 700;
     font-size: 1rem;
 }
-.info{
+.info {
     pointer-events: none;
 }
 .btnRegister {
@@ -118,10 +113,10 @@
     font-size: 1rem;
     padding: 3%; //!important;
     width: 35%;
-    border: 1px solid #D57AD4;
+    border: 1px solid #d57ad4;
     border-radius: 10%;
     color: white;
-    background-color: #D57AD4;
+    background-color: #d57ad4;
 }
 
 .btnRegister:hover {
@@ -142,9 +137,9 @@
 //     background-color: white;
 //     background-image: none;
 //     text-align: center;
-    
+
 // }
-.divRow{
+.divRow {
     flex-direction: row;
 }
 .register-title {
