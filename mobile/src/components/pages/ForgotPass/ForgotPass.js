@@ -14,9 +14,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 function ForgotPass() {
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.container}>
             <Animatable.View
-                animation="fadeInUp"
+                animation="bounceIn"
                 // iterationCount={5}
                 direction="alternate"
             >
@@ -40,7 +40,7 @@ function ForgotPass() {
                     >
                         <Text>forgot pw</Text>
                         <Link
-                            to="/login"
+                            to="/"
                             style={{
                                 shadowColor: 'rgba(0,0,0, .4)', // IOS
                                 shadowOffset: { height: 1, width: 1 }, // IOS
@@ -54,11 +54,13 @@ function ForgotPass() {
                                 marginRight: 20,
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                alignSelf: 'center'
+                                alignSelf: 'center',
                             }}
                             // onPress={() => {setFlag(false); setAnimationName('zoomIn');}}
                         >
-                            <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>Trở về màn hình đăng nhập</Text>
+                            <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>
+                                Trở về màn hình đăng nhập
+                            </Text>
                         </Link>
                     </View>
                 </ImageBackground>
