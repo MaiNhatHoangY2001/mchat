@@ -1,9 +1,9 @@
 import { ForgotPass, Home, Login, Register } from '../components/pages';
 
 const publicRoutes = [
-    { path: '/', component: Home },
+    { path: '/', component: Login },
     { path: '/register', component: Register },
-    { path: '/login', component: Login },
+    { path: '/home', component: Home },
     { path: '/forgotPass', component: ForgotPass },
     // { path: '/call', component: Call },
 ];

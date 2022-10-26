@@ -13,11 +13,51 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 function Login() {
-    // const [flag, setFlag] = useState(false);
+    const [flag, setFlag] = useState(false);
     // const [animationName, setAnimationName] = useState('');
     return (
         <SafeAreaView style={styles.container}>
-            <Animatable.View animation="fadeInDown">
+            <View style={{ display: !flag ? 'flex' : 'none' }}>
+                <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={styles.imgBG}>
+                    <View>
+                        <Image
+                            source={require('../../../../assets/logo-no-bg.png')}
+                            style={{ width: 180, height: 150, resizeMode: 'contain' }}
+                        />
+                        <Text style={styles.txtLine}>LINE</Text>
+                    </View>
+                    <View>
+                        <Image
+                            source={require('../../../../assets/Illustration.png')}
+                            style={{ height: 270, resizeMode: 'contain' }}
+                        />
+                    </View>
+                    <View>
+                        <TouchableOpacity
+                            style={{
+                                shadowColor: 'rgba(0,0,0, .4)', // IOS
+                                shadowOffset: { height: 1, width: 1 }, // IOS
+                                shadowOpacity: 2, // IOS
+                                shadowRadius: 1, //IOS
+                                backgroundColor: '#fff',
+                                elevation: 4, // Android
+                                backgroundColor: '#fff',
+                                borderRadius: 12,
+                                borderColor: 'rgb(250, 139, 158)',
+                                borderWidth: 2,
+                                borderStyle: 'solid',
+                                padding: '3%',
+                            }}
+                            onPress={() => setFlag(true)}
+                        >
+                            <Text style={{ color: 'rgb(250, 139, 158)', fontSize: 17, fontWeight: 'bold' }}>
+                                Đăng nhập bằng số điện thoại
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </ImageBackground>
+            </View>
+            <View style={{ display: !flag ? 'none' : 'flex' }}>
                 <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={styles.imgBG}>
                     <View
                         style={{
@@ -83,8 +123,7 @@ function Login() {
                             </Text>
                         </Link>
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                            <Link
-                                to="/"
+                            <TouchableOpacity
                                 style={{
                                     shadowColor: 'rgba(0,0,0, .4)', // IOS
                                     shadowOffset: { height: 1, width: 1 }, // IOS
@@ -100,11 +139,12 @@ function Login() {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}
-                                // onPress={() => {setFlag(false); setAnimationName('zoomIn');}}
+                                onPress={() => setFlag(false)}
                             >
                                 <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>Trở về</Text>
-                            </Link>
-                            <TouchableOpacity
+                            </TouchableOpacity>
+                            <Link
+                                to='/home'
                                 style={{
                                     shadowColor: 'rgba(0,0,0, .4)', // IOS
                                     shadowOffset: { height: 1, width: 1 }, // IOS
@@ -122,7 +162,7 @@ function Login() {
                                 // onPress={() => }
                             >
                                 <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>Đăng nhập</Text>
-                            </TouchableOpacity>
+                            </Link>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <Text>Bạn chưa có tài khoản?</Text>
@@ -141,7 +181,7 @@ function Login() {
                         </View>
                     </View>
                 </ImageBackground>
-            </Animatable.View>
+            </View>
         </SafeAreaView>
     );
 }

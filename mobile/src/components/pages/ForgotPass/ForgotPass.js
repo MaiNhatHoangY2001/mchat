@@ -40,7 +40,7 @@ function ForgotPass() {
                     >
                         <Text>forgot pw</Text>
                         <Link
-                            to="/login"
+                            to="/"
                             style={{
                                 shadowColor: 'rgba(0,0,0, .4)', // IOS
                                 shadowOffset: { height: 1, width: 1 }, // IOS
