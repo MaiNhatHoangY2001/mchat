@@ -88,6 +88,7 @@ function Chat({ setRightBar }) {
                 time: time,
             },
             isNewChat: false,
+            isGroupChat: isGroupChat,
             senderName: sender.profileName,
         };
 
@@ -102,6 +103,7 @@ function Chat({ setRightBar }) {
         delete newChat.receiver;
         delete newChat.isNewChat;
         delete newChat.senderName;
+        delete newChat.isGroupChat;
         //add chat on content
         setSendData((prev) => [...prev, newChat]);
     };
@@ -218,20 +220,28 @@ function Chat({ setRightBar }) {
                 }, 1000);
             }
 
+            if (chatMessage.isGroupChat) {
+                if (chatMessage.receiver === currentSenderId) {
+                    setSendData((prev) => {
+                        return [...prev, chatMessage];
+                    });
+                }
+            }
+
             if (chatMessage.sender === currentSenderId && chatMessage.receiver === currentUserId) {
                 setSendData((prev) => {
                     return [...prev, chatMessage];
                 });
             }
 
-            //displaying a notification
-            if (chatMessage.receiver === currentUserId) {
-                Push.create(chatMessage.senderName, {
-                    body: chatMessage.message.content,
-                    silent: true,
-                });
-                Push.clear();
-            }
+            // //displaying a notification
+            // if (chatMessage.receiver === currentUserId) {
+            //     Push.create(chatMessage.senderName, {
+            //         body: chatMessage.message.content,
+            //         silent: true,
+            //     });
+            //     Push.clear();
+            // }
         };
         if (user?.accessToken) {
             socket.current = io(url, {

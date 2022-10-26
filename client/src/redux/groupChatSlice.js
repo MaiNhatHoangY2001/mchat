@@ -12,6 +12,17 @@ const groupChatSlice = createSlice({
         },
     },
     reducers: {
+        addGroupChatStart: (state) => {
+            state.groupChat.isFetching = true;
+        },
+        addGroupChatSuccess: (state) => {
+            state.groupChat.isFetching = false;
+            state.groupChat.success = true;
+        },
+        addGroupChatFailed: (state) => {
+            state.groupChat.isFetching = false;
+            state.groupChat.error = true;
+        },
         getGroupChatStart: (state) => {
             state.groupChat.isFetching = true;
         },
@@ -30,6 +41,14 @@ const groupChatSlice = createSlice({
     },
 });
 
-export const { getGroupChatStart, getGroupChatFailed, getGroupChatSuccess, setIsGroupChat } = groupChatSlice.actions;
+export const {
+    getGroupChatStart,
+    getGroupChatFailed,
+    getGroupChatSuccess,
+    setIsGroupChat,
+    addGroupChatStart,
+    addGroupChatFailed,
+    addGroupChatSuccess,
+} = groupChatSlice.actions;
 
 export default groupChatSlice.reducer;

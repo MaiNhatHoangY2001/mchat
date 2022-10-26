@@ -13,7 +13,14 @@ import {
     getMessagesSuccess,
 } from '../chatSlice';
 import { url } from '../createInstance';
-import { getGroupChatFailed, getGroupChatStart, getGroupChatSuccess } from '../groupChatSlice';
+import {
+    addGroupChatFailed,
+    addGroupChatStart,
+    addGroupChatSuccess,
+    getGroupChatFailed,
+    getGroupChatStart,
+    getGroupChatSuccess,
+} from '../groupChatSlice';
 
 export const addIndividualChat4NewUser = async (
     accessToken,
@@ -46,15 +53,16 @@ export const addIndividualChat4NewUser = async (
     }
 };
 
-export const addGroupChat = async (accessToken, dispatch, idIndividualChat, axiosJWT) => {
-    dispatch(addIndividualChatStart());
+export const addGroupChat = async (accessToken, dispatch, groupChat, axiosJWT) => {
+    dispatch(addGroupChatStart());
     try {
-        await axiosJWT.post(`${url}/api/groupChat/`, {
+        const res = await axiosJWT.post(`${url}/api/groupChat/`, groupChat, {
             headers: { token: `Bearer ${accessToken}` },
         });
-        dispatch(addIndividualChatSuccess());
+        dispatch(addGroupChatSuccess());
+        return res.data;
     } catch (error) {
-        dispatch(addIndividualChatFailed());
+        dispatch(addGroupChatFailed());
     }
 };
 
@@ -100,7 +108,6 @@ export const getMsgsGroupChat = async (accessToken, dispatch, actor, axiosJWT) =
 export const getListIndividualChat = async (accessToken, userId, dispatch, axiosJWT) => {
     dispatch(getIndividualChatStart());
     try {
-        
         const res = await axiosJWT.get(`${url}/api/individualChat/` + userId, {
             headers: { token: `Bearer ${accessToken}` },
         });

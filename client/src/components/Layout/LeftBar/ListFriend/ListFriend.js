@@ -8,9 +8,9 @@ import { createAxios } from '../../../../redux/createInstance';
 import { addIndividualChatSuccess } from '../../../../redux/chatSlice';
 import { searchUser } from '../../../../redux/apiRequest/userApiRequest';
 import { setSender } from '../../../../redux/userSlice';
-import { getMsgs, getMsgsGroupChat } from '../../../../redux/apiRequest/chatApiRequest';
+import { addGroupChat, getMsgs, getMsgsGroupChat } from '../../../../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../../../../redux/authSlice';
-import { setIsGroupChat } from '../../../../redux/groupChatSlice';
+import { getGroupChatSuccess, setIsGroupChat } from '../../../../redux/groupChatSlice';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import {
     Avatar,
@@ -42,6 +42,7 @@ export default function ListFriend() {
     const [chatActors, setChatActors] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [searchGroup, setSearchGroup] = useState('');
+    const [nameGroup, setNameGroup] = useState('');
 
     const dispatch = useDispatch();
     const accessToken = currentUser?.accessToken;
@@ -127,9 +128,9 @@ export default function ListFriend() {
     const handleToggle = (item) => () => {
         const currentIndex = selectData
             .map((item1) => {
-                return item1.id;
+                return item1._id;
             })
-            .indexOf(item.id);
+            .indexOf(item._id);
         const newData = [...selectData];
 
         if (currentIndex === -1) {
@@ -160,10 +161,55 @@ export default function ListFriend() {
         dispatch(setSender(sender));
     };
 
+    const handleCreateGroupChat = async (listFriend) => {
+        if (listFriend.length > 1) {
+            let name;
+            const listIdUser = listFriend?.reduce(
+                (list, friend) => {
+                    return [...list, friend.sender._id];
+                },
+                [currentUser._id],
+            );
+            if (nameGroup === '') {
+                name = listFriend?.reduce((list, friend) => {
+                    return `${list}, ${friend.sender.profileName}`;
+                }, `${currentUser.profileName}`);
+            } else name = nameGroup.trim();
+
+            console.log(name);
+
+            const isHaveGroupChat = currentGroupChat.some((group) => group.groupName === name);
+            if (isHaveGroupChat) {
+                console.log('Đã tồn tại nhóm');
+            } else {
+                const apiNewGroupChat = {
+                    groupName: name,
+                    chatStatus: '0',
+                    user: listIdUser,
+                };
+
+                const newGroupChat = await addGroupChat(accessToken, dispatch, apiNewGroupChat, axiosJWT);
+                dispatch(getGroupChatSuccess([...currentGroupChat, newGroupChat]));
+                dispatch(
+                    setSender({
+                        _id: newGroupChat._id,
+                        profileName: newGroupChat.groupName,
+                    }),
+                );
+                handleClickExit();
+            }
+        }
+    };
+
+    const handleClickExit = () => {
+        setOpenModal(false);
+        setSelectData([]);
+    };
+
     useEffect(() => {
         if (currentIndividualChat !== null) {
-            const listChat = currentIndividualChat.concat(currentGroupChat);
-            const listSort = listChat.sort(function (a, b) {
+            const listChat = currentIndividualChat?.concat(currentGroupChat);
+            const listSort = listChat?.sort(function (a, b) {
                 return new Date(b.message[0]?.time) - new Date(a.message[0]?.time);
             });
             setChatActors(listSort);
@@ -231,6 +277,7 @@ export default function ListFriend() {
                                             size="small"
                                             variant="standard"
                                             placeholder="Nhập tên nhóm"
+                                            onChange={(e) => setNameGroup(e.target.value)}
                                         />
                                         <TextField
                                             className={cx('groupName')}
@@ -245,9 +292,9 @@ export default function ListFriend() {
                                         <div className={cx('listFriendModal')}>
                                             <p>Danh sách bạn bè</p>
                                             <List className={cx('listItem')}>
-                                                {dataList.map((item, index) => {
-                                                    const name = item.name;
-                                                    return name.toLowerCase().includes(searchGroup.toLowerCase()) ? (
+                                                {chatActors?.map((item, index) => {
+                                                    const name = item?.sender?.profileName;
+                                                    return name?.toLowerCase().includes(searchGroup.toLowerCase()) ? (
                                                         <ListItem key={index} disablePadding>
                                                             <ListItemButton
                                                                 role={undefined}
@@ -260,9 +307,9 @@ export default function ListFriend() {
                                                                         checked={
                                                                             selectData
                                                                                 .map((item1) => {
-                                                                                    return item1.id;
+                                                                                    return item1._id;
                                                                                 })
-                                                                                .indexOf(item.id) !== -1
+                                                                                .indexOf(item?._id) !== -1
                                                                         }
                                                                         tabIndex={-1}
                                                                         disableRipple
@@ -270,10 +317,15 @@ export default function ListFriend() {
                                                                 </ListItemIcon>
                                                                 <ListItemAvatar>
                                                                     <Avatar>
-                                                                        <img src={item.avata} alt="avata" />
+                                                                        <img
+                                                                            src={
+                                                                                'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg'
+                                                                            }
+                                                                            alt="avata"
+                                                                        />
                                                                     </Avatar>
                                                                 </ListItemAvatar>
-                                                                <ListItemText primary={item.name} />
+                                                                <ListItemText primary={name} />
                                                             </ListItemButton>
                                                         </ListItem>
                                                     ) : (
@@ -301,10 +353,15 @@ export default function ListFriend() {
                                                         >
                                                             <ListItemAvatar>
                                                                 <Avatar>
-                                                                    <img src={item.avata} alt="avata" />
+                                                                    <img
+                                                                        src={
+                                                                            'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg'
+                                                                        }
+                                                                        alt="avata"
+                                                                    />
                                                                 </Avatar>
                                                             </ListItemAvatar>
-                                                            <ListItemText primary={item.name} />
+                                                            <ListItemText primary={item?.sender?.profileName} />
                                                         </ListItem>
                                                     );
                                                 })}
@@ -313,16 +370,10 @@ export default function ListFriend() {
                                     </div>
                                 </div>
                                 <div className={cx('footerModal')}>
-                                    <Button
-                                        color="error"
-                                        onClick={() => {
-                                            setOpenModal(false);
-                                            setSelectData([]);
-                                        }}
-                                    >
+                                    <Button color="error" onClick={handleClickExit}>
                                         <p>Hủy</p>
                                     </Button>
-                                    <Button color="success">
+                                    <Button color="success" onClick={() => handleCreateGroupChat(selectData)}>
                                         <p>Tạo nhóm</p>
                                     </Button>
                                 </div>
