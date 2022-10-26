@@ -3,7 +3,8 @@
     padding: 0;
 }
 
-.imgBG {
+.imgBG,
+.whiteBG {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -13,6 +14,10 @@
     padding: 0;
     width: 100%;
     height: 100%;
+}
+
+.whiteBG {
+    background-color: #DFDFDF;
 }
 
 .txtLine {
@@ -34,9 +39,9 @@
     // border: 1px solid #D57AD4;
     width: 210px;
     height: 40px;
-    padding: 10px;
     font-size: 17px;
     margin: 5px 0 5px 0;
+    padding-left: 10px;
 }
 
 .errorMess {

@@ -15,6 +15,18 @@ import Icon from 'react-native-vector-icons/Ionicons';
 function Login() {
     const [flag, setFlag] = useState(false);
     // const [animationName, setAnimationName] = useState('');
+
+    //show-hide-pw
+    // const [passwordInput, setPasswordInput] = useState('');
+    const [isSecureTextEntry, setIsSecureTextEntry] = useState(true);
+    const togglePassword = () => {
+        if (isSecureTextEntry) {
+            setIsSecureTextEntry(false);
+            return;
+        }
+        setIsSecureTextEntry(true);
+    };
+    
     return (
         <SafeAreaView style={styles.container}>
             <Animatable.View
@@ -24,6 +36,7 @@ function Login() {
             >
                 <View style={{ display: !flag ? 'flex' : 'none' }}>
                     <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={styles.imgBG}>
+                        {/* <View style={styles.whiteBG}> */}
                         <View>
                             <Image
                                 source={require('../../../../assets/logo-no-bg.png')}
@@ -33,8 +46,10 @@ function Login() {
                         </View>
                         <View>
                             <Image
-                                source={require('../../../../assets/Illustration.png')}
+                                // source={require('../../../../assets/Illustration.png')}
+                                source={require('../../../../assets/animate-app-chat-6.gif')}
                                 style={{ height: 270, resizeMode: 'contain' }}
+                                // style={{ height: 350, resizeMode: 'contain' }}
                             />
                         </View>
                         <View>
@@ -60,6 +75,7 @@ function Login() {
                                 </Text>
                             </TouchableOpacity>
                         </View>
+                        {/* </View> */}
                     </ImageBackground>
                 </View>
                 <View style={{ display: !flag ? 'none' : 'flex' }}>
@@ -87,6 +103,7 @@ function Login() {
                                     placeholder="Số điện thoại"
                                     maxLength={10}
                                     keyboardType="numeric"
+                                    numberOfLines={1}
                                     // onChangeText={(infoToDo) => setInfoToDo(infoToDo)}
                                     // value={infoToDo}
                                 />
@@ -96,7 +113,15 @@ function Login() {
                             </View>
                             <Text style={styles.errorMess}>Lỗi sdt</Text>
                             <View style={{ flexDirection: 'row' }}>
-                                <TextInput style={styles.styleInput} placeholder="Mật khẩu" />
+                                <TextInput
+                                    style={styles.styleInput}
+                                    placeholder="Mật khẩu"
+                                    numberOfLines={1}
+                                    secureTextEntry={isSecureTextEntry}
+                                    // onChangeText={(passwordInput) => setPasswordInput(passwordInput)}
+                                    // value={passwordInput}
+                                    // name="password"
+                                />
                                 <TouchableOpacity
                                     style={{
                                         justifyContent: 'center',
@@ -110,8 +135,13 @@ function Login() {
                                         paddingRight: 5,
                                         marginLeft: 10,
                                     }}
+                                    onPress={togglePassword}
                                 >
-                                    <Icon name="eye-sharp" size={30} color="rgb(250, 139, 158)" />
+                                    {isSecureTextEntry ? (
+                                            <Icon name="eye-sharp" size={30} color="rgb(250, 139, 158)" />
+                                        ) : (
+                                            <Icon name="eye-off-sharp" size={30} color="rgb(250, 139, 158)" />
+                                    )}
                                 </TouchableOpacity>
                             </View>
                             <Text style={styles.errorMess}>Lỗi mk</Text>
