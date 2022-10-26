@@ -221,17 +221,17 @@ function Chat({ setRightBar }) {
             }
 
             if (chatMessage.isGroupChat) {
-                if (chatMessage.receiver === currentSenderId) {
+                if (chatMessage.receiver === currentSenderId && chatMessage.sender !== currentUserId) {
                     setSendData((prev) => {
                         return [...prev, chatMessage];
                     });
                 }
-            }
-
-            if (chatMessage.sender === currentSenderId && chatMessage.receiver === currentUserId) {
-                setSendData((prev) => {
-                    return [...prev, chatMessage];
-                });
+            } else {
+                if (chatMessage.sender === currentSenderId && chatMessage.receiver === currentUserId) {
+                    setSendData((prev) => {
+                        return [...prev, chatMessage];
+                    });
+                }
             }
 
             // //displaying a notification

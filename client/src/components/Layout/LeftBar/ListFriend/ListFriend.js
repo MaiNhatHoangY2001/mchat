@@ -210,7 +210,7 @@ export default function ListFriend() {
         if (currentIndividualChat !== null) {
             const listChat = currentIndividualChat?.concat(currentGroupChat);
             const listSort = listChat?.sort(function (a, b) {
-                return new Date(b.message[0]?.time) - new Date(a.message[0]?.time);
+                return new Date(b?.message[0]?.time) - new Date(a?.message[0]?.time);
             });
             setChatActors(listSort);
         }
