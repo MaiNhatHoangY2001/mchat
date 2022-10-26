@@ -12,6 +12,13 @@ import * as Animatable from 'react-native-animatable';
 //link all icons react-native: https://oblador.github.io/react-native-vector-icons/
 import Icon from 'react-native-vector-icons/Ionicons';
 
+//link doc: https://docs.expo.dev/guides/splash-screens/
+//npm i expo-splash-screen
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync(); //splash screen khi khởi động toàn bộ app - chỉnh splash trong app.json
+setTimeout(SplashScreen.hideAsync, 2000); //để ngoài export default function time khởi động lâu hơn 1s để trong
+
 function Login() {
     const [flag, setFlag] = useState(false);
     // const [animationName, setAnimationName] = useState('');
