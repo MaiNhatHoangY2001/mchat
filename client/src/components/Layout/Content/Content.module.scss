@@ -5,6 +5,8 @@
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+        'Open Sans', 'Helvetica Neue', sans-serif;
 
     width: 100%;
     height: 100%;
@@ -83,10 +85,6 @@
 
                 &:hover {
                     background: #e1e1e1;
-                }
-
-                img {
-                    width: 100%;
                 }
             }
         }
@@ -170,20 +168,27 @@
                     flex-direction: column;
                     justify-content: center;
                     align-items: flex-start;
+                    user-select: text;
+                    padding: 10px;
                     gap: 4px;
 
+                    max-width: 500px;
+
+                    background: #f3a3ad;
+                    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
+                    border-radius: 10px;
+
+                    .textUserName {
+                        margin: 0;
+                        font-weight: 400;
+                        font-size: 14px;
+                        color: #606060;
+                    }
+
                     .textChat {
-                        user-select: text;
-                        padding: 10px;
                         margin: 0;
                         font-weight: 400;
                         font-size: 16px;
-
-                        max-width: 500px;
-
-                        background: #f3a3ad;
-                        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
-                        border-radius: 10px;
                     }
 
                     img {
@@ -196,17 +201,10 @@
                     .groupImage {
                         display: grid;
                         grid-template-columns: auto auto auto;
-
                         gap: 4px;
-                        padding: 10px;
-
-                        background: #f3a3ad;
-                        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
-                        border-radius: 10px;
 
                         img {
                             width: 100%;
-                            max-width: 500px;
                             border-radius: 10px;
                         }
                     }
@@ -233,26 +231,44 @@
                     flex-direction: column;
                     justify-content: center;
                     align-items: flex-start;
+                    user-select: text;
+                    padding: 10px;
                     gap: 4px;
 
+                    max-width: 500px;
+
+                    background: #f3a3ad;
+                    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
+                    border-radius: 10px;
+
+                    .textUserName {
+                        margin: 0;
+                        font-weight: 400;
+                        font-size: 14px;
+                        color: #606060;
+                    }
+
                     .textChat {
-                        padding: 10px;
                         margin: 0;
                         font-weight: 400;
                         font-size: 16px;
-                        user-select: text;
-
-                        max-width: 500px;
-
-                        background: #f3a3ad;
-                        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
-                        border-radius: 10px;
                     }
 
                     img {
                         width: 500px;
                         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
                         border-radius: 10px;
+                    }
+
+                    .groupImage {
+                        display: grid;
+                        grid-template-columns: auto auto auto;
+                        gap: 4px;
+
+                        img {
+                            width: 100%;
+                            border-radius: 10px;
+                        }
                     }
                 }
             }
@@ -322,5 +338,22 @@
                 }
             }
         }
+    }
+}
+
+.modalMain {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 650;
+    height: 90%;
+    background-color: #fff;
+    box-shadow: 24;
+    padding: 4px;
+    border-radius: 10px;
+
+    &:focus-visible {
+        outline: none;
     }
 }

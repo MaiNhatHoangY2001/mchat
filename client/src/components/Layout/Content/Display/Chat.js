@@ -19,9 +19,11 @@ import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
 import Push from 'push.js';
 import moment from 'moment';
 import Data from './DataHeaderButtonChat';
-import ReactTooltip from 'react-tooltip';
 import Picker from 'emoji-picker-react';
-import { ImageList, ImageListItem } from '@mui/material';
+import { Modal, Tooltip } from '@mui/material';
+import CallIcon from '@mui/icons-material/Call';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 const cx = classNames.bind(styles);
 
@@ -39,6 +41,9 @@ function Chat({ setRightBar }) {
     const socket = useRef();
     const bottomRef = useRef(null);
 
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const [individualChatId, setIndividualChatId] = useState('');
     const [message, setMessage] = useState('');
     const [sendData, setSendData] = useState([
@@ -52,57 +57,6 @@ function Chat({ setRightBar }) {
             },
         },
     ]);
-
-    const itemData = [
-        {
-            img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-            title: 'Breakfast',
-        },
-        {
-            img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-            title: 'Burger',
-        },
-        {
-            img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-            title: 'Camera',
-        },
-        {
-            img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-            title: 'Coffee',
-        },
-        // {
-        //     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-        //     title: 'Hats',
-        // },
-        // {
-        //     img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-        //     title: 'Honey',
-        // },
-        // {
-        //     img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-        //     title: 'Basketball',
-        // },
-        // {
-        //     img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-        //     title: 'Fern',
-        // },
-        // {
-        //     img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-        //     title: 'Mushrooms',
-        // },
-        // {
-        //     img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-        //     title: 'Tomato basil',
-        // },
-        // {
-        //     img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-        //     title: 'Sea star',
-        // },
-        // {
-        //     img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-        //     title: 'Bike',
-        // },
-    ];
 
     const dispatch = useDispatch();
 
@@ -339,26 +293,27 @@ function Chat({ setRightBar }) {
                 </div>
 
                 <ul className={cx('ListButton')}>
-                    {Data.map((item, index) => {
-                        const image = item.urc;
-                        const toolTip = item.title;
-                        const alt = item.alt;
-
-                        return (
-                            <React.Fragment key={index}>
-                                <li
-                                    data-tip={toolTip}
-                                    data-for="button"
-                                    data-iscapture="true"
-                                    className={cx('button')}
-                                    onClick={() => callPopupFunction()}
-                                >
-                                    <img src={image} alt={alt} />
-                                </li>
-                                <ReactTooltip id="button" place="left" />
-                            </React.Fragment>
-                        );
-                    })}
+                    <Tooltip title="Gọi điện" placement="left" disableInteractive arrow>
+                        <li className={cx('button')} onClick={() => callPopupFunction()}>
+                            <CallIcon sx={{ fontSize: 30 }} />
+                        </li>
+                    </Tooltip>
+                    <Tooltip title="Gọi điện video" placement="left" disableInteractive arrow>
+                        <li className={cx('button')} onClick={() => callPopupFunction()}>
+                            <VideoCallIcon sx={{ fontSize: 30 }} />
+                        </li>
+                    </Tooltip>
+                    <Tooltip title="Các chức năng" placement="left" disableInteractive arrow>
+                        <li className={cx('button')} onClick={handleOpen}>
+                            <DragIndicatorIcon sx={{ fontSize: 30 }} />
+                        </li>
+                    </Tooltip>
+                    <Modal open={open} onClose={handleClose}>
+                        <div className={cx('modalMain')}>
+                            <h1>Text in a modal</h1>
+                            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+                        </div>
+                    </Modal>
                 </ul>
             </div>
 
@@ -377,6 +332,9 @@ function Chat({ setRightBar }) {
                         <LoadingChat />
                     ) : (
                         sendData?.map((mess, index) => {
+                            const nameSender = sender?.profileName;
+                            const nameUser = user?.profileName;
+
                             return (
                                 <React.Fragment key={index}>
                                     <div className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}>
@@ -385,54 +343,38 @@ function Chat({ setRightBar }) {
                                             src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                                             alt="avata"
                                         />
-                                        <div
-                                            data-tip={convertTime(mess.message.time)}
-                                            data-for="registerTip"
-                                            className={cx('boxTextChat')}
+                                        <Tooltip
+                                            title={convertTime(mess.message.time)}
+                                            placement="right"
+                                            disableInteractive
+                                            arrow
                                         >
-                                            {mess.message?.type_Msg === TYPE_MSG ? (
-                                                <p className={cx('textChat')}>{mess.message.content}</p>
-                                            ) : (
-                                                imgChat(mess.message?.imageContent.length, mess.message?.imageContent)
-                                            )}
-                                        </div>
+                                            <div className={cx('boxTextChat')}>
+                                                <p className={cx('textUserName')}>
+                                                    {mess.sender === currentUserId ? nameUser : nameSender}
+                                                </p>
+                                                {mess.message?.type_Msg === TYPE_MSG ? (
+                                                    <p className={cx('textChat')}>{mess.message.content}</p>
+                                                ) : (
+                                                    imgChat(
+                                                        mess.message?.imageContent.length,
+                                                        mess.message?.imageContent,
+                                                    )
+                                                )}
+                                            </div>
+                                        </Tooltip>
                                         <div className={cx('boxEdite')}>
                                             <div></div>
                                             <div></div>
                                             <div></div>
                                         </div>
                                     </div>
-                                    <ReactTooltip id="registerTip" place="left" effect="solid" />
                                 </React.Fragment>
                             );
                         })
                     )}
-                    {/* <div className={cx('friendSend')}>
-                        <img
-                            className={cx('imgChat')}
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                            alt="avata"
-                        />
-                        <div data-tip={'test'} data-for="registerTip" className={cx('boxTextChat')}>
-                            <div className={cx('groupImage')}>
-                                {itemData.map((item, index) => (
-                                    <img
-                                        key={index}
-                                        src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                                        alt={item.title}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                        <div className={cx('boxEdite')}>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div> */}
-
-                    <div ref={bottomRef} />
                 </div>
+                <div ref={bottomRef} />
             </div>
 
             <form onSubmit={handleSubmit} className={cx('inputChat')} encType={'multipart/form-data'}>
