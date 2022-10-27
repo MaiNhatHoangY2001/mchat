@@ -52,13 +52,26 @@ const groupChatController = {
 					$unwind: '$message',
 				},
 				{
+					$lookup: {
+						from: 'users',
+						localField: 'message.userGroupChat',
+						foreignField: '_id',
+						as: 'message.userGroupChat',
+					},
+				},
+				{
+					$unwind: '$message.userGroupChat',
+				},
+				{
 					$project: {
 						'message.type_Msg': 1,
-						sender: '$message.userGroupChat',
+						sender: '$message.userGroupChat._id',
 						'message.content': 1,
 						'message.time': 1,
 						'message.imageContent': 1,
-						'message.userGroupChat': 1,
+						'message.userGroupChat._id': 1,
+						'message.userGroupChat.profileName': 1,
+
 						_id: 0,
 					},
 				},

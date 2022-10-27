@@ -178,7 +178,7 @@ function Chat() {
                         <LoadingChat />
                     ) : (
                         sendData?.map((mess, index) => {
-                            const nameSender = sender?.profileName;
+                            const nameSender = mess.message.userGroupChat?.profileName || sender?.profileName;
                             const nameUser = user?.profileName;
 
                             return (

@@ -45,6 +45,10 @@ function ChatContextProvider({ children }) {
                 content: mess,
                 imageContent: imageContent,
                 time: time,
+                userGroupChat: {
+                    _id: currentUserId,
+                    profileName: user.profileName,
+                },
             },
             isNewChat: false,
             isGroupChat: isGroupChat,
@@ -63,6 +67,7 @@ function ChatContextProvider({ children }) {
         delete newChat.isNewChat;
         delete newChat.senderName;
         delete newChat.isGroupChat;
+        delete newChat.userGroupChat;
         //add chat on content
         setSendData((prev) => [...prev, newChat]);
     };
