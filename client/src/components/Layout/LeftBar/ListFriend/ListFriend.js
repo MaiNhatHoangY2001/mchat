@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './ListFriend.scss';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AutoComplete from '../AutoComplete';
 import TextField from '@mui/material/TextField';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,6 +26,7 @@ import {
     Modal,
     Tooltip,
 } from '@mui/material';
+import { ChatContext } from '../../../../context/ChatContext';
 
 const cx = classNames.bind(styles);
 
@@ -35,6 +36,9 @@ export default function ListFriend() {
     const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
     const currentSearch = useSelector((state) => state.user.users?.allUsers);
     const currentSender = useSelector((state) => state.user.sender?.user);
+
+    const chatContext = useContext(ChatContext);
+    const createChat = chatContext.createChat;
 
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
@@ -130,6 +134,7 @@ export default function ListFriend() {
                         profileName: newGroupChat.groupName,
                     }),
                 );
+
                 handleClickExit();
             }
         }

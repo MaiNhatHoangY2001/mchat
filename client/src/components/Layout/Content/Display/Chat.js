@@ -14,12 +14,9 @@ import Data from './DataHeaderButtonChat';
 import ReactTooltip from 'react-tooltip';
 import Picker from 'emoji-picker-react';
 import { ChatContext } from '../../../../context/ChatContext';
+import { TYPE_IMG, TYPE_MSG } from '../../../../context/TypeChat';
 
 const cx = classNames.bind(styles);
-
-const TYPE_MSG = 0;
-const TYPE_IMG = 1;
-const TYPE_NOTIFICATION = 2;
 
 function Chat() {
     const user = useSelector((state) => state.auth.login?.currentUser);
