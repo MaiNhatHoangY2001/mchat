@@ -1,25 +1,17 @@
 import classNames from 'classnames/bind';
 import styles from '../Content.module.scss';
 import 'react-loading-skeleton/dist/skeleton.css';
-import io from 'socket.io-client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAxios, url } from '../../../../redux/createInstance';
-import { loginSuccess, logoutSuccess } from '../../../../redux/authSlice';
-import {
-    addIndividualChat4NewUser,
-    addMessage,
-    getListIndividualChat,
-    getMsgs,
-    getMsgsGroupChat,
-} from '../../../../redux/apiRequest/chatApiRequest';
+import { createAxios } from '../../../../redux/createInstance';
+import { loginSuccess } from '../../../../redux/authSlice';
+import { getMsgs, getMsgsGroupChat } from '../../../../redux/apiRequest/chatApiRequest';
 import { popupCenter } from '../PopupCenter';
 import LoadingChat from '../../Loading/LoadingChat';
 import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
-import Push from 'push.js';
 import moment from 'moment';
-import Data from './DataHeaderButtonChat';
 import Picker from 'emoji-picker-react';
+import { ChatContext } from '../../../../context/ChatContext';
 import { Modal, Tooltip } from '@mui/material';
 import CallIcon from '@mui/icons-material/Call';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
@@ -29,8 +21,9 @@ const cx = classNames.bind(styles);
 
 const TYPE_MSG = 0;
 const TYPE_IMG = 1;
+const TYPE_NOTIFICATION = 2;
 
-function Chat({ setRightBar }) {
+function Chat() {
     const user = useSelector((state) => state.auth.login?.currentUser);
     const sender = useSelector((state) => state.user.sender?.user);
     const chat = useSelector((state) => state.chat.message?.content);
@@ -38,25 +31,18 @@ function Chat({ setRightBar }) {
     const isGroupChat = useSelector((state) => state.groupChat?.groupChat.isGroupChat);
     // const urlImage = useSelector((state) => state.file?.upload?.url.url);
 
-    const socket = useRef();
+    const chatContext = useContext(ChatContext);
+    const createChat = chatContext.createChat;
+    const setSendData = chatContext.setSendData;
+    const sendData = chatContext.sendData;
+    const setIndividualChatId = chatContext.setIndividualChatId;
+
     const bottomRef = useRef(null);
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [individualChatId, setIndividualChatId] = useState('');
     const [message, setMessage] = useState('');
-    const [sendData, setSendData] = useState([
-        {
-            type_Msg: null,
-            sender: null,
-            message: {
-                content: null,
-                time: null,
-                imageContent: [],
-            },
-        },
-    ]);
 
     const dispatch = useDispatch();
 
@@ -80,100 +66,6 @@ function Chat({ setRightBar }) {
 
     const addMsgImgWithInfo = (url) => {
         createChat(TYPE_IMG, '', url);
-    };
-
-    const createChat = (typeChat, mess, imageContent) => {
-        const time = new Date();
-        const newChat = {
-            sender: currentUserId,
-            receiver: currentSenderId,
-            message: {
-                type_Msg: typeChat,
-                content: mess,
-                imageContent: imageContent,
-                time: time,
-            },
-            isNewChat: false,
-            isGroupChat: isGroupChat,
-            senderName: sender.profileName,
-        };
-
-        if (sendData.length <= 0) {
-            newChat.isNewChat = true;
-        }
-
-        addMsg(typeChat, mess, imageContent);
-
-        socket.current.emit('on-chat', newChat);
-        //delete receiver property
-        delete newChat.receiver;
-        delete newChat.isNewChat;
-        delete newChat.senderName;
-        delete newChat.isGroupChat;
-        //add chat on content
-        setSendData((prev) => [...prev, newChat]);
-    };
-
-    const addMsg = (typeChat, mess, imageContent) => {
-        if (!isGroupChat) {
-            if (sendData.length <= 0) {
-                addChat4NewUser(typeChat, mess, imageContent);
-            } else {
-                addMsgWithInfo(typeChat, mess, imageContent);
-            }
-        } else {
-            addMsgWithInfoGroupChat(typeChat, mess, imageContent);
-        }
-    };
-
-    //
-    const addChat4NewUser = (typeChat, mess, imageContent) => {
-        const msg = {
-            type_Msg: typeChat,
-            content: mess,
-            imageContent: imageContent,
-        };
-        const indiviSender = {
-            sender: currentUserId,
-            status: 'Active',
-            chatStatus: 0,
-            user: currentSenderId,
-        };
-        const indiviUser = {
-            sender: currentSenderId,
-            status: 'Active',
-            chatStatus: 0,
-            user: currentUserId,
-        };
-
-        addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
-        window.setTimeout(function () {
-            //add chat finish before get one second
-            getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        }, 1000);
-    };
-
-    const addMsgWithInfoGroupChat = (typeChat, mess, imageContent) => {
-        const msg = {
-            type_Msg: typeChat,
-            content: mess,
-            imageContent: imageContent,
-            groupChat: currentSenderId,
-            userGroupChat: currentUserId,
-        };
-
-        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
-    };
-
-    const addMsgWithInfo = (typeChat, mess, imageContent) => {
-        const msg = {
-            type_Msg: typeChat,
-            content: mess,
-            imageContent: imageContent,
-            individualChat: individualChatId,
-        };
-
-        addMessage(msg, accessToken, dispatch, axiosJWTLogin);
     };
 
     const convertTime = (time) => {
@@ -232,49 +124,6 @@ function Chat({ setRightBar }) {
     useEffect(() => {
         setSendData(chat);
     }, [chat]);
-
-    //SOCKET CHAT
-    useEffect(() => {
-        const handler = (chatMessage) => {
-            if (chatMessage.isNewChat) {
-                window.setTimeout(function () {
-                    //add chat finish before get one second
-                    getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-                }, 1000);
-            }
-
-            if (chatMessage.isGroupChat) {
-                if (chatMessage.receiver === currentSenderId && chatMessage.sender !== currentUserId) {
-                    setSendData((prev) => {
-                        return [...prev, chatMessage];
-                    });
-                }
-            } else {
-                if (chatMessage.sender === currentSenderId && chatMessage.receiver === currentUserId) {
-                    setSendData((prev) => {
-                        return [...prev, chatMessage];
-                    });
-                }
-            }
-
-            // //displaying a notification
-            // if (chatMessage.receiver === currentUserId) {
-            //     Push.create(chatMessage.senderName, {
-            //         body: chatMessage.message.content,
-            //         silent: true,
-            //     });
-            //     Push.clear();
-            // }
-        };
-        if (user?.accessToken) {
-            socket.current = io(url, {
-                'Access-Control-Allow-Credentials': true,
-            });
-
-            socket.current.on('user-chat', handler);
-            return () => socket.current.off('user-chat', handler);
-        }
-    }, [sendData]);
 
     useEffect(() => {
         // 👇️ scroll to bottom every time messages change
@@ -373,8 +222,9 @@ function Chat({ setRightBar }) {
                             );
                         })
                     )}
+
+                    <div ref={bottomRef} />
                 </div>
-                <div ref={bottomRef} />
             </div>
 
             <form onSubmit={handleSubmit} className={cx('inputChat')} encType={'multipart/form-data'}>
