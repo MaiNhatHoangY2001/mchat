@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { getMsgs } from '../../../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../../../redux/authSlice';
 import { createAxios } from '../../../redux/createInstance';
+import { setIsGroupChat } from '../../../redux/groupChatSlice';
 import { setSender } from '../../../redux/userSlice';
 
 export default function ComboBox({ currentUser, users, renderInput }) {
@@ -16,6 +17,7 @@ export default function ComboBox({ currentUser, users, renderInput }) {
 
         getMsgs(currentUser.accessToken, dispatch, actor, axiosJWT);
         dispatch(setSender(sender));
+        dispatch(setIsGroupChat(false));
     };
 
     const getOptionLabel = (option) => {

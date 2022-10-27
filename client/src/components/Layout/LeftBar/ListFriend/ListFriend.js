@@ -112,8 +112,6 @@ export default function ListFriend() {
                 }, `${currentUser.profileName}`);
             } else name = nameGroup.trim();
 
-            console.log(name);
-
             const isHaveGroupChat = currentGroupChat.some((group) => group.groupName === name);
             if (isHaveGroupChat) {
                 console.log('Đã tồn tại nhóm');
