@@ -234,6 +234,23 @@ function Chat({ setRightBar }) {
         setInputStr((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
     };
+
+    const imgChat = (length, images) => {
+        const chatImage = (srcGroup) =>
+            images?.map((img, index) => {
+                return <img key={index} alt="not fount" width={'20px'} src={img + srcGroup} />;
+            });
+
+        if (length > 0) {
+            switch (length) {
+                case 1:
+                    return chatImage('');
+                default:
+                    return <div className={cx('groupImage')}>{chatImage('?w=164&h=164&fit=crop&auto=format')}</div>;
+            }
+        } else return <img alt="not fount" width={'20px'} src={''} />;
+    };
+
     //SAVE MSG WHEN RELOAD PAGE
     useEffect(() => {
         if (!isGroupChat) {
@@ -376,24 +393,8 @@ function Chat({ setRightBar }) {
                                             {mess.message?.type_Msg === TYPE_MSG ? (
                                                 <p className={cx('textChat')}>{mess.message.content}</p>
                                             ) : (
-                                                <>
-                                                    {mess.message?.imageContent.length > 0 ? (
-                                                        (mess.message?.imageContent).map((img, index) => {
-                                                            return (
-                                                                <img
-                                                                    key={index}
-                                                                    alt="not fount"
-                                                                    width={'20px'}
-                                                                    src={img}
-                                                                />
-                                                            );
-                                                        })
-                                                    ) : (
-                                                        <img key={index} alt="not fount" width={'20px'} src={''} />
-                                                    )}
-                                                </>
+                                                imgChat(mess.message?.imageContent.length, mess.message?.imageContent)
                                             )}
-                                            {/* {convertTime(mess.message.time)} */}
                                         </div>
                                         <div className={cx('boxEdite')}>
                                             <div></div>
@@ -406,7 +407,7 @@ function Chat({ setRightBar }) {
                             );
                         })
                     )}
-                    <div className={cx('friendSend')}>
+                    {/* <div className={cx('friendSend')}>
                         <img
                             className={cx('imgChat')}
                             src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
@@ -414,8 +415,12 @@ function Chat({ setRightBar }) {
                         />
                         <div data-tip={'test'} data-for="registerTip" className={cx('boxTextChat')}>
                             <div className={cx('groupImage')}>
-                                {itemData.map((item) => (
-                                    <img src={`${item.img}?w=164&h=164&fit=crop&auto=format`} alt={item.title} />
+                                {itemData.map((item, index) => (
+                                    <img
+                                        key={index}
+                                        src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                                        alt={item.title}
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -424,7 +429,7 @@ function Chat({ setRightBar }) {
                             <div></div>
                             <div></div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div ref={bottomRef} />
                 </div>
