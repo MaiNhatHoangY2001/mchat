@@ -10,11 +10,13 @@ import { popupCenter } from '../PopupCenter';
 import LoadingChat from '../../Loading/LoadingChat';
 import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
 import moment from 'moment';
-import Data from './DataHeaderButtonChat';
-import ReactTooltip from 'react-tooltip';
 import Picker from 'emoji-picker-react';
 import { ChatContext } from '../../../../context/ChatContext';
 import { TYPE_IMG, TYPE_MSG } from '../../../../context/TypeChat';
+import { Modal, Tooltip } from '@mui/material';
+import CallIcon from '@mui/icons-material/Call';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 const cx = classNames.bind(styles);
 
@@ -34,6 +36,9 @@ function Chat() {
 
     const bottomRef = useRef(null);
 
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const [message, setMessage] = useState('');
 
     const dispatch = useDispatch();
@@ -134,26 +139,27 @@ function Chat() {
                 </div>
 
                 <ul className={cx('ListButton')}>
-                    {Data.map((item, index) => {
-                        const image = item.urc;
-                        const toolTip = item.title;
-                        const alt = item.alt;
-
-                        return (
-                            <React.Fragment key={index}>
-                                <li
-                                    data-tip={toolTip}
-                                    data-for="button"
-                                    data-iscapture="true"
-                                    className={cx('button')}
-                                    onClick={() => callPopupFunction()}
-                                >
-                                    <img src={image} alt={alt} />
-                                </li>
-                                <ReactTooltip id="button" place="left" />
-                            </React.Fragment>
-                        );
-                    })}
+                    <Tooltip title="Gọi điện" placement="left" disableInteractive arrow>
+                        <li className={cx('button')} onClick={() => callPopupFunction()}>
+                            <CallIcon sx={{ fontSize: 30 }} />
+                        </li>
+                    </Tooltip>
+                    <Tooltip title="Gọi điện video" placement="left" disableInteractive arrow>
+                        <li className={cx('button')} onClick={() => callPopupFunction()}>
+                            <VideoCallIcon sx={{ fontSize: 30 }} />
+                        </li>
+                    </Tooltip>
+                    <Tooltip title="Các chức năng" placement="left" disableInteractive arrow>
+                        <li className={cx('button')} onClick={handleOpen}>
+                            <DragIndicatorIcon sx={{ fontSize: 30 }} />
+                        </li>
+                    </Tooltip>
+                    <Modal open={open} onClose={handleClose}>
+                        <div className={cx('modalMain')}>
+                            <h1>Text in a modal</h1>
+                            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+                        </div>
+                    </Modal>
                 </ul>
             </div>
 
@@ -172,6 +178,9 @@ function Chat() {
                         <LoadingChat />
                     ) : (
                         sendData?.map((mess, index) => {
+                            const nameSender = sender?.profileName;
+                            const nameUser = user?.profileName;
+
                             return (
                                 <React.Fragment key={index}>
                                     <div className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}>
@@ -180,24 +189,32 @@ function Chat() {
                                             src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
                                             alt="avata"
                                         />
-                                        <div
-                                            data-tip={convertTime(mess.message.time)}
-                                            data-for="registerTip"
-                                            className={cx('boxTextChat')}
+                                        <Tooltip
+                                            title={convertTime(mess.message.time)}
+                                            placement="right"
+                                            disableInteractive
+                                            arrow
                                         >
-                                            {mess.message?.type_Msg === TYPE_MSG ? (
-                                                <p className={cx('textChat')}>{mess.message.content}</p>
-                                            ) : (
-                                                imgChat(mess.message?.imageContent.length, mess.message?.imageContent)
-                                            )}
-                                        </div>
+                                            <div className={cx('boxTextChat')}>
+                                                <p className={cx('textUserName')}>
+                                                    {mess.sender === currentUserId ? nameUser : nameSender}
+                                                </p>
+                                                {mess.message?.type_Msg === TYPE_MSG ? (
+                                                    <p className={cx('textChat')}>{mess.message.content}</p>
+                                                ) : (
+                                                    imgChat(
+                                                        mess.message?.imageContent.length,
+                                                        mess.message?.imageContent,
+                                                    )
+                                                )}
+                                            </div>
+                                        </Tooltip>
                                         <div className={cx('boxEdite')}>
                                             <div></div>
                                             <div></div>
                                             <div></div>
                                         </div>
                                     </div>
-                                    <ReactTooltip id="registerTip" place="left" effect="solid" />
                                 </React.Fragment>
                             );
                         })
