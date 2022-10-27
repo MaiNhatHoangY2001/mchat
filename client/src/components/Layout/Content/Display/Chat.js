@@ -239,9 +239,9 @@ function Chat() {
                             bodyFormData.append('file', files[index]);
                         }
                         const image = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
-                        window.setTimeout(function () {
+                        window.setTimeout(async function () {
                             //wait upload image on google cloud
-                            addMsgImgWithInfo(image.url);
+                            await addMsgImgWithInfo(image.url);
                         }, 1000);
                     }}
                     style={{ display: 'none' }}
