@@ -174,7 +174,6 @@ function Register() {
         <section className={cx('register-container')}>
             <div className={cx('boxTabs')}>
             <Tabs
-                //className={cx('boxTabs')}
                 defaultActiveKey={activeTab}
                 transition={false}
                 variant="pills"
@@ -338,7 +337,6 @@ function Register() {
                             />
                             <input
                                 type="date"
-                                // placeholder="dd/mm/yyyy"
                                 className={cx('inputRegisterDate')}
                                 onChange={(e) => setDate(e.target.value)}
                             />
