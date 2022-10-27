@@ -6,11 +6,11 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/mlineSplash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
-    },
+    // "splash": {
+    //   "image": "./assets/splash-mline.png",
+    //   "resizeMode": "cover",
+    //   "backgroundColor": "#ffffff"
+    // },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
