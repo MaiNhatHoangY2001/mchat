@@ -165,6 +165,9 @@ function Register() {
     }
     const handleChangeTab = (e) =>{
         setActiveTab(2)
+        setActiveTab(2);
+        setDisableTab1(true);
+        setDisableTab2(false);
     }
     return (
         // <body>
@@ -176,7 +179,8 @@ function Register() {
                 transition={false}
                 variant="pills"
                 fill
-                onSelect ={(key) => handleChangeTab(key)}>
+                onSelect ={(key) => handleChangeTab(key)}
+                >
                 <Tab eventKey={1}  className={cx('TabOTP')} disabled={disableTab1} >
                     <div >
                                     <Form onSubmit={getOtp}  style={{ display: !flag ? 'block' : 'none' }} >
