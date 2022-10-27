@@ -1,7 +1,9 @@
 import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Animated, Dimensions } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './Login.module.scss';
-import { Link } from 'react-router-native';
+import { Link, useNavigate } from 'react-router-native';
+import { loginUser } from '../../../redux/apiRequest/authApiRequest';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -16,6 +18,7 @@ const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
 
 function Login() {
+    //splash-screen
     const splashscreen = useRef(new Animated.Value(0)).current;
     const [isVisible, setisVisible] = useState(true);
     useEffect(() => {
@@ -56,6 +59,7 @@ function Login() {
         );
     }
 
+    //show-hide-form
     const [flag, setFlag] = useState(false);
     // const [animationName, setAnimationName] = useState('');
 
@@ -69,6 +73,65 @@ function Login() {
         }
         setIsSecureTextEntry(true);
     };
+
+    //handle login
+    const user = useSelector((state) => state.auth.login?.currentUser);
+    const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [password, setPassword] = useState('');
+    const [linkToHome, setLinkToHome] = useState('');
+
+    const handleLogin = () => {
+        const newUser = {
+            phoneNumber: phoneNumber,
+            password: password,
+        };
+        console.warn(newUser);
+        // loginUser(newUser, dispatch, navigate, setIsLoading);
+    };
+
+    // useEffect(() => {
+    //     if (user) {
+    //         setLinkToHome('/home');
+    //         navigate({ linkToHome });
+    //         console.warn('Login success')
+    //     }
+    //     if (!user) console.warn('Login fail');
+    // });
+
+    //check regex sdt
+    const [errorMessSDT, setErrorMessSDT] = useState('');
+    let isNum = /^\d+$/.test(phoneNumber.trim());
+    let regexPhoneNumber = /\+?(0|84)\d{9}/.test(phoneNumber.trim());
+    function checkPhoneNumber() {
+        if (phoneNumber.trim() === '')
+            setErrorMessSDT((errorMessSDT) => (errorMessSDT = 'Vui lòng nhập số điện thoại!'));
+        else if (!isNum) setErrorMessSDT('Vui lòng nhập lại số điện thoại!');
+        else if (phoneNumber.trim().length !== 10) setErrorMessSDT('Vui lòng nhập đủ 10 ký tự số!');
+        else if (!regexPhoneNumber) setErrorMessSDT('SĐT không hợp lệ!');
+        // setErrorMessSDT(errorMessSDT => errorMessSDT = '✅');
+        else setErrorMessSDT('');
+    }
+
+    //check input pw
+    const [errorMessPW, setErrorMessPW] = useState('');
+    function checkPW() {
+        if (password.trim() === '') setErrorMessPW('Vui lòng nhập mật khẩu!');
+        else if (password.trim().length < 6) setErrorMessPW('Mật khẩu phải tối thiểu 6 ký tự!');
+        else {
+            setErrorMessPW('');
+            handleLogin();
+        }
+    }
+
+    //check data inputs
+    function checkDataInputs() {
+        checkPhoneNumber();
+        checkPW();
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -156,21 +219,21 @@ function Login() {
                                         maxLength={10}
                                         keyboardType="numeric"
                                         numberOfLines={1}
-                                        // onChangeText={(infoToDo) => setInfoToDo(infoToDo)}
-                                        // value={infoToDo}
+                                        onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
+                                        // value={phoneNumber}
                                     />
                                     <View style={{ justifyContent: 'center', marginLeft: 10 }}>
                                         <Icon name="phone-portrait-outline" size={40} color="rgb(250, 139, 158)" />
                                     </View>
                                 </View>
-                                <Text style={styles.errorMess}>Lỗi sdt</Text>
+                                <Text style={styles.errorMess}>{errorMessSDT}</Text>
                                 <View style={{ flexDirection: 'row' }}>
                                     <TextInput
                                         style={styles.styleInput}
                                         placeholder="Mật khẩu"
                                         numberOfLines={1}
                                         secureTextEntry={isSecureTextEntry}
-                                        // onChangeText={(passwordInput) => setPasswordInput(passwordInput)}
+                                        onChangeText={(password) => setPassword(password)}
                                         // value={passwordInput}
                                         // name="password"
                                     />
@@ -196,7 +259,7 @@ function Login() {
                                         )}
                                     </TouchableOpacity>
                                 </View>
-                                <Text style={styles.errorMess}>Lỗi mk</Text>
+                                <Text style={styles.errorMess}>{errorMessPW}</Text>
                                 <Link to="/forgotPass" style={{ alignSelf: 'flex-end', marginRight: 22 }}>
                                     <Text
                                         style={{
@@ -230,28 +293,32 @@ function Login() {
                                     >
                                         <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>Trở về</Text>
                                     </TouchableOpacity>
-                                    <Link
-                                        to="/home"
-                                        style={{
-                                            shadowColor: 'rgba(0,0,0, .4)', // IOS
-                                            shadowOffset: { height: 1, width: 1 }, // IOS
-                                            shadowOpacity: 1, // IOS
-                                            shadowRadius: 1, //IOS
-                                            backgroundColor: '#fff',
-                                            elevation: 2, // Android
-                                            backgroundColor: 'rgb(250, 139, 158)',
-                                            borderRadius: 12,
-                                            padding: '3%',
-                                            width: 120,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                        // onPress={() => }
-                                    >
-                                        <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>
-                                            Đăng nhập
-                                        </Text>
-                                    </Link>
+                                    {isLoading ? (
+                                        <Text style={styles.currentLoginMobile}>Đang đăng nhập...</Text>
+                                    ) : (
+                                        <Link
+                                            to={linkToHome}
+                                            style={{
+                                                shadowColor: 'rgba(0,0,0, .4)', // IOS
+                                                shadowOffset: { height: 1, width: 1 }, // IOS
+                                                shadowOpacity: 1, // IOS
+                                                shadowRadius: 1, //IOS
+                                                backgroundColor: '#fff',
+                                                elevation: 2, // Android
+                                                backgroundColor: 'rgb(250, 139, 158)',
+                                                borderRadius: 12,
+                                                padding: '3%',
+                                                width: 120,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
+                                            onPress={() => checkDataInputs()}
+                                        >
+                                            <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>
+                                                Đăng nhập
+                                            </Text>
+                                        </Link>
+                                    )}
                                 </View>
                                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                     <Text>Bạn chưa có tài khoản?</Text>
