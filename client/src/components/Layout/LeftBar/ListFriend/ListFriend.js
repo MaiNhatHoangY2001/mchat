@@ -14,7 +14,6 @@ import { getGroupChatSuccess, setIsGroupChat } from '../../../../redux/groupChat
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import {
     Avatar,
-    Box,
     Button,
     Checkbox,
     IconButton,
@@ -57,69 +56,6 @@ export default function ListFriend() {
         pointerEvents: 'none',
         userSelect: 'none',
     };
-
-    const dataList = [
-        {
-            id: 0,
-            name: 'Mai Ngọc Long',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715205/samples/people/boy-snow-hoodie.jpg',
-            sdt: '001',
-        },
-        {
-            id: 1,
-            name: 'Phạm Minh Hùng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715203/samples/people/smiling-man.jpg',
-            sdt: '002',
-        },
-        {
-            id: 2,
-            name: 'Mai Nhật Hoàng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
-            sdt: '003',
-        },
-        {
-            id: 3,
-            name: 'Mai Nhật Hoàng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
-            sdt: '003',
-        },
-        {
-            id: 4,
-            name: 'Mai Nhật Hoàng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
-            sdt: '003',
-        },
-        {
-            id: 5,
-            name: 'Mai Nhật Hoàng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
-            sdt: '003',
-        },
-        {
-            id: 6,
-            name: 'Mai Nhật Hoàng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
-            sdt: '003',
-        },
-        {
-            id: 7,
-            name: 'Mai Nhật Hoàng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
-            sdt: '003',
-        },
-        {
-            id: 8,
-            name: 'Mai Nhật Hoàng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
-            sdt: '003',
-        },
-        {
-            id: 9,
-            name: 'Mai Nhật Hoàng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg',
-            sdt: '003',
-        },
-    ];
 
     const setDataSelect = (event) => {
         setSearchGroup(event.target.value);

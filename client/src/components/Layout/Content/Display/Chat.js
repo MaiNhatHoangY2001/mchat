@@ -21,6 +21,7 @@ import moment from 'moment';
 import Data from './DataHeaderButtonChat';
 import ReactTooltip from 'react-tooltip';
 import Picker from 'emoji-picker-react';
+import { ImageList, ImageListItem } from '@mui/material';
 
 const cx = classNames.bind(styles);
 
@@ -51,6 +52,57 @@ function Chat({ setRightBar }) {
             },
         },
     ]);
+
+    const itemData = [
+        {
+            img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+            title: 'Breakfast',
+        },
+        {
+            img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+            title: 'Burger',
+        },
+        {
+            img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+            title: 'Camera',
+        },
+        {
+            img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
+            title: 'Coffee',
+        },
+        // {
+        //     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
+        //     title: 'Hats',
+        // },
+        // {
+        //     img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
+        //     title: 'Honey',
+        // },
+        // {
+        //     img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
+        //     title: 'Basketball',
+        // },
+        // {
+        //     img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
+        //     title: 'Fern',
+        // },
+        // {
+        //     img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
+        //     title: 'Mushrooms',
+        // },
+        // {
+        //     img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
+        //     title: 'Tomato basil',
+        // },
+        // {
+        //     img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
+        //     title: 'Sea star',
+        // },
+        // {
+        //     img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
+        //     title: 'Bike',
+        // },
+    ];
 
     const dispatch = useDispatch();
 
@@ -182,6 +234,23 @@ function Chat({ setRightBar }) {
         setInputStr((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
     };
+
+    const imgChat = (length, images) => {
+        const chatImage = (srcGroup) =>
+            images?.map((img, index) => {
+                return <img key={index} alt="not fount" width={'20px'} src={img + srcGroup} />;
+            });
+
+        if (length > 0) {
+            switch (length) {
+                case 1:
+                    return chatImage('');
+                default:
+                    return <div className={cx('groupImage')}>{chatImage('?w=164&h=164&fit=crop&auto=format')}</div>;
+            }
+        } else return <img alt="not fount" width={'20px'} src={''} />;
+    };
+
     //SAVE MSG WHEN RELOAD PAGE
     useEffect(() => {
         if (!isGroupChat) {
@@ -324,24 +393,8 @@ function Chat({ setRightBar }) {
                                             {mess.message?.type_Msg === TYPE_MSG ? (
                                                 <p className={cx('textChat')}>{mess.message.content}</p>
                                             ) : (
-                                                <>
-                                                    {mess.message?.imageContent.length > 0 ? (
-                                                        (mess.message?.imageContent).map((img, index) => {
-                                                            return (
-                                                                <img
-                                                                    key={index}
-                                                                    alt="not fount"
-                                                                    width={'20px'}
-                                                                    src={img}
-                                                                />
-                                                            );
-                                                        })
-                                                    ) : (
-                                                        <img key={index} alt="not fount" width={'20px'} src={''} />
-                                                    )}
-                                                </>
+                                                imgChat(mess.message?.imageContent.length, mess.message?.imageContent)
                                             )}
-                                            {/* {convertTime(mess.message.time)} */}
                                         </div>
                                         <div className={cx('boxEdite')}>
                                             <div></div>
@@ -354,6 +407,29 @@ function Chat({ setRightBar }) {
                             );
                         })
                     )}
+                    {/* <div className={cx('friendSend')}>
+                        <img
+                            className={cx('imgChat')}
+                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                            alt="avata"
+                        />
+                        <div data-tip={'test'} data-for="registerTip" className={cx('boxTextChat')}>
+                            <div className={cx('groupImage')}>
+                                {itemData.map((item, index) => (
+                                    <img
+                                        key={index}
+                                        src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                                        alt={item.title}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <div className={cx('boxEdite')}>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div> */}
 
                     <div ref={bottomRef} />
                 </div>
