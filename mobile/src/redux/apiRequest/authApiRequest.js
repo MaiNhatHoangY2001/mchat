@@ -18,6 +18,8 @@ import { clearSender } from '../userSlice';
 export const loginUser = async (user, dispatch, navigate, setIsLoading) => {
     dispatch(loginStart());
     try {
+        console.log(url);
+
         setIsLoading(true);
         const res = await axios.post(`${url}/api/login`, user, {
             withCredentials: true,

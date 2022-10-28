@@ -90,7 +90,7 @@ function Login() {
             password: password,
         };
         console.warn(newUser);
-        // loginUser(newUser, dispatch, navigate, setIsLoading);
+        loginUser(newUser, dispatch, navigate, setIsLoading);
     };
 
     // useEffect(() => {
@@ -132,6 +132,12 @@ function Login() {
         checkPhoneNumber();
         checkPW();
     }
+
+    useEffect(() => {
+        if (user) {
+            navigate('/');
+        }
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>

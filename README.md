@@ -5,6 +5,7 @@ https://mchat-realtimechat-cnm.netlify.app/login
 # Development
 ## Requirement
 Download and copy file .env and google-cloud-key.json to server folder
+
 ## How to start web
 1. Open new terminal and run
 ```
@@ -15,4 +16,15 @@ npm run server
 npm run client
 ```
 3. web will deploy on localhost:3000
+
+## How to start mobile
+1. Open new terminal and run
+```
+npm run server
+```
+2. Open new terminal and run
+```
+npm run mobile
+```
+3. app will deploy on expo 
 
