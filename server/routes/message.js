@@ -8,4 +8,6 @@ router.post('/', middlewareController.verifyTokenAndUserAuth, messageController.
 //GET ALL MESSAGE
 router.get('/:sender', middlewareController.verifyTokenAndUserAuth, messageController.getAllMsgOnePerson);
 
+router.put('/:id', messageController.updateMessage);
+
 module.exports = router;

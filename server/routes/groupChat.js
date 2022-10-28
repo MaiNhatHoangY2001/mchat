@@ -9,4 +9,7 @@ router.get('/:id', middlewareController.verifyTokenAndUserAuth, groupChatControl
 
 // GET CHAT IN GROUP CHAT
 router.get('/', middlewareController.verifyTokenAndUserAuth, groupChatController.getListChat);
+
+router.post('/addUser', groupChatController.addUserGroupChat);
+
 module.exports = router;

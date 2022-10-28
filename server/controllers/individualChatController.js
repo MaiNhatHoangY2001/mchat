@@ -80,6 +80,7 @@ const individualChatController = {
 						'message.type_Msg': 1,
 						'message.imageContent': 1,
 						sender: '$user',
+						'message._id': 1,
 						_id: 0,
 					},
 				},

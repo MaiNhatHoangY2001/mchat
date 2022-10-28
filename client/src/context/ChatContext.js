@@ -35,7 +35,7 @@ function ChatContextProvider({ children }) {
         },
     ]);
 
-    const createChat = (typeChat, mess, imageContent, individualId = individualChatId) => {
+    const createChat = (typeChat, mess, imageContent, individualId = individualChatId, groupChat = isGroupChat) => {
         const time = new Date();
         const newChat = {
             sender: currentUserId,
@@ -51,7 +51,7 @@ function ChatContextProvider({ children }) {
                 },
             },
             isNewChat: false,
-            isGroupChat: isGroupChat,
+            isGroupChat: groupChat,
             senderName: sender.profileName,
         };
 
@@ -59,7 +59,7 @@ function ChatContextProvider({ children }) {
             newChat.isNewChat = true;
         }
 
-        addMsg(typeChat, mess, imageContent, individualId);
+        addMsg(typeChat, mess, imageContent, individualId, groupChat);
 
         socket.current.emit('on-chat', newChat);
         //delete receiver property
@@ -72,7 +72,7 @@ function ChatContextProvider({ children }) {
         setSendData((prev) => [...prev, newChat]);
     };
 
-    const addMsg = (typeChat, mess, imageContent, individualId) => {
+    const addMsg = (typeChat, mess, imageContent, individualId, isGroupChat) => {
         if (!isGroupChat) {
             if (sendData.length <= 0) {
                 addChat4NewUser(typeChat, mess, imageContent);

@@ -137,11 +137,10 @@ export default function ListFriend() {
                 );
 
                 //send text join group to friend
-
                 listFriend.forEach((friend) => {
                     const individualChatId = friend._id;
-                    const msg = `Đã thêm bạn vào nhóm. Bạn có đồng ý tham gia không?/=`;
-                    createChat(TYPE_NOTIFICATION, msg, [], individualChatId);
+                    const msg = `Đã thêm bạn vào nhóm. Bạn có đồng ý tham gia không?/=/${newGroupChat._id}`;
+                    createChat(TYPE_NOTIFICATION, msg, [], individualChatId, false);
                 });
 
                 handleClickExit();
