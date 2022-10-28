@@ -19,6 +19,15 @@ const groupChatController = {
 			res.status(500).json(error);
 		}
 	},
+	addUserGroupChat: async (req, res) => {
+		try {
+			const group = await GroupChat.findById(req.body.idGroup);
+			await group.updateOne({ $push: { user: req.body.idUser } });
+			res.status(200).json('add successfully');
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
 	getListGroupChat: async (req, res) => {
 		try {
 			const idUser = mongoose.Types.ObjectId(req.params.id);

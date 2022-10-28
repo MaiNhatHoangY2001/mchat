@@ -12,13 +12,91 @@ import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
 import moment from 'moment';
 import Picker from 'emoji-picker-react';
 import { ChatContext } from '../../../../context/ChatContext';
-import { TYPE_IMG, TYPE_MSG } from '../../../../context/TypeChat';
-import { Modal, Tooltip } from '@mui/material';
+import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeChat';
+import {
+    Avatar,
+    Button,
+    IconButton,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Modal,
+    TextField,
+    Tooltip,
+} from '@mui/material';
 import CallIcon from '@mui/icons-material/Call';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import LogoutIcon from '@mui/icons-material/Logout';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import KeyIcon from '@mui/icons-material/Key';
+import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
 
 const cx = classNames.bind(styles);
+
+const DataGroupDemo = {
+    id: 0,
+    name: 'Nhóm 16',
+    admin: 0,
+    avataGroup: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715210/samples/imagecon-group.jpg',
+    listUser: [
+        {
+            id: 0,
+            name: 'Sơn Tùng MTP',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar2_abehs5.png',
+        },
+        {
+            id: 1,
+            name: 'Jack 5 Triệu',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar6_cfpsfq.png',
+        },
+        {
+            id: 2,
+            name: 'Dương Lâm Đông Nai',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966663/Avata/thumb-1920-233306_wgsosk.jpg',
+        },
+        {
+            id: 3,
+            name: 'HieuThuHai',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/img_avatar2_ldxfoe.png',
+        },
+        {
+            id: 4,
+            name: 'Đạt Vi Na',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/img_avatar_byssaa.png',
+        },
+        {
+            id: 5,
+            name: 'Huấn Hoa Hồng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
+        },
+        {
+            id: 6,
+            name: 'Huấn Hoa Hồng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
+        },
+        {
+            id: 8,
+            name: 'Huấn Hoa Hồng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
+        },
+        {
+            id: 9,
+            name: 'Huấn Hoa Hồng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
+        },
+        {
+            id: 10,
+            name: 'Huấn Hoa Hồng',
+            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
+        },
+    ],
+};
 
 function Chat() {
     const user = useSelector((state) => state.auth.login?.currentUser);
@@ -36,7 +114,8 @@ function Chat() {
 
     const bottomRef = useRef(null);
 
-    const [open, setOpen] = React.useState(false);
+    const [isDataGroup, setDataGroup] = useState(DataGroupDemo.admin);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [message, setMessage] = useState('');
@@ -48,6 +127,11 @@ function Chat() {
     const accessToken = user?.accessToken;
 
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
+
+    const handleSetKeyAdmin = (value) => () => {
+        setDataGroup(value);
+        DataGroupDemo.admin = value;
+    };
 
     const callPopupFunction = () => {
         popupCenter({ url: '../call', title: 'xtf', w: 500, h: 650 });
@@ -76,6 +160,17 @@ function Chat() {
     const emojiPicker = (event, emojiObject) => {
         setInputStr((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
+    };
+
+    const typeChat = (type, mess) => {
+        switch (type) {
+            case TYPE_MSG:
+                return <p className={cx('textChat')}>{mess.message.content}</p>;
+            case TYPE_IMG:
+                return imgChat(mess.message?.imageContent.length, mess.message?.imageContent);
+            case TYPE_NOTIFICATION:
+                return <p className={cx('textChat')}>{mess.message.content}</p>;
+        }
     };
 
     const imgChat = (length, images) => {
@@ -156,8 +251,80 @@ function Chat() {
                     </Tooltip>
                     <Modal open={open} onClose={handleClose}>
                         <div className={cx('modalMain')}>
-                            <h1>Text in a modal</h1>
-                            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+                            <div className={cx('titleModal')}>
+                                <p>Thông tin nhóm</p>
+                            </div>
+                            <div className={cx('modalHeader')}>
+                                <div className={cx('AvataAndImage')}>
+                                    <img
+                                        src="https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715205/samples/bike.jpg"
+                                        alt="Image Avata Group"
+                                    />
+                                </div>
+                                <div className={cx('updateInfo')}>
+                                    <Button size="small" variant="contained" startIcon={<CameraAltIcon />}>
+                                        Cập nhật ảnh đại diện
+                                        <input hidden accept="image/*" multiple type="file" />
+                                    </Button>
+                                    <TextField
+                                        className={cx('updateNameGroup')}
+                                        label="Tên nhóm hiện tại"
+                                        fullWidth
+                                        size="small"
+                                        variant="standard"
+                                        placeholder="Nhập tên nhóm"
+                                    />
+                                </div>
+                            </div>
+                            <div className={cx('modalBody')}>
+                                <Button size="small" variant="contained" startIcon={<GroupAddIcon />}>
+                                    Thêm thành viên
+                                    <input hidden accept="image/*" multiple type="file" />
+                                </Button>
+                                <div className={cx('ListUserGroup')}>
+                                    <p>{isDataGroup}</p>
+                                    <p>Danh sách thành viên:</p>
+                                    <List className={cx('ListUser')}>
+                                        {DataGroupDemo.listUser.map((item, index) => {
+                                            const name =
+                                                isDataGroup === item.id ? item.name + ' (Trưởng nhóm)' : item.name;
+                                            const admin = isDataGroup === item.id ? false : true;
+                                            const showbutton = isDataGroup === 0 ? true : false;
+                                            return (
+                                                <ListItem key={index}>
+                                                    <ListItemAvatar>
+                                                        <Avatar>
+                                                            <img src={item.avata} alt={item.name} />
+                                                        </Avatar>
+                                                    </ListItemAvatar>
+                                                    <ListItemText primary={name} />
+
+                                                    {showbutton && admin ? (
+                                                        <ListItemIcon>
+                                                            <IconButton onClick={handleSetKeyAdmin(item.id)}>
+                                                                <KeyIcon />
+                                                            </IconButton>
+                                                            <IconButton>
+                                                                <GroupRemoveIcon />
+                                                            </IconButton>
+                                                        </ListItemIcon>
+                                                    ) : (
+                                                        <React.Fragment></React.Fragment>
+                                                    )}
+                                                </ListItem>
+                                            );
+                                        })}
+                                    </List>
+                                </div>
+                            </div>
+                            <div className={cx('modalFooter')}>
+                                <Button variant="text" color="success" startIcon={<CheckCircleIcon />}>
+                                    Xác nhận
+                                </Button>
+                                <Button variant="text" color="error" startIcon={<LogoutIcon />}>
+                                    Rời nhóm
+                                </Button>
+                            </div>
                         </div>
                     </Modal>
                 </ul>
@@ -199,14 +366,7 @@ function Chat() {
                                                 <p className={cx('textUserName')}>
                                                     {mess.sender === currentUserId ? nameUser : nameSender}
                                                 </p>
-                                                {mess.message?.type_Msg === TYPE_MSG ? (
-                                                    <p className={cx('textChat')}>{mess.message.content}</p>
-                                                ) : (
-                                                    imgChat(
-                                                        mess.message?.imageContent.length,
-                                                        mess.message?.imageContent,
-                                                    )
-                                                )}
+                                                {typeChat(mess.message?.type_Msg, mess)}
                                             </div>
                                         </Tooltip>
                                         <div className={cx('boxEdite')}>

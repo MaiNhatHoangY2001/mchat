@@ -21,6 +21,16 @@ const messageController = {
 		}
 	},
 
+	updateMessage: async (req, res) => {
+		try {
+			const mess = await Message.findById(req.params.id);
+			await mess.updateOne({ $set: { content: req.body.content } });
+			res.status(200).json('update successfully');
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
+
 	//GET All MESSAGE WITH SENDER
 	getAllMsgOnePerson: async (req, res) => {
 		try {
