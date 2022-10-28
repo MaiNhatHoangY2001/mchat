@@ -27,6 +27,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ChatContext } from '../../../../context/ChatContext';
+import { TYPE_NOTIFICATION } from '../../../../context/TypeChat';
 
 const cx = classNames.bind(styles);
 
@@ -104,12 +105,12 @@ export default function ListFriend() {
     const handleCreateGroupChat = async (listFriend) => {
         if (listFriend.length > 1) {
             let name;
-            const listIdUser = listFriend?.reduce(
-                (list, friend) => {
-                    return [...list, friend.sender._id];
-                },
-                [currentUser._id],
-            );
+            // const listIdUser = listFriend?.reduce(
+            //     (list, friend) => {
+            //         return [...list, friend.sender._id];
+            //     },
+            //     [currentUser._id],
+            // );
             if (nameGroup === '') {
                 name = listFriend?.reduce((list, friend) => {
                     return `${list}, ${friend.sender.profileName}`;
@@ -123,7 +124,7 @@ export default function ListFriend() {
                 const apiNewGroupChat = {
                     groupName: name,
                     chatStatus: '0',
-                    user: listIdUser,
+                    user: [currentUser._id],
                 };
 
                 const newGroupChat = await addGroupChat(accessToken, dispatch, apiNewGroupChat, axiosJWT);
@@ -134,6 +135,13 @@ export default function ListFriend() {
                         profileName: newGroupChat.groupName,
                     }),
                 );
+
+                //send text join group to friend
+                listFriend.forEach((friend) => {
+                    const individualChatId = friend._id;
+                    const msg = `Đã thêm bạn vào nhóm. Bạn có đồng ý tham gia không?/=/${newGroupChat._id}`;
+                    createChat(TYPE_NOTIFICATION, msg, [], individualChatId, false);
+                });
 
                 handleClickExit();
             }

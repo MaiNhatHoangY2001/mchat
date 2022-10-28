@@ -242,7 +242,7 @@ function ForgotPass() {
                                         >
                                             <Form.Control
                                                 type="text"
-                                                placeholder="Nhập mã xác nhận"
+                                                placeholder="Nhập mã xác thực"
                                                 onChange={(e) => setOtp(e.target.value)}
                                                 className={cx('inputOTP')}
                                             ></Form.Control>
