@@ -12,7 +12,7 @@ import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
 import moment from 'moment';
 import Picker from 'emoji-picker-react';
 import { ChatContext } from '../../../../context/ChatContext';
-import { TYPE_IMG, TYPE_MSG } from '../../../../context/TypeChat';
+import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeChat';
 import { Modal, Tooltip } from '@mui/material';
 import CallIcon from '@mui/icons-material/Call';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
@@ -76,6 +76,17 @@ function Chat() {
     const emojiPicker = (event, emojiObject) => {
         setInputStr((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
+    };
+
+    const typeChat = (type, mess) => {
+        switch (type) {
+            case TYPE_MSG:
+                return <p className={cx('textChat')}>{mess.message.content}</p>;
+            case TYPE_IMG:
+                return imgChat(mess.message?.imageContent.length, mess.message?.imageContent);
+            case TYPE_NOTIFICATION:
+                return <p className={cx('textChat')}>{mess.message.content}</p>;
+        }
     };
 
     const imgChat = (length, images) => {
@@ -199,14 +210,7 @@ function Chat() {
                                                 <p className={cx('textUserName')}>
                                                     {mess.sender === currentUserId ? nameUser : nameSender}
                                                 </p>
-                                                {mess.message?.type_Msg === TYPE_MSG ? (
-                                                    <p className={cx('textChat')}>{mess.message.content}</p>
-                                                ) : (
-                                                    imgChat(
-                                                        mess.message?.imageContent.length,
-                                                        mess.message?.imageContent,
-                                                    )
-                                                )}
+                                                {typeChat(mess.message?.type_Msg, mess)}
                                             </div>
                                         </Tooltip>
                                         <div className={cx('boxEdite')}>
