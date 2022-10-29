@@ -95,7 +95,7 @@ function ChatContextProvider({ children }) {
     };
 
     //
-    const addChat4NewUser = (typeChat, mess, imageContent) => {
+    const addChat4NewUser = async (typeChat, mess, imageContent) => {
         const msg = {
             type_Msg: typeChat,
             content: mess,
@@ -114,11 +114,8 @@ function ChatContextProvider({ children }) {
             user: currentUserId,
         };
 
-        addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
-        window.setTimeout(function () {
-            //add chat finish before get one second
-            getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        }, 1000);
+        await addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
+        getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
     };
 
     const addMsgWithInfoGroupChat = (typeChat, mess, imageContent) => {

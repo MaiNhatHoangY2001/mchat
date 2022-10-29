@@ -5,7 +5,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../../redux/createInstance';
 import { loginSuccess } from '../../../../redux/authSlice';
-import { getMsgs, getMsgsGroupChat, updateMsg } from '../../../../redux/apiRequest/chatApiRequest';
+import {
+    addUserGroupChat,
+    getListGroupChat,
+    getMsgs,
+    getMsgsGroupChat,
+    updateMsg,
+} from '../../../../redux/apiRequest/chatApiRequest';
 import { popupCenter } from '../PopupCenter';
 import LoadingChat from '../../Loading/LoadingChat';
 import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
@@ -228,7 +234,12 @@ function Chat() {
                 const question = content.split('/');
                 if (mess.sender === currentUserId)
                     return <p className={cx('textChat')}>Bạn đã gửi tin nhắn tham gia nhóm</p>;
-                else return formQuestion(question, isMessageQuestion === '' ? question[1] : isMessageQuestion, mess.message._id);
+                else
+                    return formQuestion(
+                        question,
+                        isMessageQuestion === '' ? question[1] : isMessageQuestion,
+                        mess.message._id,
+                    );
             default:
                 return <></>;
         }
@@ -257,12 +268,21 @@ function Chat() {
         }
     };
 
-    const handleAnswer = (question, anwser, id) => {
+    const handleAnswer = async (question, anwser, id) => {
         setMessageQuetion(anwser);
         const newAnwser = question[0] + '/' + anwser + '/' + question[2];
         const content = {
             content: newAnwser,
         };
+        if (anwser === 'Y') {
+            const apiGroupChat = {
+                idGroup: question[2],
+                idUser: currentUserId,
+            };
+            await addUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
+
+            getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        }
         updateMsg(accessToken, dispatch, id, content, axiosJWTLogin);
     };
 
