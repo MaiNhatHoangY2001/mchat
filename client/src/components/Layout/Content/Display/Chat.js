@@ -36,6 +36,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import KeyIcon from '@mui/icons-material/Key';
 import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
+import { Box } from '@mui/system';
 
 const cx = classNames.bind(styles);
 
@@ -98,6 +99,42 @@ const DataGroupDemo = {
     ],
 };
 
+function ChildModal({ onPress }) {
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    return (
+        <React.Fragment>
+            <IconButton onClick={handleOpen}>
+                <KeyIcon />
+            </IconButton>
+            <Modal hideBackdrop open={open} onClose={handleClose}>
+                <div className={cx('modalDialog')}>
+                    <div className={cx('modalTitle')}>
+                        <p>Xác nhận</p>
+                    </div>
+                    <div className={cx('modalContent')}>
+                        <p>Chuyển quyền trưởng nhóm cho người này?</p>
+                    </div>
+                    <div className={cx('modalButton')}>
+                        <Button size="small" onClick={handleClose}>
+                            Hủy
+                        </Button>
+                        <Button size="small" onClick={onPress}>
+                            Đồng ý
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
+        </React.Fragment>
+    );
+}
+
 function Chat() {
     const user = useSelector((state) => state.auth.login?.currentUser);
     const sender = useSelector((state) => state.user.sender?.user);
@@ -114,11 +151,13 @@ function Chat() {
 
     const bottomRef = useRef(null);
 
+    const [changeNameGroup, setChangeNameGroup] = useState(DataGroupDemo.name);
     const [isDataGroup, setDataGroup] = useState(DataGroupDemo.admin);
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [message, setMessage] = useState('');
+    const [isListUser, setListUser] = useState(DataGroupDemo.listUser);
 
     const dispatch = useDispatch();
 
@@ -127,6 +166,21 @@ function Chat() {
     const accessToken = user?.accessToken;
 
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
+
+    const handleRemoveUser = (item) => {
+        const index = isListUser
+            .map((item1) => {
+                return item1.id;
+            })
+            .indexOf(item.id);
+        const newData = [...isListUser];
+        newData.splice(index, 1);
+        setListUser(newData);
+    };
+
+    const setNameGroup = (event) => {
+        setChangeNameGroup(event.target.value);
+    };
 
     const handleSetKeyAdmin = (value) => () => {
         setDataGroup(value);
@@ -256,10 +310,7 @@ function Chat() {
                             </div>
                             <div className={cx('modalHeader')}>
                                 <div className={cx('AvataAndImage')}>
-                                    <img
-                                        src="https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715205/samples/bike.jpg"
-                                        alt="Image Avata Group"
-                                    />
+                                    <img src={DataGroupDemo.avataGroup} alt={DataGroupDemo.name} />
                                 </div>
                                 <div className={cx('updateInfo')}>
                                     <Button size="small" variant="contained" startIcon={<CameraAltIcon />}>
@@ -268,11 +319,12 @@ function Chat() {
                                     </Button>
                                     <TextField
                                         className={cx('updateNameGroup')}
-                                        label="Tên nhóm hiện tại"
                                         fullWidth
                                         size="small"
                                         variant="standard"
                                         placeholder="Nhập tên nhóm"
+                                        value={changeNameGroup}
+                                        onChange={setNameGroup}
                                     />
                                 </div>
                             </div>
@@ -282,10 +334,9 @@ function Chat() {
                                     <input hidden accept="image/*" multiple type="file" />
                                 </Button>
                                 <div className={cx('ListUserGroup')}>
-                                    <p>{isDataGroup}</p>
                                     <p>Danh sách thành viên:</p>
                                     <List className={cx('ListUser')}>
-                                        {DataGroupDemo.listUser.map((item, index) => {
+                                        {isListUser.map((item, index) => {
                                             const name =
                                                 isDataGroup === item.id ? item.name + ' (Trưởng nhóm)' : item.name;
                                             const admin = isDataGroup === item.id ? false : true;
@@ -301,10 +352,9 @@ function Chat() {
 
                                                     {showbutton && admin ? (
                                                         <ListItemIcon>
-                                                            <IconButton onClick={handleSetKeyAdmin(item.id)}>
-                                                                <KeyIcon />
-                                                            </IconButton>
-                                                            <IconButton>
+                                                            <ChildModal onPress={handleSetKeyAdmin(item.id)} />
+
+                                                            <IconButton onClick={() => handleRemoveUser(item)}>
                                                                 <GroupRemoveIcon />
                                                             </IconButton>
                                                         </ListItemIcon>
@@ -318,7 +368,12 @@ function Chat() {
                                 </div>
                             </div>
                             <div className={cx('modalFooter')}>
-                                <Button variant="text" color="success" startIcon={<CheckCircleIcon />}>
+                                <Button
+                                    variant="text"
+                                    color="success"
+                                    startIcon={<CheckCircleIcon />}
+                                    onClick={handleClose}
+                                >
                                     Xác nhận
                                 </Button>
                                 <Button variant="text" color="error" startIcon={<LogoutIcon />}>
