@@ -82,7 +82,7 @@ function Login() {
 
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
-    const [linkToHome, setLinkToHome] = useState('');
+    // const [linkToHome, setLinkToHome] = useState('');
 
     const handleLogin = () => {
         const newUser = {
@@ -303,7 +303,7 @@ function Login() {
                                         <Text style={styles.currentLoginMobile}>Đang đăng nhập...</Text>
                                     ) : (
                                         <Link
-                                            to={linkToHome}
+                                            // to={linkToHome}
                                             style={{
                                                 shadowColor: 'rgba(0,0,0, .4)', // IOS
                                                 shadowOffset: { height: 1, width: 1 }, // IOS
