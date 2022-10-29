@@ -37,11 +37,13 @@
     font-weight: 200;
     font-size: 17;
     font-weight: 400;
+    opacity: 0.6;
 }
 .inputSDT{
     align-self: center;
-    margin-top: 40px;
-    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 28px;
     height: 50;
     width: 300;
     border-radius: 20px;
@@ -65,10 +67,19 @@
     margin: 30px;
     margin-top: 10;
 }
+.btnConUser{
+    background-color: 'rgb(250, 139, 158)';
+    border-radius: 20px;
+    padding: 2px;
+    height: 50;
+    width: 330;
+    margin: 30px;
+    margin-top: 10;
+}
 .txtCon{
     color: white;
     font-size: 22;
-    margin-left: 26px;
+    align-self: center;
     margin-top: 8px;
     font-weight: 600;
 }
@@ -83,4 +94,17 @@
     align-items: center;
     align-self: center;
     justify-content: center;
+}
+.btnImgPicker{
+    border-width: 1px;
+    border-radius: 100px;
+    height: 150;
+    width: 150;
+}
+.ImgPicker{
+    height: 70;
+    width: 70;
+    align-self: center;
+    margin-top: 35;
+    flex-direction: column-reverse;
 }
