@@ -39,8 +39,9 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import KeyIcon from '@mui/icons-material/Key';
-import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
+import ModalKey from '../Modal/ModalKey/ModalKey';
+import ModalRemoveUser from '../Modal/ModalRemoveUser/ModalRemoveUser';
+import ModalAddUser from '../Modal/ModalAddUser/ModalAddUser';
 
 const cx = classNames.bind(styles);
 
@@ -103,42 +104,6 @@ const DataGroupDemo = {
     ],
 };
 
-function ChildModal({ onPress }) {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    return (
-        <React.Fragment>
-            <IconButton onClick={handleOpen}>
-                <KeyIcon />
-            </IconButton>
-            <Modal hideBackdrop open={open} onClose={handleClose}>
-                <div className={cx('modalDialog')}>
-                    <div className={cx('modalTitle')}>
-                        <p>Xác nhận</p>
-                    </div>
-                    <div className={cx('modalContent')}>
-                        <p>Chuyển quyền trưởng nhóm cho người này?</p>
-                    </div>
-                    <div className={cx('modalButton')}>
-                        <Button size="small" onClick={handleClose}>
-                            Hủy
-                        </Button>
-                        <Button size="small" onClick={onPress}>
-                            Đồng ý
-                        </Button>
-                    </div>
-                </div>
-            </Modal>
-        </React.Fragment>
-    );
-}
-
 function Chat() {
     const user = useSelector((state) => state.auth.login?.currentUser);
     const sender = useSelector((state) => state.user.sender?.user);
@@ -171,7 +136,7 @@ function Chat() {
 
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
 
-    const handleRemoveUser = (item) => {
+    const handleRemoveUser = (item) => () => {
         const index = isListUser
             .map((item1) => {
                 return item1.id;
@@ -387,10 +352,7 @@ function Chat() {
                                 </div>
                             </div>
                             <div className={cx('modalBody')}>
-                                <Button size="small" variant="contained" startIcon={<GroupAddIcon />}>
-                                    Thêm thành viên
-                                    <input hidden accept="image/*" multiple type="file" />
-                                </Button>
+                                <ModalAddUser />
                                 <div className={cx('ListUserGroup')}>
                                     <p>Danh sách thành viên:</p>
                                     <List className={cx('ListUser')}>
@@ -410,11 +372,15 @@ function Chat() {
 
                                                     {showbutton && admin ? (
                                                         <ListItemIcon>
-                                                            <ChildModal onPress={handleSetKeyAdmin(item.id)} />
+                                                            <ModalKey
+                                                                content={'Chuyển quyền trưởng nhóm cho người này?'}
+                                                                onPress={handleSetKeyAdmin(item.id)}
+                                                            />
 
-                                                            <IconButton onClick={() => handleRemoveUser(item)}>
-                                                                <GroupRemoveIcon />
-                                                            </IconButton>
+                                                            <ModalRemoveUser
+                                                                content={'Xác nhận mời người này ra khỏi nhóm!'}
+                                                                onPress={handleRemoveUser(item)}
+                                                            />
                                                         </ListItemIcon>
                                                     ) : (
                                                         <React.Fragment></React.Fragment>
