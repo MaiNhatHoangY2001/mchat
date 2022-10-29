@@ -79,7 +79,7 @@ function VerifiedScreen() {
                 setFlag(true);
             } catch (err) {
                 console.log(err.message);
-                Alert.alert('Xác thực không thành công!');
+                Alert.alert('Vui lòng nhập lại só điện thoại!');
             }
         }
     };
@@ -98,7 +98,7 @@ function VerifiedScreen() {
                 })
                 .catch((error) => {
                     console.log(error);
-                    alert(error);
+                    alert('Xác thực không thành công!');
                 });
             console.log(otp);
 
@@ -284,9 +284,9 @@ function ForgotPass() {
                                 Trở về màn hình đăng nhập
                             </Text>
                         </Link> */}
-                        <Link to="/" style={{ marginRight: '81%' }}>
+                        <Link to="/">
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Icon name="caret-left" size={40} color="#fff" />
+                                <Icon name="caret-left" size={26} color="#fff" />
                                 <Text
                                     style={{
                                         fontSize: 18,
