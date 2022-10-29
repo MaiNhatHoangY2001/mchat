@@ -13,7 +13,7 @@ const groupChatSchema = new mongoose.Schema({
 	},
 	groupImage: {
 		type: String,
-		default: 'https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png',
+		default: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667061870/Avata/computer-science-1331579_1280_nomqbh.png',
 	},
 	user: [
 		{

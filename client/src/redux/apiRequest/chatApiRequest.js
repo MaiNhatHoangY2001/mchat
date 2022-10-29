@@ -22,6 +22,9 @@ import {
     getGroupChatFailed,
     getGroupChatStart,
     getGroupChatSuccess,
+    updateGroupChatFailed,
+    updateGroupChatStart,
+    updateGroupChatSuccess,
 } from '../groupChatSlice';
 
 export const addIndividualChat4NewUser = async (
@@ -69,14 +72,26 @@ export const addGroupChat = async (accessToken, dispatch, groupChat, axiosJWT) =
 };
 
 export const addUserGroupChat = async (accessToken, dispatch, apiGroupChat, axiosJWT) => {
-    dispatch(addGroupChatStart());
+    dispatch(updateGroupChatStart());
     try {
         await axiosJWT.post(`${url}/api/groupChat/addUser`, apiGroupChat, {
             headers: { token: `Bearer ${accessToken}` },
         });
-        dispatch(addGroupChatSuccess());
+        dispatch(updateGroupChatSuccess());
     } catch (error) {
-        dispatch(addGroupChatFailed());
+        dispatch(updateGroupChatFailed());
+    }
+};
+
+export const removeUserGroupChat = async (accessToken, dispatch, apiGroupChat, axiosJWT) => {
+    dispatch(updateGroupChatStart());
+    try {
+        await axiosJWT.post(`${url}/api/groupChat/removeUser`, apiGroupChat, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateGroupChatSuccess());
+    } catch (error) {
+        dispatch(updateGroupChatFailed());
     }
 };
 

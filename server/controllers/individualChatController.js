@@ -22,7 +22,7 @@ const individualChatController = {
 
 			const listInvidualChat = await IndividualChat.find({ user: idUser })
 				.populate('message')
-				.populate('sender', 'firstName lastName birthDate profileName status');
+				.populate('sender', 'profileName profileImg');
 			res.status(200).json(listInvidualChat);
 		} catch (error) {
 			res.status(500).json(error);

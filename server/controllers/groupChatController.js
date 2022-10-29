@@ -23,10 +23,32 @@ const groupChatController = {
 		try {
 			const group = await GroupChat.findById(req.body.idGroup);
 			await group.updateOne({ $push: { user: req.body.idUser } });
-			
+
 			const user = User.findById(req.body.idUser);
 			await await user.updateOne({ $push: { groupChats: req.body.idGroup } });
 			res.status(200).json('add successfully');
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
+	removeUserGroupChat: async (req, res) => {
+		try {
+			const group = await GroupChat.findById(req.body.idGroup);
+			await group.updateOne({ $pull: { user: req.body.idUser } });
+
+			const user = User.findById(req.body.idUser);
+			await await user.updateOne({ $pull: { groupChats: req.body.idGroup } });
+			res.status(200).json('remove successfully');
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
+	deleteGroupChat: async (req, res) => {
+		try {
+			const groupChat = await GroupChat.findById(req.body.idGroup);
+			
+			
+			res.status(200).json();
 		} catch (error) {
 			res.status(500).json(error);
 		}
@@ -44,7 +66,10 @@ const groupChatController = {
 		try {
 			const idUser = mongoose.Types.ObjectId(req.params.id);
 
-			const listGroupChat = await GroupChat.find({ user: idUser }).populate('message', 'time');
+			const listGroupChat = await GroupChat.find({ user: idUser })
+				.populate('message', 'time')
+				.populate('user', 'profileName')
+				.populate('groupAdmin', 'profileName');
 			res.status(200).json(listGroupChat);
 		} catch (error) {
 			res.status(500).json(error);

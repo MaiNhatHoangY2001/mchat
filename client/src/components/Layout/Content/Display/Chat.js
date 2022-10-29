@@ -10,6 +10,7 @@ import {
     getListGroupChat,
     getMsgs,
     getMsgsGroupChat,
+    removeUserGroupChat,
     updateMsg,
 } from '../../../../redux/apiRequest/chatApiRequest';
 import { popupCenter } from '../PopupCenter';
@@ -146,6 +147,7 @@ function Chat() {
     const chat = useSelector((state) => state.chat.message?.content);
     const individualChat = useSelector((state) => state.chat.individualChat);
     const isGroupChat = useSelector((state) => state.groupChat?.groupChat.isGroupChat);
+    const listGroupChat = useSelector((state) => state.groupChat?.groupChat.actor);
     // const urlImage = useSelector((state) => state.file?.upload?.url.url);
 
     const chatContext = useContext(ChatContext);
@@ -156,13 +158,15 @@ function Chat() {
 
     const bottomRef = useRef(null);
 
-    const [changeNameGroup, setChangeNameGroup] = useState(DataGroupDemo.name);
-    const [isDataGroup, setDataGroup] = useState(DataGroupDemo.admin);
+    const [currentGroupChat, setCurrentGroupChat] = useState(
+        listGroupChat.filter((groupChat) => groupChat.groupName === sender?.profileName)[0],
+    );
+    const [changeNameGroup, setChangeNameGroup] = useState(currentGroupChat?.groupName);
+    const [isDataGroup, setDataGroup] = useState(currentGroupChat?.groupAdmin._id);
+    const [isListUser, setListUser] = useState(currentGroupChat?.user);
+
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
     const [message, setMessage] = useState('');
-    const [isListUser, setListUser] = useState(DataGroupDemo.listUser);
 
     const dispatch = useDispatch();
 
@@ -172,24 +176,29 @@ function Chat() {
 
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
 
-    const handleRemoveUser = (item) => {
-        const index = isListUser
-            .map((item1) => {
-                return item1.id;
-            })
-            .indexOf(item.id);
-        const newData = [...isListUser];
-        newData.splice(index, 1);
-        setListUser(newData);
+    const handleOpen = async () => {
+        setOpen(true);
+        await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
     };
+    const handleClose = () => setOpen(false);
+
+    const handleRemoveUser = async (item) => {
+        setListUser(isListUser.filter((user) => user._id !== item._id));
+        const apiGroupChat = {
+            idGroup: currentGroupChat._id,
+            idUser: item._id,
+        };
+        await removeUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
+    };
+
+    const handleClickAddUser = () => {};
 
     const setNameGroup = (event) => {
         setChangeNameGroup(event.target.value);
     };
 
-    const handleSetKeyAdmin = (value) => () => {
+    const handleSetKeyAdmin = (value) => {
         setDataGroup(value);
-        DataGroupDemo.admin = value;
     };
 
     const callPopupFunction = () => {
@@ -335,11 +344,18 @@ function Chat() {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [sendData]);
 
+    useEffect(() => {
+        setCurrentGroupChat(listGroupChat.filter((groupChat) => groupChat.groupName === sender?.profileName)[0]);
+        setChangeNameGroup(currentGroupChat?.groupName);
+        setDataGroup(currentGroupChat?.groupAdmin._id);
+        setListUser(currentGroupChat?.user);
+    }, [listGroupChat]);
+
     return (
         <>
             <div className={cx('headerChat')}>
                 <div className={cx('infoFriend')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt="avata" />
+                    <img src={sender?.profileImg} alt="avata" />
                     <div className={cx('infoText')}>
                         {<p className={cx('name')}>{sender?.profileName}</p>}
                         <span className={cx('active')}>Đang hoạt động</span>
@@ -357,11 +373,16 @@ function Chat() {
                             <VideoCallIcon sx={{ fontSize: 30 }} />
                         </li>
                     </Tooltip>
-                    <Tooltip title="Các chức năng" placement="left" disableInteractive arrow>
-                        <li className={cx('button')} onClick={handleOpen}>
-                            <DragIndicatorIcon sx={{ fontSize: 30 }} />
-                        </li>
-                    </Tooltip>
+                    {isGroupChat ? (
+                        <Tooltip title="Các chức năng" placement="left" disableInteractive arrow>
+                            <li className={cx('button')} onClick={handleOpen}>
+                                <DragIndicatorIcon sx={{ fontSize: 30 }} />
+                            </li>
+                        </Tooltip>
+                    ) : (
+                        <></>
+                    )}
+
                     <Modal open={open} onClose={handleClose}>
                         <div className={cx('modalMain')}>
                             <div className={cx('titleModal')}>
@@ -369,7 +390,7 @@ function Chat() {
                             </div>
                             <div className={cx('modalHeader')}>
                                 <div className={cx('AvataAndImage')}>
-                                    <img src={DataGroupDemo.avataGroup} alt={DataGroupDemo.name} />
+                                    <img src={currentGroupChat?.groupImage} alt={currentGroupChat?.groupName} />
                                 </div>
                                 <div className={cx('updateInfo')}>
                                     <Button size="small" variant="contained" startIcon={<CameraAltIcon />}>
@@ -388,30 +409,40 @@ function Chat() {
                                 </div>
                             </div>
                             <div className={cx('modalBody')}>
-                                <Button size="small" variant="contained" startIcon={<GroupAddIcon />}>
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    startIcon={<GroupAddIcon />}
+                                    onClick={handleClickAddUser}
+                                >
                                     Thêm thành viên
                                     <input hidden accept="image/*" multiple type="file" />
                                 </Button>
                                 <div className={cx('ListUserGroup')}>
                                     <p>Danh sách thành viên:</p>
                                     <List className={cx('ListUser')}>
-                                        {isListUser.map((item, index) => {
+                                        {isListUser?.map((item, index) => {
                                             const name =
-                                                isDataGroup === item.id ? item.name + ' (Trưởng nhóm)' : item.name;
-                                            const admin = isDataGroup === item.id ? false : true;
-                                            const showbutton = isDataGroup === 0 ? true : false;
+                                                isDataGroup === item._id
+                                                    ? item.profileName + ' (Trưởng nhóm)'
+                                                    : item.profileName;
+                                            const admin = isDataGroup === item._id ? false : true;
+                                            const showButton = isDataGroup === currentUserId ? true : false;
                                             return (
                                                 <ListItem key={index}>
                                                     <ListItemAvatar>
                                                         <Avatar>
-                                                            <img src={item.avata} alt={item.name} />
+                                                            <img
+                                                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                                                alt={item.profileName}
+                                                            />
                                                         </Avatar>
                                                     </ListItemAvatar>
                                                     <ListItemText primary={name} />
 
-                                                    {showbutton && admin ? (
+                                                    {showButton && admin ? (
                                                         <ListItemIcon>
-                                                            <ChildModal onPress={handleSetKeyAdmin(item.id)} />
+                                                            <ChildModal onPress={() => handleSetKeyAdmin(item._id)} />
 
                                                             <IconButton onClick={() => handleRemoveUser(item)}>
                                                                 <GroupRemoveIcon />
@@ -446,7 +477,7 @@ function Chat() {
 
             <div className={cx('bodyCenter')}>
                 <div className={cx('infoFriendChat')}>
-                    <img src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`} alt="avata" />
+                    <img src={sender?.profileImg} alt="avata" />
                     <p>{sender?.profileName}</p>
                 </div>
 

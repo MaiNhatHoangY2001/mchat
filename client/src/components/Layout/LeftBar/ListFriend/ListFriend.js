@@ -8,7 +8,7 @@ import { createAxios } from '../../../../redux/createInstance';
 import { addIndividualChatSuccess } from '../../../../redux/chatSlice';
 import { searchUser } from '../../../../redux/apiRequest/userApiRequest';
 import { setSender } from '../../../../redux/userSlice';
-import { addGroupChat, getMsgs, getMsgsGroupChat } from '../../../../redux/apiRequest/chatApiRequest';
+import { addGroupChat, getListGroupChat, getMsgs, getMsgsGroupChat } from '../../../../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../../../../redux/authSlice';
 import { getGroupChatSuccess, setIsGroupChat } from '../../../../redux/groupChatSlice';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
@@ -96,6 +96,7 @@ export default function ListFriend() {
                 groupId: sender?._id,
             };
             getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWT);
+            getListGroupChat(accessToken, currentUser?._id, dispatch, axiosJWT);
             dispatch(setIsGroupChat(true));
         }
 
@@ -134,6 +135,7 @@ export default function ListFriend() {
                     setSender({
                         _id: newGroupChat._id,
                         profileName: newGroupChat.groupName,
+                        profileImg: newGroupChat?.groupImage,
                     }),
                 );
                 //reload chat when create new group
@@ -172,7 +174,7 @@ export default function ListFriend() {
         const search = textSearchUser === '' ? '@' : textSearchUser;
         searchUser(accessToken, dispatch, search, axiosJWT);
         if (currentSearch !== null) {
-            setUsersSearch(currentSearch?.filter((user) => user.profileName !== currentUser.profileName));
+            setUsersSearch(currentSearch?.filter((user) => user?.profileName !== currentUser?.profileName));
         }
     }, [textSearchUser]);
 
@@ -341,6 +343,7 @@ export default function ListFriend() {
                     const actorGroupChat = {
                         _id: actor?._id,
                         profileName: actor?.groupName,
+                        profileImg: actor?.groupImage,
                     };
 
                     return (
@@ -353,10 +356,7 @@ export default function ListFriend() {
                             className={cx('item')}
                             style={isActorSenderActive ? activeButtonStyles : {}}
                         >
-                            <img
-                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                alt={'avata'}
-                            />
+                            <img src={actor?.sender?.profileImg || actor?.groupImage} alt={'avata'} />
                             <div className={cx('content-item')}>
                                 <p>{actor?.sender?.profileName || actor?.groupName}</p>
                                 <p className={cx('supchat')}>{/* {newMessage(actor?.message[0])} */}</p>
