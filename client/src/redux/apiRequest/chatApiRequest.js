@@ -109,7 +109,7 @@ export const getMsgs = async (accessToken, dispatch, actor, axiosJWT) => {
 export const updateMsg = async (accessToken, dispatch, id, content, axiosJWT) => {
     dispatch(updateMessageStart());
     try {
-        const res = await axiosJWT.put(`${url}/api/message/${id}`, content, {
+        await axiosJWT.put(`${url}/api/message/${id}`, content, {
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(updateMessageSuccess());

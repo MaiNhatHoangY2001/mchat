@@ -24,7 +24,7 @@ const messageController = {
 	updateMessage: async (req, res) => {
 		try {
 			const mess = await Message.findById(req.params.id);
-			await mess.updateOne({ $set: { content: req.body.content } });
+			await mess.updateOne({ $set: req.body });
 			res.status(200).json('update successfully');
 		} catch (error) {
 			res.status(500).json(error);

@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import { addIndividualChat4NewUser, addMessage, getListIndividualChat } from '../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../redux/authSlice';
 import { createAxios, url } from '../redux/createInstance';
+import { TYPE_NOTIFICATION } from './TypeChat';
 
 const ChatContext = createContext();
 
@@ -35,11 +36,18 @@ function ChatContextProvider({ children }) {
         },
     ]);
 
-    const createChat = (typeChat, mess, imageContent, individualId = individualChatId, groupChat = isGroupChat) => {
+    const createChat = (
+        typeChat,
+        mess,
+        imageContent,
+        individualId = individualChatId,
+        groupChat = isGroupChat,
+        currentSender = sender,
+    ) => {
         const time = new Date();
         const newChat = {
             sender: currentUserId,
-            receiver: currentSenderId,
+            receiver: currentSender._id,
             message: {
                 type_Msg: typeChat,
                 content: mess,
@@ -52,7 +60,7 @@ function ChatContextProvider({ children }) {
             },
             isNewChat: false,
             isGroupChat: groupChat,
-            senderName: sender.profileName,
+            senderName: currentSender.profileName,
         };
 
         if (sendData.length <= 0) {
@@ -69,12 +77,14 @@ function ChatContextProvider({ children }) {
         delete newChat.isGroupChat;
         delete newChat.userGroupChat;
         //add chat on content
-        setSendData((prev) => [...prev, newChat]);
+        if (typeChat !== TYPE_NOTIFICATION) {
+            setSendData((prev) => [...prev, newChat]);
+        }
     };
 
     const addMsg = (typeChat, mess, imageContent, individualId, isGroupChat) => {
         if (!isGroupChat) {
-            if (sendData.length <= 0) {
+            if (sendData.length <= 0 && typeChat !== TYPE_NOTIFICATION) {
                 addChat4NewUser(typeChat, mess, imageContent);
             } else {
                 addMsgWithInfo(typeChat, mess, imageContent, individualId);

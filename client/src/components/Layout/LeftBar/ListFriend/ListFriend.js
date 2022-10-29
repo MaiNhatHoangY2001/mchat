@@ -125,6 +125,7 @@ export default function ListFriend() {
                     groupName: name,
                     chatStatus: '0',
                     user: [currentUser._id],
+                    groupAdmin: currentUser._id,
                 };
 
                 const newGroupChat = await addGroupChat(accessToken, dispatch, apiNewGroupChat, axiosJWT);
@@ -135,12 +136,16 @@ export default function ListFriend() {
                         profileName: newGroupChat.groupName,
                     }),
                 );
-
+                //reload chat when create new group
+                const apiSent = {
+                    groupId: newGroupChat._id,
+                };
+                getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWT);
                 //send text join group to friend
                 listFriend.forEach((friend) => {
                     const individualChatId = friend._id;
-                    const msg = `Đã thêm bạn vào nhóm. Bạn có đồng ý tham gia không?/=/${newGroupChat._id}`;
-                    createChat(TYPE_NOTIFICATION, msg, [], individualChatId, false);
+                    const msg = `Đã thêm bạn vào nhóm ${name}. Bạn có đồng ý tham gia không?/=/${newGroupChat._id}`;
+                    createChat(TYPE_NOTIFICATION, msg, [], individualChatId, false, friend.sender);
                 });
 
                 handleClickExit();
