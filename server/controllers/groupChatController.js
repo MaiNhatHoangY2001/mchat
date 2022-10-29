@@ -23,7 +23,19 @@ const groupChatController = {
 		try {
 			const group = await GroupChat.findById(req.body.idGroup);
 			await group.updateOne({ $push: { user: req.body.idUser } });
+			
+			const user = User.findById(req.body.idUser);
+			await await user.updateOne({ $push: { groupChats: req.body.idGroup } });
 			res.status(200).json('add successfully');
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
+	updateGroup: async (req, res) => {
+		try {
+			const group = await GroupChat.findById(req.params.id);
+			await group.updateOne({ $set: req.body });
+			res.status(200).json('update successfully');
 		} catch (error) {
 			res.status(500).json(error);
 		}

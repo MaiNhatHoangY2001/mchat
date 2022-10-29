@@ -5,7 +5,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../../redux/createInstance';
 import { loginSuccess } from '../../../../redux/authSlice';
-import { getMsgs, getMsgsGroupChat } from '../../../../redux/apiRequest/chatApiRequest';
+import {
+    addUserGroupChat,
+    getListGroupChat,
+    getMsgs,
+    getMsgsGroupChat,
+    updateMsg,
+} from '../../../../redux/apiRequest/chatApiRequest';
 import { popupCenter } from '../PopupCenter';
 import LoadingChat from '../../Loading/LoadingChat';
 import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
@@ -214,7 +220,7 @@ function Chat() {
         setShowPicker(false);
     };
 
-    const [isMessageQuestion, setMessageQuetion] = useState('=');
+    const [isMessageQuestion, setMessageQuetion] = useState('');
 
     const typeChat = (type, mess) => {
         switch (type) {
@@ -225,17 +231,17 @@ function Chat() {
             case TYPE_NOTIFICATION:
                 const content = mess.message.content;
                 const question = content.split('/');
-                question[1] = '=';
-                addtest(question[1]);
-
-                return formQuestion(question[0], isMessageQuestion, question[2]);
+                if (mess.sender === currentUserId)
+                    return <p className={cx('textChat')}>Bạn đã gửi tin nhắn tham gia nhóm</p>;
+                else
+                    return formQuestion(
+                        question,
+                        isMessageQuestion === '' ? question[1] : isMessageQuestion,
+                        mess.message._id,
+                    );
             default:
                 return <></>;
         }
-    };
-
-    const addtest = (key) => () => {
-        setMessageQuetion(key);
     };
 
     const formQuestion = (question, key, id) => {
@@ -247,7 +253,7 @@ function Chat() {
             case '=':
                 return (
                     <div>
-                        <p className={cx('textChat')}>{question}</p>
+                        <p className={cx('textChat')}>{question[0]}</p>
                         <Button size="small" onClick={() => handleAnswer(question, 'Y', id)}>
                             có
                         </Button>
@@ -261,10 +267,22 @@ function Chat() {
         }
     };
 
-    const handleAnswer = (question, anwser, id) => {
+    const handleAnswer = async (question, anwser, id) => {
         setMessageQuetion(anwser);
         const newAnwser = question[0] + '/' + anwser + '/' + question[2];
-        console.log(newAnwser);
+        const content = {
+            content: newAnwser,
+        };
+        if (anwser === 'Y') {
+            const apiGroupChat = {
+                idGroup: question[2],
+                idUser: currentUserId,
+            };
+            await addUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
+
+            getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        }
+        updateMsg(accessToken, dispatch, id, content, axiosJWTLogin);
     };
 
     const imgChat = (length, images) => {

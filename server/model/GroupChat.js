@@ -7,6 +7,14 @@ const groupChatSchema = new mongoose.Schema({
 	chatStatus: {
 		type: Number,
 	},
+	groupAdmin: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+	},
+	groupImage: {
+		type: String,
+		default: 'https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png',
+	},
 	user: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

@@ -12,4 +12,6 @@ router.get('/', middlewareController.verifyTokenAndUserAuth, groupChatController
 
 router.post('/addUser', middlewareController.verifyTokenAndUserAuth, groupChatController.addUserGroupChat);
 
+router.put('/:id', middlewareController.verifyTokenAndUserAuth, groupChatController.updateGroup);
+
 module.exports = router;
