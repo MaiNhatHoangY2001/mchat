@@ -36,7 +36,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import KeyIcon from '@mui/icons-material/Key';
 import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
-import { Box } from '@mui/system';
 
 const cx = classNames.bind(styles);
 
@@ -216,6 +215,8 @@ function Chat() {
         setShowPicker(false);
     };
 
+    const [isMessageQuestion, setMessageQuetion] = useState('=');
+
     const typeChat = (type, mess) => {
         switch (type) {
             case TYPE_MSG:
@@ -223,8 +224,48 @@ function Chat() {
             case TYPE_IMG:
                 return imgChat(mess.message?.imageContent.length, mess.message?.imageContent);
             case TYPE_NOTIFICATION:
-                return <p className={cx('textChat')}>{mess.message.content}</p>;
+                const content = mess.message.content;
+                const question = content.split('/');
+                question[1] = '=';
+                addtest(question[1]);
+
+                return formQuestion(question[0], isMessageQuestion, question[2]);
+            default:
+                return <></>;
         }
+    };
+
+    const addtest = (key) => () => {
+        setMessageQuetion(key);
+    };
+
+    const formQuestion = (question, key, id) => {
+        switch (key) {
+            case 'Y':
+                return <p className={cx('textChat')}>Bạn đã tham gia nhóm gì đó ....</p>;
+            case 'N':
+                return <p className={cx('textChat')}>Bạn từ chối đã tham gia nhóm gì đó ....</p>;
+            case '=':
+                return (
+                    <div>
+                        <p className={cx('textChat')}>{question}</p>
+                        <Button size="small" onClick={() => handleAnswer(question, 'Y', id)}>
+                            có
+                        </Button>
+                        <Button size="small" onClick={() => handleAnswer(question, 'N', id)}>
+                            Không
+                        </Button>
+                    </div>
+                );
+            default:
+                return <></>;
+        }
+    };
+
+    const handleAnswer = (question, anwser, id) => {
+        setMessageQuetion(anwser);
+        const newAnwser = question[0] + '/' + anwser + '/' + question[2];
+        console.log(newAnwser);
     };
 
     const imgChat = (length, images) => {
@@ -413,7 +454,7 @@ function Chat() {
                                         />
                                         <Tooltip
                                             title={convertTime(mess.message.time)}
-                                            placement="right"
+                                            placement="left"
                                             disableInteractive
                                             arrow
                                         >
