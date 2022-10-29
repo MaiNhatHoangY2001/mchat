@@ -82,7 +82,7 @@ function Login() {
 
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
-    const [linkToHome, setLinkToHome] = useState('');
+    // const [linkToHome, setLinkToHome] = useState('');
 
     const handleLogin = () => {
         const newUser = {
@@ -90,7 +90,7 @@ function Login() {
             password: password,
         };
         console.warn(newUser);
-        // loginUser(newUser, dispatch, navigate, setIsLoading);
+        loginUser(newUser, dispatch, navigate, setIsLoading);
     };
 
     // useEffect(() => {
@@ -132,6 +132,12 @@ function Login() {
         checkPhoneNumber();
         checkPW();
     }
+
+    useEffect(() => {
+        if (user) {
+            navigate('/');
+        }
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -297,7 +303,7 @@ function Login() {
                                         <Text style={styles.currentLoginMobile}>Đang đăng nhập...</Text>
                                     ) : (
                                         <Link
-                                            to={linkToHome}
+                                            // to={linkToHome}
                                             style={{
                                                 shadowColor: 'rgba(0,0,0, .4)', // IOS
                                                 shadowOffset: { height: 1, width: 1 }, // IOS

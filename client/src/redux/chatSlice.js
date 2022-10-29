@@ -53,6 +53,17 @@ const chatSlice = createSlice({
             state.message.isFetching = false;
             state.message.error = true;
         },
+        updateMessageStart: (state) => {
+            state.message.isFetching = true;
+        },
+        updateMessageSuccess: (state) => {
+            state.message.isFetching = false;
+            state.message.success = true;
+        },
+        updateMessageFailed: (state) => {
+            state.message.isFetching = false;
+            state.message.error = true;
+        },
         getMessagesStart: (state) => {
             state.message.content = null;
             state.message.isFetching = true;
@@ -69,7 +80,7 @@ const chatSlice = createSlice({
         clearActor: (state) => {
             state.individualChat.idChat = null;
             state.individualChat.actor = null;
-        }
+        },
     },
 });
 
@@ -86,7 +97,10 @@ export const {
     getIndividualChatFailed,
     getIndividualChatStart,
     getIndividualChatSuccess,
-    clearActor
+    clearActor,
+    updateMessageStart,
+    updateMessageSuccess,
+    updateMessageFailed,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

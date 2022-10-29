@@ -1,12 +1,13 @@
 //link npm firebase: https://www.npmjs.com/package/firebase
-//link firebase doc: 
-//https://firebase.google.com/docs/auth/web/start; https://firebase.google.com/docs/auth/web/phone-auth
-//https://www.youtube.com/watch?v=IivlA4o5RkU&t=774s
+//link firebase doc: https://firebase.google.com/docs/auth/web/start; https://firebase.google.com/docs/auth/web/phone-auth
+//new link firebase-expo-recaptcha: https://docs.expo.dev/versions/latest/sdk/firebase-recaptcha/
+//link yt: https://www.youtube.com/watch?v=ePk0fjrNo6c
+//npm i firebase@9.6.11
+//npm i expo-firebase-recaptcha react-native-webview
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: 'AIzaSyAoyE1IePwGi1gyHgfAKTDyY7P4Fy7-amY',
     authDomain: 'otp-verify-phonenumber-mline.firebaseapp.com',
     projectId: 'otp-verify-phonenumber-mline',
@@ -16,7 +17,6 @@ const firebaseConfig = {
     measurementId: 'G-W1ECSF8NJY',
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-// export {app, auth};
-export default auth;
+if(!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}

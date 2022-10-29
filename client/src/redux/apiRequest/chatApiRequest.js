@@ -11,6 +11,8 @@ import {
     getMessagesFailed,
     getMessagesStart,
     getMessagesSuccess,
+    updateMessageStart,
+    updateMessageSuccess,
 } from '../chatSlice';
 import { url } from '../createInstance';
 import {
@@ -66,6 +68,18 @@ export const addGroupChat = async (accessToken, dispatch, groupChat, axiosJWT) =
     }
 };
 
+export const addUserGroupChat = async (accessToken, dispatch, apiGroupChat, axiosJWT) => {
+    dispatch(addGroupChatStart());
+    try {
+        await axiosJWT.post(`${url}/api/groupChat/addUser`, apiGroupChat, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(addGroupChatSuccess());
+    } catch (error) {
+        dispatch(addGroupChatFailed());
+    }
+};
+
 export const addMessage = async (message, accessToken, dispatch, axiosJWT) => {
     dispatch(addMessageStart());
     try {
@@ -89,6 +103,18 @@ export const getMsgs = async (accessToken, dispatch, actor, axiosJWT) => {
         dispatch(getMessagesSuccess(res.data));
     } catch (error) {
         dispatch(getMessagesFailed());
+    }
+};
+
+export const updateMsg = async (accessToken, dispatch, id, content, axiosJWT) => {
+    dispatch(updateMessageStart());
+    try {
+        const res = await axiosJWT.put(`${url}/api/message/${id}`, content, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateMessageSuccess());
+    } catch (error) {
+        dispatch(updateMessageSuccess());
     }
 };
 

@@ -11,8 +11,18 @@ import {
     getMessagesFailed,
     getMessagesStart,
     getMessagesSuccess,
+    updateMessageStart,
+    updateMessageSuccess,
 } from '../chatSlice';
 import { url } from '../createInstance';
+import {
+    addGroupChatFailed,
+    addGroupChatStart,
+    addGroupChatSuccess,
+    getGroupChatFailed,
+    getGroupChatStart,
+    getGroupChatSuccess,
+} from '../groupChatSlice';
 
 export const addIndividualChat4NewUser = async (
     accessToken,
@@ -45,15 +55,28 @@ export const addIndividualChat4NewUser = async (
     }
 };
 
-export const addGroupChat = async (accessToken, dispatch, idIndividualChat, axiosJWT) => {
-    dispatch(addIndividualChatStart());
+export const addGroupChat = async (accessToken, dispatch, groupChat, axiosJWT) => {
+    dispatch(addGroupChatStart());
     try {
-        await axiosJWT.post(`${url}/api/groupChat/`, {
+        const res = await axiosJWT.post(`${url}/api/groupChat/`, groupChat, {
             headers: { token: `Bearer ${accessToken}` },
         });
-        dispatch(addIndividualChatSuccess());
+        dispatch(addGroupChatSuccess());
+        return res.data;
     } catch (error) {
-        dispatch(addIndividualChatFailed());
+        dispatch(addGroupChatFailed());
+    }
+};
+
+export const addUserGroupChat = async (accessToken, dispatch, apiGroupChat, axiosJWT) => {
+    dispatch(addGroupChatStart());
+    try {
+        await axiosJWT.post(`${url}/api/groupChat/addUser`, apiGroupChat, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(addGroupChatSuccess());
+    } catch (error) {
+        dispatch(addGroupChatFailed());
     }
 };
 
@@ -83,6 +106,31 @@ export const getMsgs = async (accessToken, dispatch, actor, axiosJWT) => {
     }
 };
 
+export const updateMsg = async (accessToken, dispatch, id, content, axiosJWT) => {
+    dispatch(updateMessageStart());
+    try {
+        const res = await axiosJWT.put(`${url}/api/message/${id}`, content, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateMessageSuccess());
+    } catch (error) {
+        dispatch(updateMessageSuccess());
+    }
+};
+
+export const getMsgsGroupChat = async (accessToken, dispatch, actor, axiosJWT) => {
+    dispatch(getMessagesStart());
+    try {
+        const res = await axiosJWT.get(`${url}/api/groupChat`, {
+            headers: { token: `Bearer ${accessToken}` },
+            params: actor,
+        });
+        dispatch(getMessagesSuccess(res.data));
+    } catch (error) {
+        dispatch(getMessagesFailed());
+    }
+};
+
 export const getListIndividualChat = async (accessToken, userId, dispatch, axiosJWT) => {
     dispatch(getIndividualChatStart());
     try {
@@ -92,6 +140,18 @@ export const getListIndividualChat = async (accessToken, userId, dispatch, axios
         dispatch(getIndividualChatSuccess(res.data));
     } catch (error) {
         dispatch(getIndividualChatFailed());
+    }
+};
+
+export const getListGroupChat = async (accessToken, userId, dispatch, axiosJWT) => {
+    dispatch(getGroupChatStart());
+    try {
+        const res = await axiosJWT.get(`${url}/api/groupChat/` + userId, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(getGroupChatSuccess(res.data));
+    } catch (error) {
+        dispatch(getGroupChatFailed());
     }
 };
 

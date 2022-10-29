@@ -1,5 +1,5 @@
-import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Alert, Dimensions } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './ForgotPass.module.scss';
 import { Link } from 'react-router-native';
 
@@ -26,22 +26,191 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import auth from '../../../firebase-config-mobile';
 // import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
+//link doc: https://formik.org/docs/guides/react-native
+//link clip: https://www.youtube.com/watch?v=fGz-I_eT0KM 
+//npm i formik
+import { Formik } from 'formik';
+
+//link npm: https://www.npmjs.com/package/react-native-phone-number-input
+//link clip: https://www.youtube.com/watch?v=gtEUVndgIzU
+//link code country: https://github.com/xcarpentier/react-native-country-picker-modal/blob/master/src/types.ts#L252
+//npm i react-native-phone-number-input
+import PhoneInput from 'react-native-phone-number-input';
+
+//new link firebase-expo-recaptcha: https://docs.expo.dev/versions/latest/sdk/firebase-recaptcha/
+//link yt: https://www.youtube.com/watch?v=ePk0fjrNo6c
+//npm i firebase@9.6.11
+//npm i expo-firebase-recaptcha react-native-webview
+import {FirebaseRecaptchaVerifierModal} from 'expo-firebase-recaptcha';
+import { firebaseConfig } from '../../../firebase-config-mobile';
+import firebase from 'firebase/compat/app';
+
+const widthScreen = Dimensions.get('window').width;
+const heightScreen = Dimensions.get('window').height;
+
 //create tab react-native
 const Tab = createBottomTabNavigator();
 function VerifiedScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', borderTopColor: 'red', borderStyle: 'solid', borderTopWidth: 1 }}>
-      <TouchableOpacity style={{backgroundColor: 'cyan'}}>
-        <Text>Xác thực</Text>
-      </TouchableOpacity>
-    </View>
-  );
+    //OTP firebase
+    const [number, setNumber] = useState('');
+    const [otp, setOtp] = useState('');
+    const [verificationId, setVerificationId] = useState(null);
+    const recaptchaVerifier = useRef(null);
+    const phoneInput = useRef(PhoneInput);
+    const [flag, setFlag] = useState(false);
+
+    // const [activeTab, setActiveTab] = useState(1); //active tab
+    // // const [disableTab1, setDisableTab1] = useState(false);
+    // // const [disableTab2, setDisableTab2] = useState(true);
+    // const [changeTabMess, setchangeTabMess] = useState('');
+    // // const [flag, setFlag] = useState(false);
+
+    const getOtp = () => {
+        let phoneNumber = number.trim();
+        // let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNumber);
+        if (phoneNumber === '' || phoneNumber === undefined) Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
+        else if (phoneNumber.length !== 10) Alert.alert('Thông báo', 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
+        else {
+            console.log(number);
+            try {
+                const phoneProvider = new firebase.auth.PhoneAuthProvider();
+                phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current).then(setVerificationId);
+                setNumber('');
+                setFlag(true);
+            } catch (err) {
+                console.log(err.message);
+                Alert.alert('Xác thực không thành công!');
+            }
+        }
+    };
+
+    const verifyOtp = () => {
+        if (otp === '' || otp === undefined) Alert.alert('Thông báo', 'Vui lòng nhập mã xác thực!');
+        else if (otp.length !== 6) Alert.alert('Thông báo', 'Vui lòng nhập 6 ký tự!');
+        else {
+            const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, otp);
+            firebase
+                .auth()
+                .signInWithCredential(credential)
+                .then(() => {
+                    setOtp('');
+                    Alert.alert('Xác thực thành công!');
+                })
+                .catch((error) => {
+                    console.log(error);
+                    alert(error);
+                });
+            console.log(otp);
+
+            // setActiveTab(2);
+            // setHandleMoveTab(2);
+            // setDisableTab1(true);
+            // setDisableTab2(false);
+            // setchangeTabMess("Đã xác thực, vui lòng chuyển đến tab 'Mật khẩu mới'");
+
+            // //  CHANGE PASSWORD
+            // const account = {
+            //     phoneNumber: phoneTabNewPW.trim(),
+            //     newPassword: passwordInputNewPW.trim(),
+            // };
+            // changePassword(account, dispatch, navigate);
+        }
+    };
+
+    return (
+        <View
+            style={{
+                flex: 1,
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                borderTopColor: 'red',
+                borderStyle: 'solid',
+                borderTopWidth: 1,
+            }}
+        >
+            <Formik initialValues={{ email: '' }} onSubmit={(values) => console.log(values)}>
+                <View style={{ width: '90%' }}>
+                    <View style={{ display: flag ? 'flex' : 'none' }}>
+                        <PhoneInput
+                            ref={phoneInput}
+                            defaultValue={number}
+                            defaultCode="VN"
+                            withShadow
+                            onChangeFormattedText={(text) => setNumber(text)}
+                            layout="first"
+                            autoFocus
+                            containerStyle={{
+                                width: '100%',
+                            }}
+                        />
+                        <TouchableOpacity
+                            style={{
+                                marginTop: 30,
+                                backgroundColor: 'rgb(250, 139, 158)',
+                                height: 40,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 20,
+                            }}
+                            onPress={getOtp}
+                        >
+                            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Gửi mã xác thực</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ display: !flag ? 'flex' : 'none' }}>
+                        <TextInput
+                            placeholder="Nhập mã xác thực"
+                            onChangeText={setOtp}
+                            keyboardType="number-pad"
+                            autoComplete="tel"
+                            style={{
+                                height: 50,
+                                padding: 15,
+                                fontSize: 18,
+                                shadowColor: 'rgba(0,0,0, .4)', // IOS
+                                shadowOffset: { height: 1, width: 1 }, // IOS
+                                shadowOpacity: 1, // IOS
+                                shadowRadius: 1, //IOS
+                                elevation: 2, // Android
+                                backgroundColor: '#fff',
+                            }}
+                        />
+                        <TouchableOpacity
+                            style={{
+                                marginTop: 30,
+                                backgroundColor: 'rgb(250, 139, 158)',
+                                height: 40,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 20,
+                            }}
+                            onPress={verifyOtp}
+                        >
+                            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Xác nhận mã</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
+                    </View>
+                </View>
+            </Formik>
+        </View>
+    );
 }
 function RenewPWScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>mk mới</Text>
-    </View>
+        <View
+            style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderTopColor: 'red',
+                borderStyle: 'solid',
+                borderTopWidth: 1,
+            }}
+        >
+            <Text>mk mới</Text>
+        </View>
   );
 }
 
@@ -64,84 +233,10 @@ const InscriptionScreen = () => {
 }
 
 function ForgotPass() {
-    //OTP firebase
-    // const [activeTab, setActiveTab] = useState(1); //active tab
-    // // const [disableTab1, setDisableTab1] = useState(false);
-    // // const [disableTab2, setDisableTab2] = useState(true);
-    // //
-    // const [number, setNumber] = useState('');
-    // const [otp, setOtp] = useState('');
-    // const [errorMess, setErrorMess] = useState('');
-    // const [errorMessOTP, setErrorMessOTP] = useState('');
-    // const [changeTabMess, setchangeTabMess] = useState('');
-    // // const [flag, setFlag] = useState(false);
-    // const [confirmObj, setConfirmObj] = useState('');
-    // const getOtp = async (e) => {
-    //     e.preventDefault();
-
-    //     let phoneNumber = '+' + number.trim();
-    //     let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNumber);
-    //     if (phoneNumber === '' || phoneNumber === undefined) return setErrorMess('Vui lòng nhập số điện thoại!');
-    //     else if (!regexPhoneNumberVN) setErrorMess('SĐT không hợp lệ!');
-    //     else {
-    //         setErrorMess('');
-    //         // console.log(number);
-    //         try {
-    //             const response = await setUpRecaptcha(phoneNumber);
-    //             console.log(response);
-    //             setConfirmObj(response);
-    //             console.log(phoneNumber);
-    //             // setFlag(true);
-    //         } catch (err) {
-    //             // setErrorMess(err.message);
-    //             console.log(err.message);
-    //         }
-    //     }
-    // };
-
-    // const verifyOtp = async (e) => {
-    //     e.preventDefault();
-
-    //     if (otp === '' || otp === undefined) setErrorMessOTP('Vui lòng nhập mã xác thực!');
-    //     else if (otp.length !== 6) setErrorMessOTP('Vui lòng nhập 6 ký tự!');
-    //     else {
-    //         setErrorMessOTP('');
-    //         try {
-    //             await confirmObj.confirm(otp);
-    //             console.log(otp);
-
-    //             // setActiveTab(2);
-    //             // setHandleMoveTab(2);
-    //             // setDisableTab1(true);
-    //             // setDisableTab2(false);
-    //             setchangeTabMess("Đã xác thực, vui lòng chuyển đến tab 'Mật khẩu mới'");
-
-    //             // //  CHANGE PASSWORD
-    //             // const account = {
-    //             //     phoneNumber: phoneTabNewPW.trim(),
-    //             //     newPassword: passwordInputNewPW.trim(),
-    //             // };
-    //             // changePassword(account, dispatch, navigate);
-    //         } catch (err) {
-    //             // setErrorMessOTP(err.message);
-    //             console.log(err.message);
-    //         }
-    //     }
-    // };
-
-    // function setUpRecaptcha(phoneNumber) {
-    //     //link sub language: https://firebase.google.com/docs/reference/android/com/google/firebase/ml/naturallanguage/translate/FirebaseTranslateLanguage
-    //     // auth.setLanguageCode('vi');
-    //     const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
-    //     recaptchaVerifier.render();
-    //     recaptchaVerifier.verify();
-    //     return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
-    // }
-
     return (
         <SafeAreaView style={styles.container}>
             <Animatable.View
-                animation="bounceIn"
+                animation="fadeInRight"
                 // iterationCount={5}
                 direction="alternate"
             >
@@ -149,7 +244,7 @@ function ForgotPass() {
                     <View
                         style={{
                             // backgroundColor: '#fff',
-                            width: 350,
+                            width: widthScreen - 100,
                             height: '80%',
                             // // padding: 20,
                             // paddingTop: 5,
@@ -189,7 +284,7 @@ function ForgotPass() {
                                 Trở về màn hình đăng nhập
                             </Text>
                         </Link> */}
-                        <Link to="/" style={{marginRight: '81%'}}>
+                        <Link to="/" style={{ marginRight: '81%' }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Icon name="caret-left" size={40} color="#fff" />
                                 <Text
@@ -214,11 +309,11 @@ function ForgotPass() {
 
                                         if (route.name === 'Xác thực SĐT') {
                                             iconName = 'sms';
-                                            size = focused ? 30 : 20;
+                                            size = focused ? 24 : 18;
                                             color = focused ? '#fff' : '#555';
                                         } else if (route.name === 'Mật khẩu mới') {
                                             iconName = focused ? 'lock-open' : 'lock';
-                                            size = focused ? 30 : 20;
+                                            size = focused ? 22 : 18;
                                             color = focused ? '#fff' : '#555';
                                         }
 
@@ -228,11 +323,12 @@ function ForgotPass() {
                                     tabBarStyle: {
                                         // backgroundColor: '#0000ff',
                                         // marginBottom: -15,
-                                        width: 350,
+                                        width: widthScreen - 100,
                                         height: 60,
                                     },
                                     tabBarItemStyle: {
                                         // backgroundColor: 'rgb(250, 139, 158)',
+                                        // flexDirection: 'column',
                                         margin: 2,
                                         padding: 5,
                                     },
