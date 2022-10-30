@@ -243,6 +243,10 @@
                     .listItem {
                         overflow-y: scroll;
                         height: 420px;
+
+                        img {
+                            width: 100%;
+                        }
                     }
                 }
             }
