@@ -313,7 +313,7 @@ function Chat() {
                                 </div>
                             </div>
                             <div className={cx('modalBody')}>
-                                <ModalAddUser />
+                                <ModalAddUser currentGroupChat={currentGroupChat} />
                                 <div className={cx('ListUserGroup')}>
                                     <p>Danh sách thành viên:</p>
                                     <List className={cx('ListUser')}>

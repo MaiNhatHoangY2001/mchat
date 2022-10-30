@@ -21,9 +21,10 @@ import { ChatContext } from '../../../../../context/ChatContext';
 
 const cx = classNames.bind(styles);
 
-export default function ModalAddUser({}) {
+export default function ModalAddUser({ currentGroupChat }) {
     const chatContext = useContext(ChatContext);
     const listFriend = chatContext.listFriend;
+    const sendText4JoinGroup = chatContext.sendText4JoinGroup;
 
     // Open and Close Modal
     const [open, setOpen] = useState(false);
@@ -59,7 +60,22 @@ export default function ModalAddUser({}) {
         setListSelect(newData);
     };
     const handleClickAddUser = () => {
-        console.log(isListSelect);
+        if (isListSelect.length > 0) {
+            console.log(isListSelect);
+            console.log(currentGroupChat);
+        }
+        handleClose();
+        //sendText4JoinGroup()
+    };
+
+    const listAddUser = (listFriend, listUserInGroupChat) => {
+        const isUserInGroupChat = (userId) => {
+            return listUserInGroupChat.some((item) => item._id === userId);
+        };
+
+        const list = listFriend.filter((user) => !isUserInGroupChat(user?.sender._id));
+
+        return list;
     };
 
     return (
@@ -86,7 +102,7 @@ export default function ModalAddUser({}) {
                             <div className={cx('ListUser')}>
                                 <p>Danh Sách bạn bè</p>
                                 <List className={cx('listItem')}>
-                                    {listFriend.map((item, index) => {
+                                    {listAddUser(listFriend, currentGroupChat?.user).map((item, index) => {
                                         const name = item?.sender?.profileName;
 
                                         return name.toLowerCase().includes(isSearchGroup.toLowerCase()) ? (
