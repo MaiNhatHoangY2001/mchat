@@ -126,11 +126,42 @@ function Chat() {
                 profileName: changeNameGroup.trim(),
             };
             setCurrentSender(updateSenderName);
-
             await updateGroupChat(accessToken, dispatch, currentGroupChat._id, apiSetGroupName, axiosJWTLogin);
+            getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         }
 
-        getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        if (currentGroupChat?.groupImage !== urlImage) {
+            //upload image to cloud
+            const bodyFormData = new FormData();
+            bodyFormData.append('file', image);
+            const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+            setUrlImage(uploadImage.url);
+
+            window.setTimeout(async function () {
+                //set group chat profile img
+                const apiSetGroupProfileImg = {
+                    groupImage: uploadImage.url[0],
+                };
+
+                //update group profile img in chat
+                const updateSenderProfileImg = {
+                    ...currentSender,
+                    profileImg: uploadImage.url,
+                };
+                setCurrentSender(updateSenderProfileImg);
+
+                await updateGroupChat(
+                    accessToken,
+                    dispatch,
+                    currentGroupChat._id,
+                    apiSetGroupProfileImg,
+                    axiosJWTLogin,
+                );
+
+                getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+            }, 1000);
+        }
+
         handleClose();
     };
 
@@ -249,10 +280,12 @@ function Chat() {
     const handleCloseModalAddUser = () => setModalAddUser(false);
 
     // MODAL CHANGE IMAGE IN GROUP
-    const [image, setImage] = React.useState(currentGroupChat?.groupImage);
-    const handleChangeImgaeGroup = (event) => {
+    const [urlImage, setUrlImage] = useState(currentGroupChat?.groupImage);
+    const [image, setImage] = useState({});
+    const handleChangeImageGroup = (event) => {
         if (event.target.files && event.target.files[0]) {
-            setImage(URL.createObjectURL(event.target.files[0]));
+            setUrlImage(URL.createObjectURL(event.target.files[0]));
+            setImage(event.target.files[0]);
         }
     };
 
@@ -300,6 +333,7 @@ function Chat() {
         setChangeNameGroup(currentGroupChat?.groupName);
         setAdminGroup(currentGroupChat?.groupAdmin._id);
         setListUser(currentGroupChat?.user);
+        setUrlImage(currentGroupChat?.groupImage);
     }, [currentListGroupChat, currentGroupChat]);
 
     return (
@@ -316,7 +350,7 @@ function Chat() {
                 <ul className={cx('ListButton')}>
                     {isGroupChat ? (
                         <React.Fragment>
-                            <Tooltip title="Thêm Thành nhóm" placement="left" disableInteractive arrow>
+                            <Tooltip title="Thêm Thành viên nhóm" placement="left" disableInteractive arrow>
                                 <li className={cx('button')} onClick={handleOpenModalAddUser}>
                                     <GroupAddIcon sx={{ fontSize: 30 }} />
                                 </li>
@@ -357,7 +391,7 @@ function Chat() {
                             </div>
                             <div className={cx('modalHeader')}>
                                 <div className={cx('AvataAndImage')}>
-                                    <img src={image} alt={currentGroupChat?.groupName} />
+                                    <img src={urlImage} alt={currentGroupChat?.groupName} />
                                 </div>
                                 <div className={cx('updateInfo')}>
                                     <Button
@@ -369,7 +403,7 @@ function Chat() {
                                         Cập nhật ảnh đại diện
                                         <input
                                             hidden
-                                            onChange={handleChangeImgaeGroup}
+                                            onChange={handleChangeImageGroup}
                                             accept="image/*"
                                             multiple
                                             type="file"
@@ -513,15 +547,16 @@ function Chat() {
                     onChange={async (event) => {
                         const bodyFormData = new FormData();
                         const files = event.target.files;
-
-                        for (let index = 0; index < files.length; index++) {
-                            bodyFormData.append('file', files[index]);
+                        if (files.length > 0) {
+                            for (let index = 0; index < files.length; index++) {
+                                bodyFormData.append('file', files[index]);
+                            }
+                            const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+                            window.setTimeout(async function () {
+                                //wait upload image on google cloud
+                                await addMsgImgWithInfo(uploadImage.url);
+                            }, 1000);
                         }
-                        const image = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
-                        window.setTimeout(async function () {
-                            //wait upload image on google cloud
-                            await addMsgImgWithInfo(image.url);
-                        }, 1000);
                     }}
                     style={{ display: 'none' }}
                 />
