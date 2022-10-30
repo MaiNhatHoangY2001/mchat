@@ -13,8 +13,10 @@ router.get('/', middlewareController.verifyTokenAndUserAuth, groupChatController
 router.post('/addUser', middlewareController.verifyTokenAndUserAuth, groupChatController.addUserGroupChat);
 router.post('/removeUser', middlewareController.verifyTokenAndUserAuth, groupChatController.removeUserGroupChat);
 
-
+//update Group chat
 router.put('/:id', middlewareController.verifyTokenAndUserAuth, groupChatController.updateGroup);
 
+//update new msgs
+router.put('/newMsg', middlewareController.verifyTokenAndUserAuth, groupChatController.updateNewMsg);
 
 module.exports = router;

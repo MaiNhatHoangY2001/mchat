@@ -20,9 +20,7 @@ const individualChatController = {
 		try {
 			const idUser = mongoose.Types.ObjectId(req.params.id);
 
-			const listInvidualChat = await IndividualChat.find({ user: idUser })
-				.populate('message')
-				.populate('sender', 'profileName profileImg');
+			const listInvidualChat = await IndividualChat.find({ user: idUser }).populate('message').populate('sender', 'profileName profileImg');
 			res.status(200).json(listInvidualChat);
 		} catch (error) {
 			res.status(500).json(error);
@@ -36,6 +34,32 @@ const individualChatController = {
 			const individualChat = await IndividualChat.find({ user: idUser, sender: idSender });
 
 			res.status(200).json(individualChat);
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
+
+	updateNewMsg: async (req, res) => {
+		try {
+			const idSender = mongoose.Types.ObjectId(req.body.sender);
+			const idUser = mongoose.Types.ObjectId(req.body.user);
+			const newMsg = req.body.newMsg;
+
+			const query = {
+				sender: idUser,
+				user: idSender,
+			};
+			const update = {
+				'newMsg.type_Msg': newMsg.type_Msg,
+				'newMsg.content': newMsg.content,
+				'newMsg.imageContent': newMsg.imageContent,
+				'newMsg.profileName': newMsg.profileName,
+			};
+			const individualChat2 = await IndividualChat.findById(req.body.individualId);
+
+			await IndividualChat.findOneAndUpdate(query, update);
+			await individualChat2.updateOne({ $set: update });
+			res.status(200).json('update successfully');
 		} catch (error) {
 			res.status(500).json(error);
 		}

@@ -14,4 +14,6 @@ router.get('/', middlewareController.verifyTokenAndUserAuth, individualChatContr
 //GET A INDIVIDUAL CHAT
 router.get('/a/chat', middlewareController.verifyTokenAndUserAuth, individualChatController.getIndividualChat);
 
+router.put('/newMsg', middlewareController.verifyTokenAndUserAuth, individualChatController.updateNewMsg);
+
 module.exports = router;

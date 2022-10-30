@@ -1,7 +1,13 @@
 import { createContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
-import { addIndividualChat4NewUser, addMessage, getListIndividualChat } from '../redux/apiRequest/chatApiRequest';
+import {
+    addIndividualChat4NewUser,
+    addMessage,
+    getListIndividualChat,
+    updateGroupChatNewMsg,
+    updateIndividualChatNewMsg,
+} from '../redux/apiRequest/chatApiRequest';
 import { loginSuccess } from '../redux/authSlice';
 import { createAxios, url } from '../redux/createInstance';
 import { TYPE_NOTIFICATION } from './TypeChat';
@@ -108,12 +114,14 @@ function ChatContextProvider({ children }) {
             status: 'Active',
             chatStatus: 0,
             user: currentSenderId,
+            newMsg: { ...msg, profileName: user.profileName },
         };
         const indiviUser = {
             sender: currentSenderId,
             status: 'Active',
             chatStatus: 0,
             user: currentUserId,
+            newMsg: { ...msg, profileName: user.profileName },
         };
 
         await addIndividualChat4NewUser(accessToken, msg, indiviUser, indiviSender, dispatch, axiosJWTLogin);
@@ -130,6 +138,13 @@ function ChatContextProvider({ children }) {
         };
 
         addMessage(msg, accessToken, dispatch, axiosJWTLogin);
+
+        const apiNewMsg = {
+            newMsg: { ...msg, profileName: user.profileName },
+            groupChatId: currentSenderId,
+        };
+
+        updateGroupChatNewMsg(accessToken, apiNewMsg, dispatch, axiosJWTLogin);
     };
 
     const addMsgWithInfo = (typeChat, mess, imageContent, individualId) => {
@@ -140,6 +155,15 @@ function ChatContextProvider({ children }) {
             individualChat: individualId,
         };
         addMessage(msg, accessToken, dispatch, axiosJWTLogin);
+
+        const apiNewMsg = {
+            sender: currentSenderId,
+            user: currentUserId,
+            newMsg: { ...msg, profileName: user.profileName },
+            individualId: individualId,
+        };
+
+        updateIndividualChatNewMsg(accessToken, apiNewMsg, dispatch, axiosJWTLogin);
     };
 
     //SOCKET CHAT
