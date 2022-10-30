@@ -184,7 +184,10 @@ function ChatContextProvider({ children }) {
                     setSendData((prev) => {
                         return [...prev, chatMessage];
                     });
+                }
 
+                if (chatMessage.sender !== currentSenderId) {
+                    console.log('run');
                     window.setTimeout(function () {
                         getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
                     }, 1000);
@@ -194,7 +197,10 @@ function ChatContextProvider({ children }) {
                     setSendData((prev) => {
                         return [...prev, chatMessage];
                     });
+                }
 
+                if (chatMessage.receiver === currentUserId) {
+                    console.log("run");
                     window.setTimeout(function () {
                         getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
                     }, 1000);
