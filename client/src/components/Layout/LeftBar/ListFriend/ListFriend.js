@@ -27,6 +27,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ChatContext } from '../../../../context/ChatContext';
+import { TYPE_IMG, TYPE_MSG } from '../../../../context/TypeChat';
 
 const cx = classNames.bind(styles);
 
@@ -121,6 +122,7 @@ export default function ListFriend() {
                     chatStatus: '0',
                     user: [currentUser._id],
                     groupAdmin: currentUser._id,
+                    newMsg: {},
                 };
 
                 const newGroupChat = await addGroupChat(accessToken, dispatch, apiNewGroupChat, axiosJWT);
@@ -148,6 +150,20 @@ export default function ListFriend() {
     const handleClickExit = () => {
         setOpenModal(false);
         setSelectData([]);
+    };
+
+    const newMessage = (mess) => {
+        const typeMess = mess?.type_Msg;
+        const content = mess?.content;
+        const profileName = currentUser.profileName === mess?.profileName ? 'Bạn' : mess?.profileName;
+        switch (typeMess) {
+            case TYPE_MSG:
+                return `${profileName}: ${content}`;
+            case TYPE_IMG:
+                return content;
+            default:
+                return content;
+        }
     };
 
     useEffect(() => {
@@ -352,7 +368,7 @@ export default function ListFriend() {
                             <img src={actor?.sender?.profileImg || actor?.groupImage} alt={'avata'} />
                             <div className={cx('content-item')}>
                                 <p>{actor?.sender?.profileName || actor?.groupName}</p>
-                                <p className={cx('supchat')}>{/* {newMessage(actor?.message[0])} */}</p>
+                                <p className={cx('supchat')}>{newMessage(actor?.newMsg)}</p>
                             </div>
                             <span className={cx('dot', actor?.status === 'Active' ? 'active' : 'disable')}></span>
                         </button>

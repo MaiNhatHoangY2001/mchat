@@ -15,6 +15,9 @@ const groupChatSchema = new mongoose.Schema({
 		type: String,
 		default: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667061870/Avata/computer-science-1331579_1280_nomqbh.png',
 	},
+	newMsg: {
+		type: Object,
+	},
 	user: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

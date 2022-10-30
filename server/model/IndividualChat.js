@@ -11,6 +11,9 @@ const individualChatSchema = new mongoose.Schema({
 	chatStatus: {
 		type: Number,
 	},
+	newMsg: {
+		type: Object,
+	},
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',

@@ -46,8 +46,7 @@ const groupChatController = {
 	deleteGroupChat: async (req, res) => {
 		try {
 			const groupChat = await GroupChat.findById(req.body.idGroup);
-			
-			
+
 			res.status(200).json();
 		} catch (error) {
 			res.status(500).json(error);
@@ -57,6 +56,24 @@ const groupChatController = {
 		try {
 			const group = await GroupChat.findById(req.params.id);
 			await group.updateOne({ $set: req.body });
+			res.status(200).json('update successfully');
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
+	updateNewMsg: async (req, res) => {
+		try {
+			const newMsg = req.body.newMsg;
+			const update = {
+				'newMsg.type_Msg': newMsg.type_Msg,
+				'newMsg.content': newMsg.content,
+				'newMsg.imageContent': newMsg.imageContent,
+				'newMsg.profileName': newMsg.profileName,
+			};
+
+			const groupChat = await GroupChat.findById(req.body.groupChatId);
+
+			await groupChat.updateOne({ $set: update });
 			res.status(200).json('update successfully');
 		} catch (error) {
 			res.status(500).json(error);
