@@ -151,7 +151,7 @@ function Chat() {
                     ...currentSender,
                     profileImg: uploadImage.url,
                 };
-                setCurrentSender(updateSenderProfileImg);
+                await setCurrentSender(updateSenderProfileImg);
 
                 await updateGroupChat(
                     accessToken,
@@ -309,7 +309,7 @@ function Chat() {
     const handleClickRemoveGroup = async () => {
         await deleteGroupChat(accessToken, dispatch, currentGroupChat._id, axiosJWTLogin);
         dispatch(setSender(null));
-        dispatch(getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin));
+        await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         handleClose();
     };
 
