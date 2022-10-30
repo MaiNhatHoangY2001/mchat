@@ -30,7 +30,7 @@ export default function Navbar({ setContainer }) {
     return (
         <div className={cx('container')}>
             <div className={cx('avata')}>
-                <Tooltip title="Tên người dùng" placement="right" disableInteractive arrow>
+                <Tooltip title={user?.profileName} placement="right" disableInteractive arrow>
                     <div className={cx('contain-avata')}>
                         <img
                             className={cx('image-avata')}

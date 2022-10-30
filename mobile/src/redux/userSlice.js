@@ -23,10 +23,12 @@ const userSlice = createSlice({
         },
         changePassSuccess: (state) => {
             state.changePass.isFetching = false;
+            state.changePass.success = true;
             state.changePass.error = false;
         },
         changePassFailed: (state) => {
             state.changePass.isFetching = false;
+            state.changePass.success = false;
             state.changePass.error = true;
         },
         getUsersStart: (state) => {
