@@ -190,6 +190,7 @@ export default function ListFriend() {
                                     },
                                 }}
                                 size="small"
+                                fullWidth
                             />
                         )}
                     />
