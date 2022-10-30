@@ -27,7 +27,6 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ChatContext } from '../../../../context/ChatContext';
-import { TYPE_NOTIFICATION } from '../../../../context/TypeChat';
 
 const cx = classNames.bind(styles);
 

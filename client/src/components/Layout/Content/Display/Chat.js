@@ -11,6 +11,7 @@ import {
     getMsgs,
     getMsgsGroupChat,
     removeUserGroupChat,
+    updateGroupChat,
     updateMsg,
 } from '../../../../redux/apiRequest/chatApiRequest';
 import { popupCenter } from '../PopupCenter';
@@ -23,7 +24,6 @@ import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeC
 import {
     Avatar,
     Button,
-    IconButton,
     List,
     ListItem,
     ListItemAvatar,
@@ -39,7 +39,6 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ModalKey from '../Modal/ModalKey/ModalKey';
 import ModalRemoveUser from '../Modal/ModalRemoveUser/ModalRemoveUser';
 import ModalAddUser from '../Modal/ModalAddUser/ModalAddUser';
@@ -63,8 +62,11 @@ function Chat() {
 
     const bottomRef = useRef(null);
 
+    const [currentSender, setCurrentSender] = useState(sender);
+
+    const [currentListGroupChat, setCurrentListGroupChat] = useState(listGroupChat);
     const [currentGroupChat, setCurrentGroupChat] = useState(
-        listGroupChat.filter((groupChat) => groupChat.groupName === sender?.profileName)[0],
+        currentListGroupChat.filter((groupChat) => groupChat.groupName === currentSender?.profileName)[0],
     );
     const [changeNameGroup, setChangeNameGroup] = useState(currentGroupChat?.groupName);
     const [adminGroup, setAdminGroup] = useState(currentGroupChat?.groupAdmin._id);
@@ -76,33 +78,59 @@ function Chat() {
     const dispatch = useDispatch();
 
     const currentUserId = user?._id;
-    const currentSenderId = sender?._id;
+    const currentSenderId = currentSender?._id;
     const accessToken = user?.accessToken;
 
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
 
     const handleOpen = async () => {
         setOpen(true);
-        await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        const list = await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        setCurrentListGroupChat(list);
     };
-    const handleClose = () => setOpen(false);
+    const handleClose = async () => {
+        setOpen(false);
+    };
 
-    const handleRemoveUser = async (item) => () => {
+    const handleRemoveUser = (item) => async () => {
         setListUser(isListUser.filter((user) => user._id !== item._id));
         const apiGroupChat = {
             idGroup: currentGroupChat._id,
             idUser: item._id,
         };
-        // await removeUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
+        await removeUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
     };
 
     const setNameGroup = (event) => {
         setChangeNameGroup(event.target.value);
     };
 
-    const handleSetKeyAdmin = (value) => () => {
-        setAdminGroup(value);
-        console.log('here');
+    const handleSetKeyAdmin = (userAdmin) => async () => {
+        setAdminGroup(userAdmin?._id);
+        const apiSetAdmin = {
+            groupAdmin: userAdmin,
+        };
+        await updateGroupChat(accessToken, dispatch, currentGroupChat._id, apiSetAdmin, axiosJWTLogin);
+    };
+
+    const handleClickApply = async () => {
+        if (currentGroupChat.groupName !== changeNameGroup.trim()) {
+            const apiSetGroupName = {
+                groupName: changeNameGroup.trim(),
+            };
+
+            //update group name in chat
+            const updateSenderName = {
+                ...currentSender,
+                profileName: changeNameGroup.trim(),
+            };
+            setCurrentSender(updateSenderName);
+
+            await updateGroupChat(accessToken, dispatch, currentGroupChat._id, apiSetGroupName, axiosJWTLogin);
+        }
+
+        getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        handleClose();
     };
 
     const callPopupFunction = () => {
@@ -193,8 +221,7 @@ function Chat() {
                 idUser: currentUserId,
             };
             await addUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
-
-            getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+            await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         }
         updateMsg(accessToken, dispatch, id, content, axiosJWTLogin);
     };
@@ -244,24 +271,30 @@ function Chat() {
     }, [chat]);
 
     useEffect(() => {
+        setCurrentSender(sender);
+    }, [sender]);
+
+    useEffect(() => {
         // 👇️ scroll to bottom every time messages change
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [sendData]);
 
     useEffect(() => {
-        setCurrentGroupChat(listGroupChat.filter((groupChat) => groupChat.groupName === sender?.profileName)[0]);
+        setCurrentGroupChat(
+            currentListGroupChat.filter((groupChat) => groupChat.groupName === currentSender?.profileName)[0],
+        );
         setChangeNameGroup(currentGroupChat?.groupName);
         setAdminGroup(currentGroupChat?.groupAdmin._id);
         setListUser(currentGroupChat?.user);
-    }, [listGroupChat]);
+    }, [currentListGroupChat, currentGroupChat]);
 
     return (
         <>
             <div className={cx('headerChat')}>
                 <div className={cx('infoFriend')}>
-                    <img src={sender?.profileImg} alt="avata" />
+                    <img src={currentSender?.profileImg} alt="avata" />
                     <div className={cx('infoText')}>
-                        {<p className={cx('name')}>{sender?.profileName}</p>}
+                        {<p className={cx('name')}>{currentSender?.profileName}</p>}
                         <span className={cx('active')}>Đang hoạt động</span>
                     </div>
                 </div>
@@ -324,7 +357,6 @@ function Chat() {
                                                     : item.profileName;
                                             const admin = adminGroup === item._id ? false : true;
                                             const showButton = adminGroup === currentUserId ? true : false;
-                                            console.log(adminGroup);
                                             return (
                                                 <ListItem key={index}>
                                                     <ListItemAvatar>
@@ -341,7 +373,7 @@ function Chat() {
                                                         <ListItemIcon>
                                                             <ModalKey
                                                                 content={'Chuyển quyền trưởng nhóm cho người này?'}
-                                                                onPress={handleSetKeyAdmin(item._id)}
+                                                                onPress={handleSetKeyAdmin(item)}
                                                             />
 
                                                             <ModalRemoveUser
@@ -363,7 +395,7 @@ function Chat() {
                                     variant="text"
                                     color="success"
                                     startIcon={<CheckCircleIcon />}
-                                    onClick={handleClose}
+                                    onClick={handleClickApply}
                                 >
                                     Xác nhận
                                 </Button>
@@ -378,8 +410,8 @@ function Chat() {
 
             <div className={cx('bodyCenter')}>
                 <div className={cx('infoFriendChat')}>
-                    <img src={sender?.profileImg} alt="avata" />
-                    <p>{sender?.profileName}</p>
+                    <img src={currentSender?.profileImg} alt="avata" />
+                    <p>{currentSender?.profileName}</p>
                 </div>
 
                 <div className={cx('containChat')}>
@@ -391,7 +423,7 @@ function Chat() {
                         <LoadingChat />
                     ) : (
                         sendData?.map((mess, index) => {
-                            const nameSender = mess.message.userGroupChat?.profileName || sender?.profileName;
+                            const nameSender = mess.message.userGroupChat?.profileName || currentSender?.profileName;
                             const nameUser = user?.profileName;
 
                             return (

@@ -71,6 +71,18 @@ export const addGroupChat = async (accessToken, dispatch, groupChat, axiosJWT) =
     }
 };
 
+export const updateGroupChat = async (accessToken, dispatch, id, apiUpdate, axiosJWT) => {
+    dispatch(updateGroupChatStart());
+    try {
+        await axiosJWT.put(`${url}/api/groupChat/${id}`, apiUpdate, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateGroupChatSuccess());
+    } catch (error) {
+        dispatch(updateGroupChatFailed());
+    }
+};
+
 export const addUserGroupChat = async (accessToken, dispatch, apiGroupChat, axiosJWT) => {
     dispatch(updateGroupChatStart());
     try {
@@ -165,6 +177,7 @@ export const getListGroupChat = async (accessToken, userId, dispatch, axiosJWT) 
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(getGroupChatSuccess(res.data));
+        return res.data;
     } catch (error) {
         dispatch(getGroupChatFailed());
     }

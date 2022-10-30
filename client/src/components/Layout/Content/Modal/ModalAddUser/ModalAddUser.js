@@ -61,16 +61,14 @@ export default function ModalAddUser({ currentGroupChat }) {
     };
     const handleClickAddUser = () => {
         if (isListSelect.length > 0) {
-            console.log(isListSelect);
-            console.log(currentGroupChat);
+            sendText4JoinGroup(isListSelect, currentGroupChat?.groupName, currentGroupChat?._id);
         }
         handleClose();
-        //sendText4JoinGroup()
     };
 
     const listAddUser = (listFriend, listUserInGroupChat) => {
         const isUserInGroupChat = (userId) => {
-            return listUserInGroupChat.some((item) => item._id === userId);
+            return listUserInGroupChat?.some((item) => item._id === userId);
         };
 
         const list = listFriend.filter((user) => !isUserInGroupChat(user?.sender._id));
