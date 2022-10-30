@@ -52,8 +52,7 @@ export default function ModalAddUser({ currentGroupChat, closeModal, isModalAddU
     };
     const handleClickAddUser = () => {
         if (isListSelect.length > 0) {
-            console.log(isListSelect);
-            console.log(currentGroupChat);
+            sendText4JoinGroup(isListSelect, currentGroupChat?.groupName, currentGroupChat?._id);
         }
         closeModal();
         //sendText4JoinGroup()
@@ -61,7 +60,7 @@ export default function ModalAddUser({ currentGroupChat, closeModal, isModalAddU
 
     const listAddUser = (listFriend, listUserInGroupChat) => {
         const isUserInGroupChat = (userId) => {
-            return listUserInGroupChat.some((item) => item._id === userId);
+            return listUserInGroupChat?.some((item) => item._id === userId);
         };
 
         const list = listFriend.filter((user) => !isUserInGroupChat(user?.sender._id));
