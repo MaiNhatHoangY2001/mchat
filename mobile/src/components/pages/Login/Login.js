@@ -89,18 +89,9 @@ function Login() {
             phoneNumber: phoneNumber,
             password: password,
         };
-        console.warn(newUser);
+        console.log(newUser);
         loginUser(newUser, dispatch, navigate, setIsLoading);
     };
-
-    // useEffect(() => {
-    //     if (user) {
-    //         setLinkToHome('/home');
-    //         navigate({ linkToHome });
-    //         console.warn('Login success')
-    //     }
-    //     if (!user) console.warn('Login fail');
-    // });
 
     //check regex sdt
     const [errorMessSDT, setErrorMessSDT] = useState('');
