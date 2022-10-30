@@ -87,7 +87,7 @@ function Chat() {
     };
     const handleClose = () => setOpen(false);
 
-    const handleRemoveUser = async (item) => {
+    const handleRemoveUser = async (item) => () => {
         setListUser(isListUser.filter((user) => user._id !== item._id));
         const apiGroupChat = {
             idGroup: currentGroupChat._id,
