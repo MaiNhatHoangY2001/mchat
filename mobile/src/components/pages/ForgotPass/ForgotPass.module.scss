@@ -17,8 +17,18 @@
 
 .txtInputsNewPW {
     height: 55px;
+    width: 100%;
     padding: 15px;
     font-size: 18px;
     background-color: #fff;
     margin-bottom: 10%;
+}
+
+.viewIputsPW {
+    width: 100%;
+    flex-direction: row;
+}
+
+.btnEye {
+    margin-top: -10%;
 }

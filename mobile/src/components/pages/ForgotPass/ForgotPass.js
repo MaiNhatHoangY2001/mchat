@@ -1,4 +1,4 @@
-import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Alert, Dimensions } from 'react-native';
+import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Alert, Dimensions, ScrollView } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './ForgotPass.module.scss';
 import { Link } from 'react-router-native';
@@ -80,7 +80,6 @@ function ForgotPass() {
         
         const getOtp = () => {
             let phoneNumber = number.trim();
-            // let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNumber);
             if (phoneNumber === '' || phoneNumber === undefined)
                 Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
             else if (phoneNumber.length !== 12) Alert.alert('Thông báo', 'Vui lòng nhập đủ 9 ký tự sau của số điện thoại!');
@@ -207,11 +206,59 @@ function ForgotPass() {
         );
     }
     function RenewPWScreen() {
+        //show-hide-pw
+        const [isSecureNewPW, setIsSecureNewPW] = useState(true);
+        const toggleNewPW = () => {
+            if (isSecureNewPW) {
+                setIsSecureNewPW(false);
+                return;
+            }
+            setIsSecureNewPW(true);
+        };
+        const [isSecureConfirmNewPW, setIsSecureConfirmNewPW] = useState(true);
+        const toggleConfirmNewPW = () => {
+            if (isSecureConfirmNewPW) {
+                setIsSecureConfirmNewPW(false);
+                return;
+            }
+            setIsSecureConfirmNewPW(true);
+        };
+
+        const [phoneTabNewPW, setPhoneTabNewPW] = useState('');
+        let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneTabNewPW.trim());
+        function checkPhoneNumber() {
+            if (phoneTabNewPW.trim() === '') Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
+            else if (phoneTabNewPW.trim().length !== 10)
+                Alert.alert('Thông báo', 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
+            else if (!regexPhoneNumberVN) Alert.alert('Thông báo', 'SĐT không hợp lệ!');
+            // else setErrorMessNewPW1('');
+        }
+        // function checkNewPW() {
+        //     if (passwordInputNewPW.trim() === '') Alert.alert('Vui lòng nhập mật khẩu mới!');
+        //     else if (passwordInputNewPW.trim().length < 6) Alert.alert('Vui lòng nhập tối thiểu 6 ký tự!');
+        //     else Alert.alert('');
+        // }
+        // function checkConfirmNewPW() {
+        //     if (passwordInputConfirmNewPW.trim() === '') Alert.alert('Vui lòng nhập xác nhận mật khẩu mới!');
+        //     else if (passwordInputConfirmNewPW.trim().length < 6)
+        //         Alert.alert('Vui lòng nhập tối thiểu 6 ký tự!');
+        //     else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
+        //         Alert.alert('Mật khẩu xác nhận không đúng, vui lòng nhập lại!');
+        //     // else {
+        //     //     setErrorMessNewPW3('');
+        //     // }
+        // }
+        function checkDataInputs() {
+            checkPhoneNumber();
+            // checkNewPW();
+            // checkConfirmNewPW();
+        }
+
         return (
             <View
                 style={{
                     flex: 1,
-                    justifyContent: 'space-around',
+                    justifyContent: 'center',
                     alignItems: 'center',
                     borderTopColor: 'red',
                     borderStyle: 'solid',
@@ -220,7 +267,7 @@ function ForgotPass() {
             >
                 <View
                     style={{
-                        display: !flagTabNewPW ? 'flex' : 'none',
+                        display: flagTabNewPW ? 'flex' : 'none',
                         justifyContent: 'center',
                         alignItems: 'center',
                         backgroundColor: '#fff',
@@ -236,43 +283,35 @@ function ForgotPass() {
                             fontSize: 16,
                             backgroundColor: '#fff',
                             marginTop: '-5%',
-                            paddingTop: '2%'
+                            paddingTop: '2%',
                         }}
                     >
                         Vui lòng xác thực số điện thoại trước!
                     </Text>
                 </View>
-                <View style={{ display: flagTabNewPW ? 'flex' : 'none' }}>
-                    <Formik initialValues={{ email: '' }} onSubmit={(values) => console.log(values)}>
-                        <View style={{ width: '80%' }}>
-                            <TextInput
-                                placeholder="Số điện thoại"
-                                style={[
-                                    styles.txtInputsNewPW,
-                                    {
-                                        shadowColor: 'rgba(0,0,0, .4)', // IOS
-                                        shadowOffset: { height: 1, width: 1 }, // IOS
-                                        shadowOpacity: 1, // IOS
-                                        shadowRadius: 1, //IOS
-                                        elevation: 2, // Android
-                                    },
-                                ]}
-                            />
+                <View style={{ display: !flagTabNewPW ? 'flex' : 'none', width: '80%', padding: '5%' }}>
+                    {/* <Formik initialValues={{ email: '' }} onSubmit={(values) => console.log(values)}> */}
+                    <ScrollView>
+                        <TextInput
+                            placeholder="Số điện thoại"
+                            keyboardType="number-pad"
+                            autoComplete="tel"
+                            autoFocus
+                            style={[
+                                styles.txtInputsNewPW,
+                                {
+                                    shadowColor: 'rgba(0,0,0, .4)', // IOS
+                                    shadowOffset: { height: 1, width: 1 }, // IOS
+                                    shadowOpacity: 1, // IOS
+                                    shadowRadius: 1, //IOS
+                                    elevation: 2, // Android
+                                },
+                            ]}
+                        />
+                        <View style={styles.viewIputsPW}>
                             <TextInput
                                 placeholder="Mật khẩu mới"
-                                style={[
-                                    styles.txtInputsNewPW,
-                                    {
-                                        shadowColor: 'rgba(0,0,0, .4)', // IOS
-                                        shadowOffset: { height: 1, width: 1 }, // IOS
-                                        shadowOpacity: 1, // IOS
-                                        shadowRadius: 1, //IOS
-                                        elevation: 2, // Android
-                                    },
-                                ]}
-                            />
-                            <TextInput
-                                placeholder="Xác nhận mật khẩu mới"
+                                secureTextEntry={isSecureNewPW}
                                 style={[
                                     styles.txtInputsNewPW,
                                     {
@@ -286,18 +325,78 @@ function ForgotPass() {
                             />
                             <TouchableOpacity
                                 style={{
-                                    marginTop: 30,
-                                    backgroundColor: 'rgb(250, 139, 158)',
-                                    height: 40,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    borderRadius: 20,
+                                    alignSelf: 'center',
+                                    // borderColor: 'cyan',
+                                    // borderWidth: 1,
+                                    // borderStyle: 'solid',
+                                    height: 55,
+                                    paddingLeft: 5,
+                                    paddingRight: 5,
+                                    marginLeft: -46,
+                                    marginTop: '-10%'
                                 }}
+                                onPress={toggleNewPW}
                             >
-                                <Text style={{ color: '#fff', fontWeight: 'bold' }}>Xác nhận</Text>
+                                {isSecureNewPW ? (
+                                    <Icon name="eye" size={30} color="rgb(250, 139, 158)" />
+                                ) : (
+                                    <Icon name="eye-slash" size={30} color="rgb(250, 139, 158)" />
+                                )}
                             </TouchableOpacity>
                         </View>
-                    </Formik>
+                        <View style={styles.viewIputsPW}>
+                            <TextInput
+                                placeholder="Nhập lại mật khẩu"
+                                secureTextEntry={isSecureConfirmNewPW}
+                                style={[
+                                    styles.txtInputsNewPW,
+                                    {
+                                        shadowColor: 'rgba(0,0,0, .4)', // IOS
+                                        shadowOffset: { height: 1, width: 1 }, // IOS
+                                        shadowOpacity: 1, // IOS
+                                        shadowRadius: 1, //IOS
+                                        elevation: 2, // Android
+                                    },
+                                ]}
+                            />
+                            <TouchableOpacity
+                                style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    alignSelf: 'center',
+                                    // borderColor: 'cyan',
+                                    // borderWidth: 1,
+                                    // borderStyle: 'solid',
+                                    height: 55,
+                                    paddingLeft: 5,
+                                    paddingRight: 5,
+                                    marginLeft: -46,
+                                    marginTop: '-10%'
+                                }}
+                                onPress={toggleConfirmNewPW}
+                            >
+                                {isSecureConfirmNewPW ? (
+                                    <Icon name="eye" size={30} color="rgb(250, 139, 158)" />
+                                ) : (
+                                    <Icon name="eye-slash" size={30} color="rgb(250, 139, 158)" />
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: 'rgb(250, 139, 158)',
+                                height: 40,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderRadius: 20,
+                            }}
+                        >
+                            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Xác nhận</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
+                    {/* </Formik> */}
                 </View>
             </View>
         );
