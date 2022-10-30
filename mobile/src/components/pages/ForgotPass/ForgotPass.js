@@ -1,7 +1,9 @@
 import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Alert, Dimensions, ScrollView } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './ForgotPass.module.scss';
-import { Link } from 'react-router-native';
+import { Link, useNavigate } from 'react-router-native';
+import { changePassword } from '../../../redux/apiRequest/userApiRequest';
+import { useDispatch } from 'react-redux';
 
 //npm i react-hook-form
 import { useForm } from 'react-hook-form';
@@ -66,6 +68,9 @@ const InscriptionScreen = () => {
 }
 
 function ForgotPass() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    
     const [flagTabNewPW, setFlagTabNewPW] = useState(false);
 
     //create tab react-native
@@ -115,13 +120,6 @@ function ForgotPass() {
                         alert('Xác thực không thành công!');
                     });
                 console.log(otp);
-
-                // //  CHANGE PASSWORD
-                // const account = {
-                //     phoneNumber: phoneTabNewPW.trim(),
-                //     newPassword: passwordInputNewPW.trim(),
-                // };
-                // changePassword(account, dispatch, navigate);
             }
         };
 
@@ -206,6 +204,8 @@ function ForgotPass() {
         );
     }
     function RenewPWScreen() {
+        const [linkToHome, setLinkToHome] = useState('');
+
         //show-hide-pw
         const [isSecureNewPW, setIsSecureNewPW] = useState(true);
         const toggleNewPW = () => {
@@ -241,6 +241,16 @@ function ForgotPass() {
                 Alert.alert('Thông báo', 'Vui lòng nhập tối thiểu 6 ký tự mật khẩu!');
             else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
                 Alert.alert('Thông báo', 'Mật khẩu nhập lại không khớp với mật khẩu mới!');
+            else {
+                // CHANGE PASSWORD
+                const account = {
+                    phoneNumber: phoneTabNewPW.trim(),
+                    newPassword: passwordInputNewPW.trim(),
+                };
+                changePassword(account, dispatch, navigate);
+                console.log(account);
+                if(account) navigate('/');
+            }
         }
         function checkDataInputs() {
             if (phoneTabNewPW.trim() === '' || passwordInputNewPW.trim() === '' || passwordInputConfirmNewPW.trim() === '')
@@ -382,7 +392,8 @@ function ForgotPass() {
                                 )}
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity
+                        <Link
+                            // to={linkToHome}
                             style={{
                                 backgroundColor: 'rgb(250, 139, 158)',
                                 height: 40,
@@ -390,10 +401,10 @@ function ForgotPass() {
                                 alignItems: 'center',
                                 borderRadius: 20,
                             }}
-                            onPress={checkDataInputs}
+                            onPress={() => checkDataInputs()}
                         >
                             <Text style={{ color: '#fff', fontWeight: 'bold' }}>Xác nhận</Text>
-                        </TouchableOpacity>
+                        </Link>
                     </ScrollView>
                     {/* </Formik> */}
                 </View>

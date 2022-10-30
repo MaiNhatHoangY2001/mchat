@@ -9,7 +9,6 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { IoPhonePortraitOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons/lib';
 import React from 'react';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 //npm i react-bootstrap
 //https://react-bootstrap.github.io/components/tabs/
@@ -18,9 +17,6 @@ import { Tab, Tabs, Form } from 'react-bootstrap';
 //link firebase doc: https://firebase.google.com/docs/auth/web/phone-auth
 import auth from '../../../firebase-config';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
-
-//npm i @react-native-firebase/auth
-// import auth from '@react-native-firebase/auth'; //ko
 
 //npm i react-phone-number-input
 // import PhoneInput from 'react-phone-number-input';
@@ -122,13 +118,6 @@ function ForgotPass() {
                 setDisableTab1(true);
                 setDisableTab2(false);
                 setchangeTabMess("Đã xác thực, vui lòng chuyển đến tab 'Mật khẩu mới'");
-
-                // //  CHANGE PASSWORD
-                // const account = {
-                //     phoneNumber: phoneTabNewPW.trim(),
-                //     newPassword: passwordInputNewPW.trim(),
-                // };
-                // changePassword(account, dispatch, navigate);
             } catch (err) {
                 // setErrorMessOTP(err.message);
                 console.log(err.message);
@@ -165,19 +154,34 @@ function ForgotPass() {
         else if (passwordInputNewPW.trim().length < 6) setErrorMessNewPW2('Vui lòng nhập tối thiểu 6 ký tự!');
         else setErrorMessNewPW2('');
     }
-    function checkConfirmNewPW() {
+    function checkConfirmNewPW(e) {
+        e.preventDefault();
         if (passwordInputConfirmNewPW.trim() === '') setErrorMessNewPW3('Vui lòng nhập xác nhận mật khẩu mới!');
         else if (passwordInputConfirmNewPW.trim().length < 6) setErrorMessNewPW3('Vui lòng nhập tối thiểu 6 ký tự!');
         else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
             setErrorMessNewPW3('Mật khẩu xác nhận không đúng, vui lòng nhập lại!');
         else {
             setErrorMessNewPW3('');
+            handleChangePW(e);
         }
     }
-    function checkDataInputs() {
+    function checkDataInputs(e) {
+        e.preventDefault();
         checkPhoneNumber();
         checkNewPW();
-        checkConfirmNewPW();
+        checkConfirmNewPW(e);
+    }
+
+    // CHANGE PASSWORD
+    const handleChangePW = (e) => {
+        e.preventDefault();
+        const account = {
+            phoneNumber: phoneTabNewPW.trim(),
+            newPassword: passwordInputNewPW.trim(),
+        };
+        changePassword(account, dispatch, navigate);
+        console.log(account);
+        if(account) navigate('/');
     }
 
     return (
@@ -190,7 +194,6 @@ function ForgotPass() {
                     />
                     <div id={cx('line')}>LINE</div>
                 </div>
-                {/* <form onSubmit={handleLogin}> */}
                 <div className={cx('boxTabs')}>
                     <Tabs
                         className={cx('formTwoTabs')}
@@ -271,91 +274,92 @@ function ForgotPass() {
                             </div>
                         </Tab>
                         <Tab eventKey={2} title="Mật khẩu mới" className={cx('formTabPhone')} disabled={disableTab2}>
-                            <div className={cx('contentTabPhone')}>
-                                <div className={cx('rowInputs')}>
-                                    <input
-                                        className={cx('txtSdtForgotPW')}
-                                        placeholder="Số điện thoại"
-                                        type="text"
-                                        onChange={(e) => {
-                                            setPhoneTabNewPW(e.target.value);
-                                        }}
-                                    />
-                                    <span className="iconPhone">
-                                        <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                            <i>
-                                                <IoPhonePortraitOutline size={30} />
-                                            </i>
-                                        </IconContext.Provider>
-                                    </span>
-                                </div>
-                                <p className={cx('errorMessNewPW')}>{errorMessNewPW1}</p>
-                                <div className={cx('rowInputs')}>
-                                    <input
-                                        className={cx('txtNewPW')}
-                                        type={passwordType1}
-                                        placeholder="Mật khẩu mới"
-                                        onChange={(e) => {
-                                            // setPassword(e.target.value);
-                                            setPasswordInputNewPW(e.target.value);
-                                        }}
-                                        value={passwordInputNewPW}
-                                        name="password"
-                                    />
-                                    <span className="eye1">
-                                        <div className="btn btn-outline-info" onClick={togglePassword1}>
+                            <Form onSubmit={checkDataInputs}>
+                                <div className={cx('contentTabPhone')}>
+                                    <div className={cx('rowInputs')}>
+                                        <input
+                                            className={cx('txtSdtForgotPW')}
+                                            placeholder="Số điện thoại"
+                                            type="text"
+                                            onChange={(e) => {
+                                                setPhoneTabNewPW(e.target.value);
+                                            }}
+                                        />
+                                        <span className="iconPhone">
                                             <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                                {passwordType1 === 'password' ? (
-                                                    <i>
-                                                        <FaEyeSlash />
-                                                    </i>
-                                                ) : (
-                                                    <i>
-                                                        <FaEye />
-                                                    </i>
-                                                )}
+                                                <i>
+                                                    <IoPhonePortraitOutline size={30} />
+                                                </i>
                                             </IconContext.Provider>
-                                        </div>
-                                    </span>
+                                        </span>
+                                    </div>
+                                    <p className={cx('errorMessNewPW')}>{errorMessNewPW1}</p>
+                                    <div className={cx('rowInputs')}>
+                                        <input
+                                            className={cx('txtNewPW')}
+                                            type={passwordType1}
+                                            placeholder="Mật khẩu mới"
+                                            onChange={(e) => {
+                                                setPasswordInputNewPW(e.target.value);
+                                            }}
+                                            value={passwordInputNewPW}
+                                            name="password"
+                                        />
+                                        <span className="eye1">
+                                            <div className="btn btn-outline-info" onClick={togglePassword1}>
+                                                <IconContext.Provider value={{ color: '#D57AD4' }}>
+                                                    {passwordType1 === 'password' ? (
+                                                        <i>
+                                                            <FaEyeSlash />
+                                                        </i>
+                                                    ) : (
+                                                        <i>
+                                                            <FaEye />
+                                                        </i>
+                                                    )}
+                                                </IconContext.Provider>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <p className={cx('errorMessNewPW')}>{errorMessNewPW2}</p>
+                                    <div className={cx('rowInputs')}>
+                                        <input
+                                            className={cx('txtConfirmNewPW')}
+                                            type={passwordType2}
+                                            placeholder="Xác nhận mật khẩu mới"
+                                            onChange={(e) => {
+                                                setPasswordInputConfirmNewPW(e.target.value);
+                                            }}
+                                            value={passwordInputConfirmNewPW}
+                                            name="password"
+                                        />
+                                        <span className="eye2">
+                                            <div className="btn btn-outline-info" onClick={togglePassword2}>
+                                                <IconContext.Provider value={{ color: '#D57AD4' }}>
+                                                    {passwordType2 === 'password' ? (
+                                                        <i>
+                                                            <FaEyeSlash />
+                                                        </i>
+                                                    ) : (
+                                                        <i>
+                                                            <FaEye />
+                                                        </i>
+                                                    )}
+                                                </IconContext.Provider>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <p className={cx('errorMessNewPW')}>{errorMessNewPW3}</p>
                                 </div>
-                                <p className={cx('errorMessNewPW')}>{errorMessNewPW2}</p>
-                                <div className={cx('rowInputs')}>
-                                    <input
-                                        className={cx('txtConfirmNewPW')}
-                                        type={passwordType2}
-                                        placeholder="Xác nhận mật khẩu mới"
-                                        onChange={(e) => {
-                                            setPasswordInputConfirmNewPW(e.target.value);
-                                        }}
-                                        value={passwordInputConfirmNewPW}
-                                        name="password"
-                                    />
-                                    <span className="eye2">
-                                        <div className="btn btn-outline-info" onClick={togglePassword2}>
-                                            <IconContext.Provider value={{ color: '#D57AD4' }}>
-                                                {passwordType2 === 'password' ? (
-                                                    <i>
-                                                        <FaEyeSlash />
-                                                    </i>
-                                                ) : (
-                                                    <i>
-                                                        <FaEye />
-                                                    </i>
-                                                )}
-                                            </IconContext.Provider>
-                                        </div>
-                                    </span>
+                                <div className={cx('contentTabPhone-btn')}>
+                                    <p className={cx('combackTabOTP')} onClick={() => window.location.reload()}>
+                                        ◀ Trở về
+                                    </p>
+                                    <button className={cx('btnNewPW')} type="submit">
+                                        XÁC NHẬN
+                                    </button>
                                 </div>
-                                <p className={cx('errorMessNewPW')}>{errorMessNewPW3}</p>
-                            </div>
-                            <div className={cx('contentTabPhone-btn')}>
-                                <p className={cx('combackTabOTP')} onClick={() => window.location.reload()}>
-                                    ◀ Trở về
-                                </p>
-                                <button className={cx('btnNewPW')} type="submit" onClick={checkDataInputs}>
-                                    XÁC NHẬN
-                                </button>
-                            </div>
+                            </Form>
                         </Tab>
                     </Tabs>
                 </div>

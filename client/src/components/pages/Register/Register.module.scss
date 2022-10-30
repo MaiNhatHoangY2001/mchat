@@ -52,23 +52,23 @@
     // font-size: 2.0vh;
     // font-weight: 600;
     // flex-direction: column;
-    // justify-content: center;
-    //align-items: center;
+    justify-content: center;
+    align-items: center;
     width: 610px;
     background-color: #fff;
     box-shadow: 1px 1px 40px 3px rgba(0, 0, 0, 0.4);
 //    margin: 0.75rem;
     height: 70%;
     border-radius: 15px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-width: 30%;
 }
-// .TabOTP{
-//     align-items: center;
-//     align-items: center;
-//     background-color: #fff;
-//     height: 340px;
-// }
+.TabOTP{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-items: center;
+    background-color: #fff;
+}
 .inputRegister{
     border: none;
     padding: 0.35rem;
