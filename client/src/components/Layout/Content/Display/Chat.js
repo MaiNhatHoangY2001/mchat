@@ -93,15 +93,16 @@ function Chat() {
             idGroup: currentGroupChat._id,
             idUser: item._id,
         };
-        await removeUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
+        // await removeUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
     };
 
     const setNameGroup = (event) => {
         setChangeNameGroup(event.target.value);
     };
 
-    const handleSetKeyAdmin = (value) => {
+    const handleSetKeyAdmin = (value) => () => {
         setAdminGroup(value);
+        console.log('here');
     };
 
     const callPopupFunction = () => {
@@ -340,12 +341,12 @@ function Chat() {
                                                         <ListItemIcon>
                                                             <ModalKey
                                                                 content={'Chuyển quyền trưởng nhóm cho người này?'}
-                                                                //onPress={handleSetKeyAdmin(item._id)}
+                                                                onPress={handleSetKeyAdmin(item._id)}
                                                             />
 
                                                             <ModalRemoveUser
                                                                 content={'Xác nhận mời người này ra khỏi nhóm!'}
-                                                               // onPress={handleRemoveUser(item)}
+                                                                onPress={handleRemoveUser(item)}
                                                             />
                                                         </ListItemIcon>
                                                     ) : (
