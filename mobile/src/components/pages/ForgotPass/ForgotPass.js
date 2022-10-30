@@ -84,10 +84,10 @@ function ForgotPass() {
                 Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
             else if (phoneNumber.length !== 12) Alert.alert('Thông báo', 'Vui lòng nhập đủ 9 ký tự sau của số điện thoại!');
             else {
-                console.log(number);
                 try {
                     const phoneProvider = new firebase.auth.PhoneAuthProvider();
                     phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current).then(setVerificationId);
+                    console.log(number);
                     setNumber('');
                     setFlag(true);
                 } catch (err) {
@@ -225,33 +225,31 @@ function ForgotPass() {
         };
 
         const [phoneTabNewPW, setPhoneTabNewPW] = useState('');
+        const [passwordInputNewPW, setPasswordInputNewPW] = useState('');
+        const [passwordInputConfirmNewPW, setPasswordInputConfirmNewPW] = useState('');
         let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneTabNewPW.trim());
         function checkPhoneNumber() {
-            if (phoneTabNewPW.trim() === '') Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
-            else if (phoneTabNewPW.trim().length !== 10)
+            if (phoneTabNewPW.trim().length !== 10)
                 Alert.alert('Thông báo', 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
             else if (!regexPhoneNumberVN) Alert.alert('Thông báo', 'SĐT không hợp lệ!');
-            // else setErrorMessNewPW1('');
         }
-        // function checkNewPW() {
-        //     if (passwordInputNewPW.trim() === '') Alert.alert('Vui lòng nhập mật khẩu mới!');
-        //     else if (passwordInputNewPW.trim().length < 6) Alert.alert('Vui lòng nhập tối thiểu 6 ký tự!');
-        //     else Alert.alert('');
-        // }
-        // function checkConfirmNewPW() {
-        //     if (passwordInputConfirmNewPW.trim() === '') Alert.alert('Vui lòng nhập xác nhận mật khẩu mới!');
-        //     else if (passwordInputConfirmNewPW.trim().length < 6)
-        //         Alert.alert('Vui lòng nhập tối thiểu 6 ký tự!');
-        //     else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
-        //         Alert.alert('Mật khẩu xác nhận không đúng, vui lòng nhập lại!');
-        //     // else {
-        //     //     setErrorMessNewPW3('');
-        //     // }
-        // }
+        function checkNewPW() {
+            if (passwordInputNewPW.trim().length < 6) Alert.alert('Thông báo', 'Vui lòng nhập tối thiểu 6 ký tự mật khẩu!');
+        }
+        function checkConfirmNewPW() {
+            if (passwordInputConfirmNewPW.trim().length < 6)
+                Alert.alert('Thông báo', 'Vui lòng nhập tối thiểu 6 ký tự mật khẩu!');
+            else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
+                Alert.alert('Thông báo', 'Mật khẩu nhập lại không khớp với mật khẩu mới!');
+        }
         function checkDataInputs() {
-            checkPhoneNumber();
-            // checkNewPW();
-            // checkConfirmNewPW();
+            if (phoneTabNewPW.trim() === '' || passwordInputNewPW.trim() === '' || passwordInputConfirmNewPW.trim() === '')
+                Alert.alert('Thông báo', 'Vui lòng nhập chỗ trống!');
+            else {
+                checkConfirmNewPW();
+                checkNewPW();
+                checkPhoneNumber();
+            }
         }
 
         return (
@@ -267,7 +265,7 @@ function ForgotPass() {
             >
                 <View
                     style={{
-                        display: flagTabNewPW ? 'flex' : 'none',
+                        display: !flagTabNewPW ? 'flex' : 'none',
                         justifyContent: 'center',
                         alignItems: 'center',
                         backgroundColor: '#fff',
@@ -289,7 +287,7 @@ function ForgotPass() {
                         Vui lòng xác thực số điện thoại trước!
                     </Text>
                 </View>
-                <View style={{ display: !flagTabNewPW ? 'flex' : 'none', width: '80%', padding: '5%' }}>
+                <View style={{ display: flagTabNewPW ? 'flex' : 'none', width: '80%', padding: '5%' }}>
                     {/* <Formik initialValues={{ email: '' }} onSubmit={(values) => console.log(values)}> */}
                     <ScrollView>
                         <TextInput
@@ -297,6 +295,8 @@ function ForgotPass() {
                             keyboardType="number-pad"
                             autoComplete="tel"
                             autoFocus
+                            value={phoneTabNewPW}
+                            onChangeText={(txt) => setPhoneTabNewPW(txt)}
                             style={[
                                 styles.txtInputsNewPW,
                                 {
@@ -312,6 +312,8 @@ function ForgotPass() {
                             <TextInput
                                 placeholder="Mật khẩu mới"
                                 secureTextEntry={isSecureNewPW}
+                                value={passwordInputNewPW}
+                                onChangeText={(txt) => setPasswordInputNewPW(txt)}
                                 style={[
                                     styles.txtInputsNewPW,
                                     {
@@ -328,14 +330,11 @@ function ForgotPass() {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     alignSelf: 'center',
-                                    // borderColor: 'cyan',
-                                    // borderWidth: 1,
-                                    // borderStyle: 'solid',
                                     height: 55,
                                     paddingLeft: 5,
                                     paddingRight: 5,
                                     marginLeft: -46,
-                                    marginTop: '-10%'
+                                    marginTop: '-10%',
                                 }}
                                 onPress={toggleNewPW}
                             >
@@ -350,6 +349,8 @@ function ForgotPass() {
                             <TextInput
                                 placeholder="Nhập lại mật khẩu"
                                 secureTextEntry={isSecureConfirmNewPW}
+                                value={passwordInputConfirmNewPW}
+                                onChangeText={(txt) => setPasswordInputConfirmNewPW(txt)}
                                 style={[
                                     styles.txtInputsNewPW,
                                     {
@@ -366,14 +367,11 @@ function ForgotPass() {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     alignSelf: 'center',
-                                    // borderColor: 'cyan',
-                                    // borderWidth: 1,
-                                    // borderStyle: 'solid',
                                     height: 55,
                                     paddingLeft: 5,
                                     paddingRight: 5,
                                     marginLeft: -46,
-                                    marginTop: '-10%'
+                                    marginTop: '-10%',
                                 }}
                                 onPress={toggleConfirmNewPW}
                             >
@@ -392,6 +390,7 @@ function ForgotPass() {
                                 alignItems: 'center',
                                 borderRadius: 20,
                             }}
+                            onPress={checkDataInputs}
                         >
                             <Text style={{ color: '#fff', fontWeight: 'bold' }}>Xác nhận</Text>
                         </TouchableOpacity>
@@ -440,7 +439,6 @@ function ForgotPass() {
                                 screenOptions={({ route }) => ({
                                     tabBarIcon: ({ focused, color, size }) => {
                                         let iconName;
-
                                         if (route.name === 'Xác thực SĐT') {
                                             iconName = 'sms';
                                             size = focused ? 24 : 18;
@@ -450,8 +448,6 @@ function ForgotPass() {
                                             size = focused ? 22 : 18;
                                             color = focused ? '#fff' : '#555';
                                         }
-
-                                        // You can return any component that you like here!
                                         return <Icon name={iconName} size={size} color={color} />;
                                     },
                                     tabBarStyle: {
