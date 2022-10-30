@@ -46,65 +46,6 @@ import ModalAddUser from '../Modal/ModalAddUser/ModalAddUser';
 
 const cx = classNames.bind(styles);
 
-const DataGroupDemo = {
-    id: 0,
-    name: 'Nhóm 16',
-    admin: 0,
-    avataGroup: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715210/samples/imagecon-group.jpg',
-    listUser: [
-        {
-            id: 0,
-            name: 'Sơn Tùng MTP',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar2_abehs5.png',
-        },
-        {
-            id: 1,
-            name: 'Jack 5 Triệu',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar6_cfpsfq.png',
-        },
-        {
-            id: 2,
-            name: 'Dương Lâm Đông Nai',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966663/Avata/thumb-1920-233306_wgsosk.jpg',
-        },
-        {
-            id: 3,
-            name: 'HieuThuHai',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/img_avatar2_ldxfoe.png',
-        },
-        {
-            id: 4,
-            name: 'Đạt Vi Na',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/img_avatar_byssaa.png',
-        },
-        {
-            id: 5,
-            name: 'Huấn Hoa Hồng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-        },
-        {
-            id: 6,
-            name: 'Huấn Hoa Hồng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-        },
-        {
-            id: 8,
-            name: 'Huấn Hoa Hồng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-        },
-        {
-            id: 9,
-            name: 'Huấn Hoa Hồng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-        },
-        {
-            id: 10,
-            name: 'Huấn Hoa Hồng',
-            avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-        },
-    ],
-};
-
 function Chat() {
     const user = useSelector((state) => state.auth.login?.currentUser);
     const sender = useSelector((state) => state.user.sender?.user);
@@ -126,7 +67,7 @@ function Chat() {
         listGroupChat.filter((groupChat) => groupChat.groupName === sender?.profileName)[0],
     );
     const [changeNameGroup, setChangeNameGroup] = useState(currentGroupChat?.groupName);
-    const [isDataGroup, setDataGroup] = useState(currentGroupChat?.groupAdmin._id);
+    const [adminGroup, setAdminGroup] = useState(currentGroupChat?.groupAdmin._id);
     const [isListUser, setListUser] = useState(currentGroupChat?.user);
 
     const [open, setOpen] = useState(false);
@@ -155,14 +96,12 @@ function Chat() {
         await removeUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
     };
 
-    const handleClickAddUser = () => {};
-
     const setNameGroup = (event) => {
         setChangeNameGroup(event.target.value);
     };
 
     const handleSetKeyAdmin = (value) => {
-        setDataGroup(value);
+        setAdminGroup(value);
     };
 
     const callPopupFunction = () => {
@@ -194,7 +133,7 @@ function Chat() {
         setShowPicker(false);
     };
 
-    const [isMessageQuestion, setMessageQuetion] = useState('');
+    const [isMessageQuestion, setMessageQuestion] = useState('');
 
     const typeChat = (type, mess) => {
         switch (type) {
@@ -241,13 +180,13 @@ function Chat() {
         }
     };
 
-    const handleAnswer = async (question, anwser, id) => {
-        setMessageQuetion(anwser);
-        const newAnwser = question[0] + '/' + anwser + '/' + question[2];
+    const handleAnswer = async (question, answer, id) => {
+        setMessageQuestion(answer);
+        const newAnswer = question[0] + '/' + answer + '/' + question[2];
         const content = {
-            content: newAnwser,
+            content: newAnswer,
         };
-        if (anwser === 'Y') {
+        if (answer === 'Y') {
             const apiGroupChat = {
                 idGroup: question[2],
                 idUser: currentUserId,
@@ -311,7 +250,7 @@ function Chat() {
     useEffect(() => {
         setCurrentGroupChat(listGroupChat.filter((groupChat) => groupChat.groupName === sender?.profileName)[0]);
         setChangeNameGroup(currentGroupChat?.groupName);
-        setDataGroup(currentGroupChat?.groupAdmin._id);
+        setAdminGroup(currentGroupChat?.groupAdmin._id);
         setListUser(currentGroupChat?.user);
     }, [listGroupChat]);
 
@@ -379,11 +318,12 @@ function Chat() {
                                     <List className={cx('ListUser')}>
                                         {isListUser?.map((item, index) => {
                                             const name =
-                                                isDataGroup === item._id
+                                                adminGroup === item._id
                                                     ? item.profileName + ' (Trưởng nhóm)'
                                                     : item.profileName;
-                                            const admin = isDataGroup === item._id ? false : true;
-                                            const showButton = isDataGroup === currentUserId ? true : false;
+                                            const admin = adminGroup === item._id ? false : true;
+                                            const showButton = adminGroup === currentUserId ? true : false;
+                                            console.log(adminGroup);
                                             return (
                                                 <ListItem key={index}>
                                                     <ListItemAvatar>
@@ -400,12 +340,12 @@ function Chat() {
                                                         <ListItemIcon>
                                                             <ModalKey
                                                                 content={'Chuyển quyền trưởng nhóm cho người này?'}
-                                                                onPress={handleSetKeyAdmin(item._id)}
+                                                                //onPress={handleSetKeyAdmin(item._id)}
                                                             />
 
                                                             <ModalRemoveUser
                                                                 content={'Xác nhận mời người này ra khỏi nhóm!'}
-                                                                onPress={handleRemoveUser(item)}
+                                                               // onPress={handleRemoveUser(item)}
                                                             />
                                                         </ListItemIcon>
                                                     ) : (

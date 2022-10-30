@@ -36,6 +36,8 @@ function ChatContextProvider({ children }) {
         },
     ]);
 
+    const [listFriend, setListFriend] = useState([]);
+
     const createChat = (
         typeChat,
         mess,
@@ -183,12 +185,24 @@ function ChatContextProvider({ children }) {
         }
     }, [sendData]);
 
+    const sendText4JoinGroup = (listFriend, nameGroup, idGroup) => {
+        //send text join group to friend
+        listFriend.forEach((friend) => {
+            const individualChatId = friend._id;
+            const msg = `Đã thêm bạn vào nhóm ${nameGroup}. Bạn có đồng ý tham gia không?/=/${idGroup}`;
+            createChat(TYPE_NOTIFICATION, msg, [], individualChatId, false, friend.sender);
+        });
+    };
+
     const contextValue = {
         createChat,
         setIndividualChatId,
         sendData,
         setSendData,
         individualChatId,
+        listFriend,
+        setListFriend,
+        sendText4JoinGroup
     };
 
     return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>;

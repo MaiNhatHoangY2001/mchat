@@ -40,6 +40,8 @@ export default function ListFriend() {
 
     const chatContext = useContext(ChatContext);
     const createChat = chatContext.createChat;
+    const setListFriend = chatContext.setListFriend;
+    const sendText4JoinGroup = chatContext.sendText4JoinGroup;
 
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
@@ -106,12 +108,6 @@ export default function ListFriend() {
     const handleCreateGroupChat = async (listFriend) => {
         if (listFriend.length > 1) {
             let name;
-            // const listIdUser = listFriend?.reduce(
-            //     (list, friend) => {
-            //         return [...list, friend.sender._id];
-            //     },
-            //     [currentUser._id],
-            // );
             if (nameGroup === '') {
                 name = listFriend?.reduce((list, friend) => {
                     return `${list}, ${friend.sender.profileName}`;
@@ -144,11 +140,7 @@ export default function ListFriend() {
                 };
                 getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWT);
                 //send text join group to friend
-                listFriend.forEach((friend) => {
-                    const individualChatId = friend._id;
-                    const msg = `Đã thêm bạn vào nhóm ${name}. Bạn có đồng ý tham gia không?/=/${newGroupChat._id}`;
-                    createChat(TYPE_NOTIFICATION, msg, [], individualChatId, false, friend.sender);
-                });
+                sendText4JoinGroup(listFriend, name, newGroupChat._id);
 
                 handleClickExit();
             }
@@ -167,6 +159,8 @@ export default function ListFriend() {
                 return new Date(b?.message[0]?.time) - new Date(a?.message[0]?.time);
             });
             setChatActors(listSort);
+            //set actor chat in context
+            setListFriend(currentIndividualChat);
         }
     }, [currentIndividualChat, currentGroupChat]);
 

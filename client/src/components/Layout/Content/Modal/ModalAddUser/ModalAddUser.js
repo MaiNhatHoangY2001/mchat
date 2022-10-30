@@ -13,67 +13,18 @@ import {
     TextField,
 } from '@mui/material';
 import classNames from 'classnames/bind';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './ModalAddUser.scss';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
+import { ChatContext } from '../../../../../context/ChatContext';
 
 const cx = classNames.bind(styles);
 
-const DataListFriend = [
-    {
-        id: 0,
-        name: 'Sơn Tùng MTP',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar2_abehs5.png',
-    },
-    {
-        id: 1,
-        name: 'Jack 5 Triệu',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar6_cfpsfq.png',
-    },
-    {
-        id: 2,
-        name: 'Dương Lâm Đông Nai',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966663/Avata/thumb-1920-233306_wgsosk.jpg',
-    },
-    {
-        id: 3,
-        name: 'HieuThuHai',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/img_avatar2_ldxfoe.png',
-    },
-    {
-        id: 4,
-        name: 'Đạt Vi Na',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/img_avatar_byssaa.png',
-    },
-    {
-        id: 5,
-        name: 'Huấn Hoa Hồng',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-    },
-    {
-        id: 6,
-        name: 'Trấn Thành',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-    },
-    {
-        id: 8,
-        name: 'Hoài Linh',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-    },
-    {
-        id: 9,
-        name: 'Bùi Anh Tuấn',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-    },
-    {
-        id: 10,
-        name: 'Tùng Sơn',
-        avata: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666966662/Avata/avatar5_vtoheb.png',
-    },
-];
-
 export default function ModalAddUser({}) {
+    const chatContext = useContext(ChatContext);
+    const listFriend = chatContext.listFriend;
+
     // Open and Close Modal
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
@@ -95,9 +46,9 @@ export default function ModalAddUser({}) {
     const handleToggle = (item) => () => {
         const currentIndex = isListSelect
             .map((item1) => {
-                return item1.id;
+                return item1._id;
             })
-            .indexOf(item.id);
+            .indexOf(item._id);
         const newData = [...isListSelect];
 
         if (currentIndex === -1) {
@@ -106,6 +57,9 @@ export default function ModalAddUser({}) {
             newData.splice(currentIndex, 1);
         }
         setListSelect(newData);
+    };
+    const handleClickAddUser = () => {
+        console.log(isListSelect);
     };
 
     return (
@@ -132,8 +86,8 @@ export default function ModalAddUser({}) {
                             <div className={cx('ListUser')}>
                                 <p>Danh Sách bạn bè</p>
                                 <List className={cx('listItem')}>
-                                    {DataListFriend.map((item, index) => {
-                                        const name = item.name;
+                                    {listFriend.map((item, index) => {
+                                        const name = item?.sender?.profileName;
 
                                         return name.toLowerCase().includes(isSearchGroup.toLowerCase()) ? (
                                             <ListItem key={index} disablePadding>
@@ -145,9 +99,9 @@ export default function ModalAddUser({}) {
                                                             checked={
                                                                 isListSelect
                                                                     .map((item1) => {
-                                                                        return item1.id;
+                                                                        return item1._id;
                                                                     })
-                                                                    .indexOf(item.id) !== -1
+                                                                    .indexOf(item._id) !== -1
                                                             }
                                                             tabIndex={-1}
                                                             disableRipple
@@ -155,7 +109,7 @@ export default function ModalAddUser({}) {
                                                     </ListItemIcon>
                                                     <ListItemAvatar>
                                                         <Avatar>
-                                                            <img src={item.avata} alt="avata" />
+                                                            <img src={item?.sender?.profileImg} alt="avata" />
                                                         </Avatar>
                                                     </ListItemAvatar>
                                                     <ListItemText size="small" primary={name} />
@@ -186,10 +140,10 @@ export default function ModalAddUser({}) {
                                             >
                                                 <ListItemAvatar>
                                                     <Avatar>
-                                                        <img src={item.avata} alt="avata" />
+                                                        <img src={item?.sender?.profileImg} alt="avata" />
                                                     </Avatar>
                                                 </ListItemAvatar>
-                                                <ListItemText primary={item.name} />
+                                                <ListItemText primary={item?.sender?.profileName} />
                                             </ListItem>
                                         );
                                     })}
@@ -201,7 +155,7 @@ export default function ModalAddUser({}) {
                         <Button size="small" onClick={handleClose}>
                             Hủy
                         </Button>
-                        <Button size="small" onClick={handleClose}>
+                        <Button size="small" onClick={handleClickAddUser}>
                             Đồng ý
                         </Button>
                     </div>
