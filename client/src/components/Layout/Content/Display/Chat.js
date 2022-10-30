@@ -302,6 +302,12 @@ function Chat() {
         handleClose();
     };
 
+    // EVENT REMOVE GROUP
+    const handleClickRemoveGroup = () => {
+        console.log('giải tán nhóm');
+        handleClose();
+    };
+
     //SAVE MSG WHEN RELOAD PAGE
     useEffect(() => {
         if (!isGroupChat) {
@@ -479,6 +485,14 @@ function Chat() {
                                 </div>
                             </div>
                             <div className={cx('modalFooter')}>
+                                {user._id === adminGroup ? (
+                                    <Button color="error" onClick={handleClickRemoveGroup}>
+                                        Giải tán nhóm
+                                    </Button>
+                                ) : (
+                                    <></>
+                                )}
+                                <ModalOutGroup user={user} adminGroup={adminGroup} />
                                 <Button
                                     variant="text"
                                     color="success"
@@ -487,7 +501,6 @@ function Chat() {
                                 >
                                     Xác nhận
                                 </Button>
-                                <ModalOutGroup user={user} adminGroup={adminGroup} />
                             </div>
                         </div>
                     </Modal>

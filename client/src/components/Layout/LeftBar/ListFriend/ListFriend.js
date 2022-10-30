@@ -286,9 +286,7 @@ export default function ListFriend() {
                                                                 <ListItemAvatar>
                                                                     <Avatar>
                                                                         <img
-                                                                            src={
-                                                                                'https://res.cloudinary.com/dpux6zwj3/image/upload/v1665715199/samples/people/kitchen-bar.jpg'
-                                                                            }
+                                                                            src={item?.sender?.profileImg}
                                                                             alt="avata"
                                                                         />
                                                                     </Avatar>
