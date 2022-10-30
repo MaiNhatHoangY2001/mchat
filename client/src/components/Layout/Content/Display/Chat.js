@@ -44,6 +44,7 @@ import ModalRemoveUser from '../Modal/ModalRemoveUser/ModalRemoveUser';
 import ModalAddUser from '../Modal/ModalAddUser/ModalAddUser';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ModalOutGroup from '../Modal/ModalOutGroup/ModalOutGroup';
+import { setSender } from '../../../../redux/userSlice';
 
 const cx = classNames.bind(styles);
 
@@ -293,6 +294,14 @@ function Chat() {
     // EVENT OUT GROUP
     const handleOutGroup = () => {
         console.log('out group');
+        const userOutGroup = {
+            _id: currentUserId,
+            profileName: user.profileName,
+        };
+
+        handleRemoveUser(userOutGroup)();
+        dispatch(setSender(null));
+        dispatch(getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin));
         handleClose();
     };
 
