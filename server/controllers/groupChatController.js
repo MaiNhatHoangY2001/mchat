@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { GroupChat, User } = require('../model');
+const { GroupChat, User, Message } = require('../model');
 
 const groupChatController = {
 	//ADD GROUP CHAT
@@ -31,23 +31,34 @@ const groupChatController = {
 			res.status(500).json(error);
 		}
 	},
+
+	deleteGroupChat: async (req, res) => {
+		try {
+			await User.updateMany({ groupChats: req.params.id }, { $pull: { groupChats: req.params.id } });
+
+			const group = await GroupChat.findById(req.params.id);
+
+			if (group.message.length > 0) {
+				group.message.forEach(async (id) => {
+					await Message.findByIdAndDelete(id);
+				});
+			}
+			await GroupChat.findByIdAndDelete(req.params.id);
+
+			res.status(200).json("delete successfully");
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	},
+
 	removeUserGroupChat: async (req, res) => {
 		try {
 			const group = await GroupChat.findById(req.body.idGroup);
 			await group.updateOne({ $pull: { user: req.body.idUser } });
 
 			const user = User.findById(req.body.idUser);
-			await await user.updateOne({ $pull: { groupChats: req.body.idGroup } });
+			await user.updateOne({ $pull: { groupChats: req.body.idGroup } });
 			res.status(200).json('remove successfully');
-		} catch (error) {
-			res.status(500).json(error);
-		}
-	},
-	deleteGroupChat: async (req, res) => {
-		try {
-			const groupChat = await GroupChat.findById(req.body.idGroup);
-
-			res.status(200).json();
 		} catch (error) {
 			res.status(500).json(error);
 		}

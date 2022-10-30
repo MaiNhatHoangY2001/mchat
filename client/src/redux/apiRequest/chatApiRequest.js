@@ -111,6 +111,18 @@ export const updateGroupChatNewMsg = async (accessToken, apiDataRequest, dispatc
     }
 };
 
+export const deleteGroupChat = async (accessToken, dispatch, idGroupChat, axiosJWT) => {
+    dispatch(updateGroupChatStart());
+    try {
+        await axiosJWT.delete(`${url}/api/groupChat/` + idGroupChat, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateGroupChatSuccess());
+    } catch (error) {
+        dispatch(updateGroupChatFailed());
+    }
+};
+
 export const addUserGroupChat = async (accessToken, dispatch, apiGroupChat, axiosJWT) => {
     dispatch(updateGroupChatStart());
     try {

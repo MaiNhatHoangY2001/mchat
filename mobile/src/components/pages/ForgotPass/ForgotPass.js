@@ -72,6 +72,7 @@ function ForgotPass() {
     const navigate = useNavigate();
     
     const [flagTabNewPW, setFlagTabNewPW] = useState(false);
+    const [getPhoneNumber, setGetPhoneNumber] = useState('');
 
     //create tab react-native
     function VerifiedScreen() {
@@ -83,8 +84,8 @@ function ForgotPass() {
         const phoneInput = useRef(PhoneInput);
         const [flag, setFlag] = useState(false);
         
+        let phoneNumber = number.trim();
         const getOtp = () => {
-            let phoneNumber = number.trim();
             if (phoneNumber === '' || phoneNumber === undefined)
                 Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
             else if (phoneNumber.length !== 12) Alert.alert('Thông báo', 'Vui lòng nhập đủ 9 ký tự sau của số điện thoại!');
@@ -93,7 +94,7 @@ function ForgotPass() {
                     const phoneProvider = new firebase.auth.PhoneAuthProvider();
                     phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current).then(setVerificationId);
                     console.log(number);
-                    setNumber('');
+                    setNumber(phoneNumber);
                     setFlag(true);
                 } catch (err) {
                     console.log(err.message);
@@ -113,6 +114,7 @@ function ForgotPass() {
                     .then(() => {
                         setOtp('');
                         setFlagTabNewPW(true);
+                        setGetPhoneNumber(phoneNumber);
                         Alert.alert('Thông báo', "Xác thực thành công. Vui lòng chuyển tab 'Mật khẩu mới'");
                     })
                     .catch((error) => {
@@ -224,15 +226,15 @@ function ForgotPass() {
             setIsSecureConfirmNewPW(true);
         };
 
-        const [phoneTabNewPW, setPhoneTabNewPW] = useState('');
+        // const [phoneTabNewPW, setPhoneTabNewPW] = useState('');
         const [passwordInputNewPW, setPasswordInputNewPW] = useState('');
         const [passwordInputConfirmNewPW, setPasswordInputConfirmNewPW] = useState('');
-        let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneTabNewPW.trim());
-        function checkPhoneNumber() {
-            if (phoneTabNewPW.trim().length !== 10)
-                Alert.alert('Thông báo', 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
-            else if (!regexPhoneNumberVN) Alert.alert('Thông báo', 'SĐT không hợp lệ!');
-        }
+        // let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneTabNewPW.trim());
+        // function checkPhoneNumber() {
+        //     if (phoneTabNewPW.trim().length !== 10)
+        //         Alert.alert('Thông báo', 'Vui lòng nhập đủ 10 ký tự số điện thoại!');
+        //     else if (!regexPhoneNumberVN) Alert.alert('Thông báo', 'SĐT không hợp lệ!');
+        // }
         function checkNewPW() {
             if (passwordInputNewPW.trim().length < 6) Alert.alert('Thông báo', 'Vui lòng nhập tối thiểu 6 ký tự mật khẩu!');
         }
@@ -243,6 +245,8 @@ function ForgotPass() {
                 Alert.alert('Thông báo', 'Mật khẩu nhập lại không khớp với mật khẩu mới!');
             else {
                 // CHANGE PASSWORD
+                //+84944302210
+                const phoneTabNewPW = '0' +getPhoneNumber.slice(3,12) //lấy chuỗi từ ký tự thứ 3 là 9, đến ký tự thứ 12 là sau số 0 cuối
                 const account = {
                     phoneNumber: phoneTabNewPW.trim(),
                     newPassword: passwordInputNewPW.trim(),
@@ -253,12 +257,12 @@ function ForgotPass() {
             }
         }
         function checkDataInputs() {
-            if (phoneTabNewPW.trim() === '' || passwordInputNewPW.trim() === '' || passwordInputConfirmNewPW.trim() === '')
+            if (passwordInputNewPW.trim() === '' || passwordInputConfirmNewPW.trim() === '')
                 Alert.alert('Thông báo', 'Vui lòng nhập chỗ trống!');
             else {
                 checkConfirmNewPW();
                 checkNewPW();
-                checkPhoneNumber();
+                // checkPhoneNumber();
             }
         }
 
@@ -300,7 +304,7 @@ function ForgotPass() {
                 <View style={{ display: flagTabNewPW ? 'flex' : 'none', width: '80%', padding: '5%' }}>
                     {/* <Formik initialValues={{ email: '' }} onSubmit={(values) => console.log(values)}> */}
                     <ScrollView>
-                        <TextInput
+                        {/* <TextInput
                             placeholder="Số điện thoại"
                             keyboardType="number-pad"
                             autoComplete="tel"
@@ -317,7 +321,7 @@ function ForgotPass() {
                                     elevation: 2, // Android
                                 },
                             ]}
-                        />
+                        /> */}
                         <View style={styles.viewIputsPW}>
                             <TextInput
                                 placeholder="Mật khẩu mới"

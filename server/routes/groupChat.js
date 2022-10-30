@@ -17,6 +17,9 @@ router.post('/removeUser', middlewareController.verifyTokenAndUserAuth, groupCha
 router.put('/:id', middlewareController.verifyTokenAndUserAuth, groupChatController.updateGroup);
 
 //update new msgs
-router.post('/newMsg', groupChatController.updateNewMsg);
+router.post('/newMsg', middlewareController.verifyTokenAndUserAuth, groupChatController.updateNewMsg);
+
+//delete group chat
+router.delete('/:id', middlewareController.verifyTokenAndUserAuth, groupChatController.deleteGroupChat);
 
 module.exports = router;
