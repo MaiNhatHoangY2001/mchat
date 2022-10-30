@@ -27,7 +27,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ChatContext } from '../../../../context/ChatContext';
-import { TYPE_IMG, TYPE_MSG } from '../../../../context/TypeChat';
+import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeChat';
 
 const cx = classNames.bind(styles);
 
@@ -126,7 +126,7 @@ export default function ListFriend() {
                         type_Msg: 0,
                         content: '',
                         imageContent: [],
-                        profileName: '',
+                        profileName: currentUser?.profileName,
                     },
                 };
 
@@ -165,9 +165,9 @@ export default function ListFriend() {
             case TYPE_MSG:
                 return `${profileName}: ${content}`;
             case TYPE_IMG:
-                return content;
-            default:
-                return content;
+                return `${profileName}: Gửi hình ảnh`;
+            case TYPE_NOTIFICATION:
+                return `${profileName}: Gửi tin nhắn thông báo`;
         }
     };
 

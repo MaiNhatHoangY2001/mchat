@@ -102,7 +102,7 @@ export const updateGroupChat = async (accessToken, dispatch, id, apiUpdate, axio
 export const updateGroupChatNewMsg = async (accessToken, apiDataRequest, dispatch, axiosJWT) => {
     dispatch(updateGroupChatStart());
     try {
-        await axiosJWT.put(`${url}/api/groupChat/newMsg`, apiDataRequest, {
+        await axiosJWT.post(`${url}/api/groupChat/newMsg`, apiDataRequest, {
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(updateGroupChatSuccess());
