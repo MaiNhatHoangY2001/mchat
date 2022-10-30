@@ -122,7 +122,12 @@ export default function ListFriend() {
                     chatStatus: '0',
                     user: [currentUser._id],
                     groupAdmin: currentUser._id,
-                    newMsg: {},
+                    newMsg: {
+                        type_Msg: 0,
+                        content: '',
+                        imageContent: [],
+                        profileName: '',
+                    },
                 };
 
                 const newGroupChat = await addGroupChat(accessToken, dispatch, apiNewGroupChat, axiosJWT);
@@ -141,7 +146,7 @@ export default function ListFriend() {
                 getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWT);
                 //send text join group to friend
                 sendText4JoinGroup(listFriend, name, newGroupChat._id);
-
+                dispatch(setIsGroupChat(true));
                 handleClickExit();
             }
         }
