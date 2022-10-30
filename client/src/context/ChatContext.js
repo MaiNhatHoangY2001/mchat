@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import {
     addIndividualChat4NewUser,
     addMessage,
+    getListGroupChat,
     getListIndividualChat,
     updateGroupChatNewMsg,
     updateIndividualChatNewMsg,
@@ -128,7 +129,7 @@ function ChatContextProvider({ children }) {
         getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
     };
 
-    const addMsgWithInfoGroupChat = (typeChat, mess, imageContent) => {
+    const addMsgWithInfoGroupChat = async (typeChat, mess, imageContent) => {
         const msg = {
             type_Msg: typeChat,
             content: mess,
@@ -144,10 +145,11 @@ function ChatContextProvider({ children }) {
             groupChatId: currentSenderId,
         };
 
-        updateGroupChatNewMsg(accessToken, apiNewMsg, dispatch, axiosJWTLogin);
+        await updateGroupChatNewMsg(accessToken, apiNewMsg, dispatch, axiosJWTLogin);
+        getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
     };
 
-    const addMsgWithInfo = (typeChat, mess, imageContent, individualId) => {
+    const addMsgWithInfo = async (typeChat, mess, imageContent, individualId) => {
         const msg = {
             type_Msg: typeChat,
             content: mess,
@@ -163,7 +165,8 @@ function ChatContextProvider({ children }) {
             individualId: individualId,
         };
 
-        updateIndividualChatNewMsg(accessToken, apiNewMsg, dispatch, axiosJWTLogin);
+        await updateIndividualChatNewMsg(accessToken, apiNewMsg, dispatch, axiosJWTLogin);
+        getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
     };
 
     //SOCKET CHAT
@@ -181,12 +184,20 @@ function ChatContextProvider({ children }) {
                     setSendData((prev) => {
                         return [...prev, chatMessage];
                     });
+
+                    window.setTimeout(function () {
+                        getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+                    }, 1000);
                 }
             } else {
                 if (chatMessage.sender === currentSenderId && chatMessage.receiver === currentUserId) {
                     setSendData((prev) => {
                         return [...prev, chatMessage];
                     });
+
+                    window.setTimeout(function () {
+                        getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+                    }, 1000);
                 }
             }
 
