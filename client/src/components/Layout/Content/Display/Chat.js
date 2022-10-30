@@ -312,7 +312,7 @@ function Chat() {
                                 </div>
                             </div>
                             <div className={cx('modalBody')}>
-                                <ModalAddUser />
+                                <ModalAddUser currentGroupChat={currentGroupChat} />
                                 <div className={cx('ListUserGroup')}>
                                     <p>Danh sách thành viên:</p>
                                     <List className={cx('ListUser')}>
@@ -345,7 +345,7 @@ function Chat() {
 
                                                             <ModalRemoveUser
                                                                 content={'Xác nhận mời người này ra khỏi nhóm!'}
-                                                               // onPress={handleRemoveUser(item)}
+                                                                // onPress={handleRemoveUser(item)}
                                                             />
                                                         </ListItemIcon>
                                                     ) : (

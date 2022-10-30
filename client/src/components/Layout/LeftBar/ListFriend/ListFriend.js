@@ -39,7 +39,6 @@ export default function ListFriend() {
     const currentSender = useSelector((state) => state.user.sender?.user);
 
     const chatContext = useContext(ChatContext);
-    const createChat = chatContext.createChat;
     const setListFriend = chatContext.setListFriend;
     const sendText4JoinGroup = chatContext.sendText4JoinGroup;
 

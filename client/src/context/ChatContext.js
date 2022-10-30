@@ -202,7 +202,7 @@ function ChatContextProvider({ children }) {
         individualChatId,
         listFriend,
         setListFriend,
-        sendText4JoinGroup
+        sendText4JoinGroup,
     };
 
     return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>;
