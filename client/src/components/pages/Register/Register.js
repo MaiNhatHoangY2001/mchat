@@ -145,13 +145,10 @@ function Register() {
             try {
                 await confirmObj.confirm(otp);
                 console.log(otp);
-                
                 setActiveTab(2);
-                // setHandleMoveTab(2);
                 setDisableTab1(true);
                 setDisableTab2(false);
-                setchangeTabMess("Đã xác thực, vui lòng chờ trong giây lát!'");
-               // navigate('/register')
+                setchangeTabMess("Đã xác thực, vui lòng chuyển đến Tab 'Đăng ký'!'");
             } catch (err) {
                 console.log(err.message);
             }
@@ -180,10 +177,10 @@ function Register() {
                 fill
                 onSelect ={(key) => handleChangeTab(key)}
                 >
-                <Tab eventKey={1}  className={cx('TabOTP')} disabled={disableTab1} >
+                <Tab eventKey={1} title="Xác thực SDT"  className={cx('TabOTP')} disabled={disableTab1} >
                     <div >
                                     <Form onSubmit={getOtp}  style={{ display: !flag ? 'block' : 'none' }} >
-                                        <Form.Group className="mb-3" controlId="formBasicphonenumber">
+                                        <Form.Group>
                                             <div
                                                     style={{width:300,marginLeft:150, flexDirection: 'row', justifyContent: 'center' }}
                                                 >
@@ -196,22 +193,23 @@ function Register() {
                                                     </div> 
                                             </div>
                                             <h2 className={cx('info')} style={{marginTop:-50 }}>VUI LÒNG NHẬP SỐ ĐIỆN THOẠI</h2> <br />
-                                            <Phone
-                                                country={'vn'}
-                                                // onlyCountries={['vn']}
-                                                // placeholder="Vui lòng chọn vùng và nhập SĐT"
-                                                inputProps={{
-                                                    id: 'phone-input',
-                                                    required: true,
-                                                    autoFocus: true,
-                                                }}
-                                                className={cx('inputSDTOTP')}
-                                                autoFormat="true"
-                                                value={phoneNumber}
-                                                onChange={setPhoneNumber}
-                                                style={{ marginLeft: 25 }}
-                                            />
+                                            <div className={cx('TabOTP')}>
+                                                <Phone
+                                                    country={'vn'}
+                                                    inputProps={{
+                                                        id: 'phone-input',
+                                                        required: true,
+                                                        autoFocus: true,
+                                                    }}
+                                                    // className={cx('inputSDTOTP')}
+                                                    autoFormat="true"
+                                                    value={phoneNumber}
+                                                    onChange={setPhoneNumber}
+                                                    style={{ marginLeft: 25 }}
+                                                />
+                                            </div>
                                             <span className={cx('errorMess')}>{errorMess}</span>
+                                            <div id="recaptcha-container" style={{ marginLeft:160 }}></div><br></br>
                                             <div className={cx('btnsTabOTP')} style={{marginTop:-10}}>
                                                 <button type="submit" className={cx('btnSendOTP')}>
                                                     Gửi mã xác thực
@@ -220,7 +218,6 @@ function Register() {
                                                     Hủy
                                                 </button>
                                             </div>
-                                            <div id="recaptcha-container" style={{ marginLeft: 25 }}></div>
                                             <div className={cx('btnsTabOTP')} >
                                                 <Link className={cx('comback-login')} to="/login"> 
                                                     Quay lại{' '}
@@ -263,7 +260,7 @@ function Register() {
                                     </Form>
                             </div>
                 </Tab>
-                <Tab eventKey={2} disabled={disableTab2}>
+                <Tab eventKey={2} title="Đăng ký" disabled={disableTab2}>
                     <div>
                         <form onSubmit={handleRegister} className={cx('register-form')}>
                         <h2 className={cx('info1')}> THÔNG TIN ĐĂNG KÝ </h2> <br />

@@ -1,4 +1,4 @@
-import { ImageBackground, SafeAreaView, Text, TextInput, View ,Image, TouchableOpacity, Dimensions} from 'react-native';
+import { ImageBackground,Alert, SafeAreaView, Text, TextInput, View ,Image, TouchableOpacity, Dimensions} from 'react-native';
 import styles from './Register.module.scss';
 import { Link } from 'react-router-native';
 import { useRef, useState } from 'react';
@@ -39,17 +39,16 @@ function Register() {
         // const [otp6, setOtp6] = useState("")
 
         const getOtp = () => {
-                let phoneNumber = number.trim();
-                // let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNumber);
+                let phoneNumber = phonenumber.trim();
                 if (phoneNumber === '' || phoneNumber === undefined)
                     Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
                 else if (phoneNumber.length !== 12) Alert.alert('Thông báo', 'Vui lòng nhập đủ 9 ký tự sau của số điện thoại!');
                 else {
-                    console.log(number);
+                    console.log(phonenumber);
                     try {
                         const phoneProvider = new firebase.auth.PhoneAuthProvider();
                         phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current).then(setVerificationId);
-                        setNumber('');
+                        setPhoneNumber('');
                         setFlag(true);
                     } catch (err) {
                         console.log(err.message);
@@ -76,13 +75,6 @@ function Register() {
                             alert('Xác thực không thành công!');
                         });
                     console.log(otp);
-
-                    // //  CHANGE PASSWORD
-                    // const account = {
-                    //     phoneNumber: phoneTabNewPW.trim(),
-                    //     newPassword: passwordInputNewPW.trim(),
-                    // };
-                    // changePassword(account, dispatch, navigate);
                 }
             };
         return (
@@ -135,7 +127,7 @@ function Register() {
                                 </View>
                                 
                                 <View style={{flexDirection:'row', alignContent:'space-around'}}>
-                                    <TouchableOpacity style={styles.btnCon} onPress={() => setFlag(true)}>
+                                    <TouchableOpacity style={styles.btnCon} onPress={getOtp}>
                                         <Text style={styles.txtCon}> Tiếp tục </Text>
                                     </TouchableOpacity>
                                     <Link to="/" style={styles.btnCon}>
@@ -156,57 +148,12 @@ function Register() {
                                         <Text style={styles.tittle}>     Vui lòng nhập mã OTP</Text>
                                         <Text style={[styles.info, {fontWeight:'300',marginBottom:20,opacity:0.6}]}> Hệ thống vừa gửi OTP đến số điện thoại {phonenumber}</Text>
                                         <View style={{flexDirection:'row', alignItems:'space-around'} }>
-                                                {/* <TextInput style={[styles.numberotp,{marginLeft:20}]} maxLength={1}
-                                                    keyboardType='number-pad'
-                                                    // onChange={(otp1) =>{
-                                                    //     setOtp1(otp1)
-                                                    //     if(otp1 != "")
-                                                    //         otp2ref.current.focus()
-                                                    // }}
-                                                ></TextInput>
-                                                <TextInput style={styles.numberotp} maxLength={1}
-                                                    keyboardType='number-pad'
-                                                    // onChange={(otp2) =>{
-                                                    //     setOtp2(otp2)
-                                                    //     if(otp2 != "")
-                                                    //         otp3ref.current.focus()
-                                                    // }}
-                                                ></TextInput>
-                                                <TextInput style={styles.numberotp} maxLength={1}
-                                                    keyboardType='number-pad'
-                                                    // onChange={(otp3) =>{
-                                                    //     setOtp3(otp3)
-                                                    //     if(otp3 != "")
-                                                    //         otp4ref.current.focus()
-                                                    // }}
-                                                ></TextInput>
-                                                <TextInput style={styles.numberotp} maxLength={1}
-                                                    keyboardType='number-pad'
-                                                    // onChange={(otp4) =>{
-                                                    //     setOtp4(otp4)
-                                                    //     if(otp4 != "")
-                                                    //         otp5ref.current.focus()
-                                                    // }}
-                                                ></TextInput>
-                                                <TextInput style={styles.numberotp} maxLength={1}
-                                                    keyboardType='number-pad'
-                                                    // onChange={(otp5) =>{
-                                                    //     setOtp5(otp5)
-                                                    //     if(otp5 != "")
-                                                    //         otp6ref.current.focus()
-                                                    // }}
-                                                ></TextInput>
-                                                <TextInput style={styles.numberotp} maxLength={1}
-                                                    keyboardType='number-pad'
-                                                    // onChange={(otp1) =>{
-                                                    //     setOtp6(otp1)
-                                                    // }}
-                                                ></TextInput> */}
                                                 <TextInput  keyboardType='number-pad' 
                                                     maxLength={6} autoComplete='cc-number'
                                                     // blurOnSubmit='true'
                                                     placeholderTextColor={'#a9a9a9'}
                                                     textContentType='oneTimeCode'
+                                                    onChangeText={setOtp}
                                                     placeholder='Nhập OTP' style={styles.inputSDT}>
                                                 </TextInput>
                                         </View>
@@ -219,7 +166,7 @@ function Register() {
                                                 }>Gửi lại OTP</Text>
                                 </View>
                                 <View style={{flexDirection:'row', marginTop:10, marginBottom:70, alignContent:'space-around'}}>
-                                    <Link to="/" style={styles.btnCon} onPress={() => setFlag(false)}>
+                                    <Link to="/" style={styles.btnCon} onPress={verifyOtp}>
                                         <Text style={styles.txtCon}> Xác nhận </Text>
                                     </Link>
                                     <TouchableOpacity onPress={() => setFlag(false)}  style={styles.btnCon}>
