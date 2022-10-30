@@ -21,19 +21,10 @@ import { ChatContext } from '../../../../../context/ChatContext';
 
 const cx = classNames.bind(styles);
 
-export default function ModalAddUser({ currentGroupChat }) {
+export default function ModalAddUser({ currentGroupChat, closeModal, isModalAddUser }) {
     const chatContext = useContext(ChatContext);
     const listFriend = chatContext.listFriend;
     const sendText4JoinGroup = chatContext.sendText4JoinGroup;
-
-    // Open and Close Modal
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     // Event Search change list user
     const [isSearchGroup, setSearchGroup] = useState('');
@@ -64,7 +55,7 @@ export default function ModalAddUser({ currentGroupChat }) {
             console.log(isListSelect);
             console.log(currentGroupChat);
         }
-        handleClose();
+        closeModal();
         //sendText4JoinGroup()
     };
 
@@ -79,104 +70,98 @@ export default function ModalAddUser({ currentGroupChat }) {
     };
 
     return (
-        <React.Fragment>
-            <Button size="small" variant="contained" startIcon={<GroupAddIcon />} onClick={handleOpen}>
-                Thêm thành viên
-                <input hidden accept="image/*" multiple type="file" />
-            </Button>
-            <Modal hideBackdrop open={open} onClose={handleClose}>
-                <div className={cx('modalDialog')}>
-                    <div className={cx('modalTitle')}>
-                        <p>Thêm thành viên nhóm</p>
-                    </div>
-                    <div className={cx('modalContent')}>
-                        <TextField
-                            label="Tìm kiếm thành viên"
-                            placeholder="Tìm kiếm theo tên hoặc theo số điện thoại"
-                            size="small"
-                            fullWidth
-                            variant="outlined"
-                            onChange={handleChangeSearchGroup()}
-                        />
-                        <div className={cx('ContainListUser')}>
-                            <div className={cx('ListUser')}>
-                                <p>Danh Sách bạn bè</p>
-                                <List className={cx('listItem')}>
-                                    {listAddUser(listFriend, currentGroupChat?.user).map((item, index) => {
-                                        const name = item?.sender?.profileName;
+        <Modal open={isModalAddUser} onClose={closeModal}>
+            <div className={cx('modalDialog')}>
+                <div className={cx('modalTitle')}>
+                    <p>Thêm thành viên nhóm</p>
+                </div>
+                <div className={cx('modalContent')}>
+                    <TextField
+                        label="Tìm kiếm thành viên"
+                        placeholder="Tìm kiếm theo tên hoặc theo số điện thoại"
+                        size="small"
+                        fullWidth
+                        variant="outlined"
+                        onChange={handleChangeSearchGroup()}
+                    />
+                    <div className={cx('ContainListUser')}>
+                        <div className={cx('ListUser')}>
+                            <p>Danh Sách bạn bè</p>
+                            <List className={cx('listItem')}>
+                                {listAddUser(listFriend, currentGroupChat?.user).map((item, index) => {
+                                    const name = item?.sender?.profileName;
 
-                                        return name.toLowerCase().includes(isSearchGroup.toLowerCase()) ? (
-                                            <ListItem key={index} disablePadding>
-                                                <ListItemButton role={undefined} onClick={handleToggle(item)} dense>
-                                                    <ListItemIcon>
-                                                        <Checkbox
-                                                            size="small"
-                                                            edge="start"
-                                                            checked={
-                                                                isListSelect
-                                                                    .map((item1) => {
-                                                                        return item1._id;
-                                                                    })
-                                                                    .indexOf(item._id) !== -1
-                                                            }
-                                                            tabIndex={-1}
-                                                            disableRipple
-                                                        />
-                                                    </ListItemIcon>
-                                                    <ListItemAvatar>
-                                                        <Avatar>
-                                                            <img src={item?.sender?.profileImg} alt="avata" />
-                                                        </Avatar>
-                                                    </ListItemAvatar>
-                                                    <ListItemText size="small" primary={name} />
-                                                </ListItemButton>
-                                            </ListItem>
-                                        ) : (
-                                            <React.Fragment key={index}></React.Fragment>
-                                        );
-                                    })}
-                                </List>
-                            </div>
-                            <div className={cx('ListUserSelect')}>
-                                <p>Danh Sách bạn bè đã chọn</p>
-                                <List className={cx('listItem')}>
-                                    {isListSelect.map((item, index) => {
-                                        return (
-                                            <ListItem
-                                                key={index}
-                                                secondaryAction={
-                                                    <IconButton
-                                                        edge="end"
-                                                        aria-label="comments"
-                                                        onClick={handleToggle(item)}
-                                                    >
-                                                        <HighlightOffOutlinedIcon />
-                                                    </IconButton>
-                                                }
-                                            >
+                                    return name.toLowerCase().includes(isSearchGroup.toLowerCase()) ? (
+                                        <ListItem key={index} disablePadding>
+                                            <ListItemButton role={undefined} onClick={handleToggle(item)} dense>
+                                                <ListItemIcon>
+                                                    <Checkbox
+                                                        size="small"
+                                                        edge="start"
+                                                        checked={
+                                                            isListSelect
+                                                                .map((item1) => {
+                                                                    return item1._id;
+                                                                })
+                                                                .indexOf(item._id) !== -1
+                                                        }
+                                                        tabIndex={-1}
+                                                        disableRipple
+                                                    />
+                                                </ListItemIcon>
                                                 <ListItemAvatar>
                                                     <Avatar>
                                                         <img src={item?.sender?.profileImg} alt="avata" />
                                                     </Avatar>
                                                 </ListItemAvatar>
-                                                <ListItemText primary={item?.sender?.profileName} />
-                                            </ListItem>
-                                        );
-                                    })}
-                                </List>
-                            </div>
+                                                <ListItemText size="small" primary={name} />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    ) : (
+                                        <React.Fragment key={index}></React.Fragment>
+                                    );
+                                })}
+                            </List>
+                        </div>
+                        <div className={cx('ListUserSelect')}>
+                            <p>Danh Sách bạn bè đã chọn</p>
+                            <List className={cx('listItem')}>
+                                {isListSelect.map((item, index) => {
+                                    return (
+                                        <ListItem
+                                            key={index}
+                                            secondaryAction={
+                                                <IconButton
+                                                    edge="end"
+                                                    aria-label="comments"
+                                                    onClick={handleToggle(item)}
+                                                >
+                                                    <HighlightOffOutlinedIcon />
+                                                </IconButton>
+                                            }
+                                        >
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                    <img src={item?.sender?.profileImg} alt="avata" />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText primary={item?.sender?.profileName} />
+                                        </ListItem>
+                                    );
+                                })}
+                            </List>
                         </div>
                     </div>
-                    <div className={cx('modalButton')}>
-                        <Button size="small" onClick={handleClose}>
-                            Hủy
-                        </Button>
-                        <Button size="small" onClick={handleClickAddUser}>
-                            Đồng ý
-                        </Button>
-                    </div>
                 </div>
-            </Modal>
-        </React.Fragment>
+                <div className={cx('modalButton')}>
+                    <Button size="small" onClick={closeModal}>
+                        Hủy
+                    </Button>
+                    <Button size="small" onClick={handleClickAddUser}>
+                        Đồng ý
+                    </Button>
+                </div>
+            </div>
+        </Modal>
     );
 }

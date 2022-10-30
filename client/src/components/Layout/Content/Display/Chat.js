@@ -215,6 +215,19 @@ function Chat() {
         } else return <img alt="not fount" width={'20px'} src={''} />;
     };
 
+    // Modal Add user Open and Close
+    const [isModalAddUser, setModalAddUser] = useState(false);
+    const handleOpenModalAddUser = () => setModalAddUser(true);
+    const handleCloseModalAddUser = () => setModalAddUser(false);
+
+    // MODAL CHANGE IMAGE IN GROUP
+    const [image, setImage] = React.useState(currentGroupChat?.groupImage);
+    const handleChangeImgaeGroup = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImage(URL.createObjectURL(event.target.files[0]));
+        }
+    };
+
     //SAVE MSG WHEN RELOAD PAGE
     useEffect(() => {
         if (!isGroupChat) {
@@ -267,6 +280,22 @@ function Chat() {
                 </div>
 
                 <ul className={cx('ListButton')}>
+                    {isGroupChat ? (
+                        <React.Fragment>
+                            <Tooltip title="Thêm Thành nhóm" placement="left" disableInteractive arrow>
+                                <li className={cx('button')} onClick={handleOpenModalAddUser}>
+                                    <GroupAddIcon sx={{ fontSize: 30 }} />
+                                </li>
+                            </Tooltip>
+                            <ModalAddUser
+                                currentGroupChat={currentGroupChat}
+                                closeModal={handleCloseModalAddUser}
+                                isModalAddUser={isModalAddUser}
+                            />
+                        </React.Fragment>
+                    ) : (
+                        <></>
+                    )}
                     <Tooltip title="Gọi điện" placement="left" disableInteractive arrow>
                         <li className={cx('button')} onClick={() => callPopupFunction()}>
                             <CallIcon sx={{ fontSize: 30 }} />
@@ -294,12 +323,23 @@ function Chat() {
                             </div>
                             <div className={cx('modalHeader')}>
                                 <div className={cx('AvataAndImage')}>
-                                    <img src={currentGroupChat?.groupImage} alt={currentGroupChat?.groupName} />
+                                    <img src={image} alt={currentGroupChat?.groupName} />
                                 </div>
                                 <div className={cx('updateInfo')}>
-                                    <Button size="small" variant="contained" startIcon={<CameraAltIcon />}>
+                                    <Button
+                                        size="small"
+                                        component="label"
+                                        variant="contained"
+                                        startIcon={<CameraAltIcon />}
+                                    >
                                         Cập nhật ảnh đại diện
-                                        <input hidden accept="image/*" multiple type="file" />
+                                        <input
+                                            hidden
+                                            onChange={handleChangeImgaeGroup}
+                                            accept="image/*"
+                                            multiple
+                                            type="file"
+                                        />
                                     </Button>
                                     <TextField
                                         className={cx('updateNameGroup')}
@@ -313,7 +353,6 @@ function Chat() {
                                 </div>
                             </div>
                             <div className={cx('modalBody')}>
-                                <ModalAddUser currentGroupChat={currentGroupChat} />
                                 <div className={cx('ListUserGroup')}>
                                     <p>Danh sách thành viên:</p>
                                     <List className={cx('ListUser')}>
@@ -325,6 +364,7 @@ function Chat() {
                                             const admin = adminGroup === item._id ? false : true;
                                             const showButton = adminGroup === currentUserId ? true : false;
                                             console.log(adminGroup);
+
                                             return (
                                                 <ListItem key={index}>
                                                     <ListItemAvatar>
