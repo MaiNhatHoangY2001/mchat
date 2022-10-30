@@ -37,12 +37,13 @@ import CallIcon from '@mui/icons-material/Call';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import LogoutIcon from '@mui/icons-material/Logout';
+
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ModalKey from '../Modal/ModalKey/ModalKey';
 import ModalRemoveUser from '../Modal/ModalRemoveUser/ModalRemoveUser';
 import ModalAddUser from '../Modal/ModalAddUser/ModalAddUser';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import ModalOutGroup from '../Modal/ModalOutGroup/ModalOutGroup';
 
 const cx = classNames.bind(styles);
 
@@ -289,6 +290,18 @@ function Chat() {
         }
     };
 
+    // EVENT OUT GROUP
+    const handleOutGroup = () => {
+        console.log('out group');
+        handleClose();
+    };
+
+    // EVENT SHOW MODAL OUT GROUP
+    const handleShowModalOutGroup = () => {
+        console.log('show modal');
+        handleClose();
+    };
+
     //SAVE MSG WHEN RELOAD PAGE
     useEffect(() => {
         if (!isGroupChat) {
@@ -474,9 +487,7 @@ function Chat() {
                                 >
                                     Xác nhận
                                 </Button>
-                                <Button variant="text" color="error" startIcon={<LogoutIcon />}>
-                                    Rời nhóm
-                                </Button>
+                                <ModalOutGroup user={user} adminGroup={adminGroup} />
                             </div>
                         </div>
                     </Modal>
