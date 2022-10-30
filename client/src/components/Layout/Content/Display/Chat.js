@@ -7,6 +7,7 @@ import { createAxios } from '../../../../redux/createInstance';
 import { loginSuccess } from '../../../../redux/authSlice';
 import {
     addUserGroupChat,
+    deleteGroupChat,
     getListGroupChat,
     getMsgs,
     getMsgsGroupChat,
@@ -293,7 +294,6 @@ function Chat() {
 
     // EVENT OUT GROUP
     const handleOutGroup = () => {
-        console.log('out group');
         const userOutGroup = {
             _id: currentUserId,
             profileName: user.profileName,
@@ -305,15 +305,11 @@ function Chat() {
         handleClose();
     };
 
-    // EVENT SHOW MODAL OUT GROUP
-    const handleShowModalOutGroup = () => {
-        console.log('show modal');
-        handleClose();
-    };
-
     // EVENT REMOVE GROUP
-    const handleClickRemoveGroup = () => {
-        console.log('giải tán nhóm');
+    const handleClickRemoveGroup = async () => {
+        await deleteGroupChat(accessToken, dispatch, currentGroupChat._id, axiosJWTLogin);
+        dispatch(setSender(null));
+        dispatch(getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin));
         handleClose();
     };
 
@@ -501,7 +497,7 @@ function Chat() {
                                 ) : (
                                     <></>
                                 )}
-                                <ModalOutGroup user={user} adminGroup={adminGroup} />
+                                <ModalOutGroup user={user} adminGroup={adminGroup} handleOutGroup={handleOutGroup} />
                                 <Button
                                     variant="text"
                                     color="success"
