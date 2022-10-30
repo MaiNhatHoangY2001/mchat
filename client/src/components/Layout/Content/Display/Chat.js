@@ -46,6 +46,7 @@ import ModalAddUser from '../Modal/ModalAddUser/ModalAddUser';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ModalOutGroup from '../Modal/ModalOutGroup/ModalOutGroup';
 import { setSender } from '../../../../redux/userSlice';
+import ModalRemoveGroup from '../Modal/ModalRemoveGroup/ModalRemoveGroup';
 
 const cx = classNames.bind(styles);
 
@@ -491,9 +492,7 @@ function Chat() {
                             </div>
                             <div className={cx('modalFooter')}>
                                 {user._id === adminGroup ? (
-                                    <Button color="error" onClick={handleClickRemoveGroup}>
-                                        Giải tán nhóm
-                                    </Button>
+                                    <ModalRemoveGroup handleClickRemoveGroup={handleClickRemoveGroup} />
                                 ) : (
                                     <></>
                                 )}
@@ -551,11 +550,12 @@ function Chat() {
                                                 {typeChat(mess.message?.type_Msg, mess)}
                                             </div>
                                         </Tooltip>
-                                        <div className={cx('boxEdite')}>
+                                        {/* ... */}
+                                        {/* <div className={cx('boxEdite')}>
                                             <div></div>
                                             <div></div>
                                             <div></div>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </React.Fragment>
                             );
@@ -619,7 +619,7 @@ function Chat() {
                     />
                     {showPicker && (
                         <Picker
-                            pickerStyle={{ width: '25%', position: 'absolute', top: 5 }}
+                            pickerStyle={{ width: '25%', position: 'absolute', top: 5, index: 2 }}
                             onEmojiClick={{ emojiPicker }}
                         />
                     )}
