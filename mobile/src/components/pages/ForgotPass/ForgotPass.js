@@ -85,10 +85,12 @@ function ForgotPass() {
         const [flag, setFlag] = useState(false);
         
         let phoneNumber = number.trim();
+        let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNumber);
         const getOtp = () => {
             if (phoneNumber === '' || phoneNumber === undefined)
                 Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
             else if (phoneNumber.length !== 12) Alert.alert('Thông báo', 'Vui lòng nhập đủ 9 ký tự sau của số điện thoại!');
+            else if (!regexPhoneNumberVN) Alert.alert('Thông báo', 'SĐT không hợp lệ!');
             else {
                 try {
                     const phoneProvider = new firebase.auth.PhoneAuthProvider();
@@ -136,13 +138,14 @@ function ForgotPass() {
                     borderTopWidth: 1,
                 }}
             >
-                <Formik initialValues={{ email: '' }} onSubmit={(values) => console.log(values)}>
+                {/* <Formik initialValues={{ email: '' }} onSubmit={(values) => console.log(values)}> */}
                     <View style={{ width: '90%' }}>
                         <View style={{ display: !flag ? 'flex' : 'none' }}>
                             <PhoneInput
                                 ref={phoneInput}
                                 defaultValue={number}
                                 defaultCode="VN"
+                                placeholder='Số điện thoại'
                                 withShadow
                                 onChangeFormattedText={(text) => setNumber(text)}
                                 layout="first"
@@ -201,12 +204,12 @@ function ForgotPass() {
                             <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
                         </View>
                     </View>
-                </Formik>
+                {/* </Formik> */}
             </View>
         );
     }
     function RenewPWScreen() {
-        const [linkToHome, setLinkToHome] = useState('');
+        // const [linkToHome, setLinkToHome] = useState('');
 
         //show-hide-pw
         const [isSecureNewPW, setIsSecureNewPW] = useState(true);
