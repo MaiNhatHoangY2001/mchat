@@ -23,7 +23,8 @@ function Register() {
         const [phonenumber, setPhoneNumber] = useState("")
         const [otp, setOtp] = useState('');
         const [verificationId, setVerificationId] = useState(null);
-        const recaptchaVerifier = useRef(null);        const phoneInput = useRef(PhoneInput);
+        const recaptchaVerifier = useRef(null);        
+        const phoneInput = useRef(PhoneInput);
         // const otp1ref = useRef(null)
         // const otp2ref = useRef(null)
         // const otp3ref = useRef(null)
@@ -134,6 +135,9 @@ function Register() {
                                         <Text style={styles.txtCon}>   Trở về </Text>
                                     </Link>
                                 </View>
+                                <View>
+                            <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
+                        </View>
                             </View>
 
 
