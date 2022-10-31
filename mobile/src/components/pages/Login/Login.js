@@ -1,4 +1,4 @@
-import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Animated, Dimensions } from 'react-native';
+import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Animated, Dimensions, Linking, Alert } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './Login.module.scss';
 import { Link, useNavigate } from 'react-router-native';
@@ -58,6 +58,44 @@ function Login() {
             </Animated.View>
         );
     }
+
+    //link website
+    //link doc: https://reactnative.dev/docs/linking
+    const webURL = 'https://mchat-realtimechat-cnm.netlify.app/login';
+    const OpenURLButton = ({ url, children }) => {
+        const handlePress = useCallback(async () => {
+            // Checking if the link is supported for links with custom URL scheme.
+            const supported = await Linking.canOpenURL(url);
+
+            if (supported) {
+                await Linking.openURL(url);
+            } else {
+                Alert.alert(`Don't know how to open this URL: ${url}`);
+            }
+        }, [url]);
+
+        return (
+            <TouchableOpacity
+                onPress={handlePress}
+                style={{
+                    shadowColor: 'rgba(0,0,0, .4)', // IOS
+                    shadowOffset: { height: 1, width: 1 }, // IOS
+                    shadowOpacity: 2, // IOS
+                    shadowRadius: 1, //IOS
+                    backgroundColor: '#fff',
+                    elevation: 4, // Android
+                    borderRadius: 12,
+                    borderColor: 'rgb(250, 139, 158)',
+                    borderWidth: 2,
+                    borderStyle: 'solid',
+                    padding: '3%',
+                    alignItems: 'center'
+                }}
+            >
+                <Text style={{ color: 'rgb(250, 139, 158)', fontSize: 17, fontWeight: 'bold' }}>{children}</Text>
+            </TouchableOpacity>
+        );
+    };
 
     //show-hide-form
     const [flag, setFlag] = useState(false);
@@ -161,7 +199,8 @@ function Login() {
                                     // style={{ height: 350, resizeMode: 'contain' }}
                                 />
                             </View>
-                            <View>
+                            <View style={{height: '22%', justifyContent: 'space-around'}}>
+                                <OpenURLButton url={webURL}>Mở bằng trình duyệt</OpenURLButton>
                                 <TouchableOpacity
                                     style={{
                                         shadowColor: 'rgba(0,0,0, .4)', // IOS
@@ -170,7 +209,6 @@ function Login() {
                                         shadowRadius: 1, //IOS
                                         backgroundColor: '#fff',
                                         elevation: 4, // Android
-                                        backgroundColor: '#fff',
                                         borderRadius: 12,
                                         borderColor: 'rgb(250, 139, 158)',
                                         borderWidth: 2,
