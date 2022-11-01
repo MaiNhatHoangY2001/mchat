@@ -40,7 +40,7 @@ function Home() {
         <SafeAreaView>
             <Animatable.View animation="bounceInRight">
                 <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={styles.imgBG}>
-                    <View style={{ width: widthScreen, height: heightScreen, alignItems: 'center', }}>
+                    <View style={{ width: widthScreen, height: '100%', alignItems: 'center', }}>
                         <NavigationContainer>
                             <Tab.Navigator
                                 initialRouteName="Trò chuyện"
