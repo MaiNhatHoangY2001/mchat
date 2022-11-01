@@ -74,10 +74,9 @@ function Home() {
                                         height: '8%',
                                         backgroundColor: '#303030',
                                     },
-                                    // tabBarItemStyle: {
-                                    //     margin: 2,
-                                    //     padding: 5,
-                                    // },
+                                    tabBarItemStyle: {
+                                        padding: '3%',
+                                    },
                                     tabBarActiveTintColor: 'rgb(250, 139, 158)',
                                     // tabBarActiveBackgroundColor: 'rgb(250, 139, 158)',
                                     tabBarInactiveTintColor: '#fff',
