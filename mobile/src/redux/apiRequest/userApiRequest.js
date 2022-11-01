@@ -28,7 +28,7 @@ export const changePassword = async (account, dispatch, navigate) => {
             withCredentials: true,
         });
         dispatch(changePassSuccess());
-        //navigate('/');
+        navigate('/');
     } catch (error) {
         dispatch(changePassFailed());
     }
