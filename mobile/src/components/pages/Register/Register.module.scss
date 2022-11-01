@@ -63,9 +63,8 @@
     border-radius: 20px;
     padding: 2px;
     height: 50;
-    width: 150;
-    margin: 30px;
-    margin-top: 10;
+    width: 125;
+    margin-top: 30;
 }
 .btnConUser{
     background-color: 'rgb(250, 139, 158)';
@@ -78,9 +77,10 @@
 }
 .txtCon{
     color: white;
-    font-size: 22;
+    font-size: 20;
+    margin-top: 10;
     align-self: center;
-    margin-top: 8px;
+    justify-content: center;
     font-weight: 600;
 }
 .numberotp{

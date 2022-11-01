@@ -1,6 +1,6 @@
 import { ImageBackground,Alert, SafeAreaView, Text, TextInput, View ,Image, TouchableOpacity, Dimensions} from 'react-native';
 import styles from './Register.module.scss';
-import { Link } from 'react-router-native';
+import { Link, useNavigate } from 'react-router-native';
 import { useRef, useState } from 'react';
 // import { Icon } from 'react-native-vector-icons/icon';
 import PhoneInput from 'react-native-phone-number-input';
@@ -10,23 +10,30 @@ import firebase from 'firebase/compat/app';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useDispatch } from 'react-redux';
 
 
 const widthScreen = Dimensions.get('window').width
 
 function Register() {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const [FlagNewUser, setFlagNewUser] = useState(false)
     function verifyOtp(){
 
         const [Flag, setFlag] = useState(false)
         
-        const [phonenumber, setPhoneNumber] = useState("")
+        const [phonenumber, setPhoneNumber] = useState('')
         const [otp, setOtp] = useState('');
         const [verificationId, setVerificationId] = useState(null);
         const recaptchaVerifier = useRef(null);        
         const phoneInput = useRef(PhoneInput);
+
+        let phoneNumber = phonenumber.trim();
+
         const getOtp = () => {
-                let phoneNumber = phonenumber.trim();
                 if (phoneNumber === '' || phoneNumber === undefined)
                     Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
                 else if (phoneNumber.length !== 12) Alert.alert('Thông báo', 'Vui lòng nhập đủ 9 ký tự sau của số điện thoại!');
@@ -35,7 +42,7 @@ function Register() {
                     try {
                         const phoneProvider = new firebase.auth.PhoneAuthProvider();
                         phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current).then(setVerificationId);
-                        setPhoneNumber('');
+                        setPhoneNumber(phoneNumber);
                         setFlag(true);
                     } catch (err) {
                         console.log(err.message);
@@ -53,7 +60,7 @@ function Register() {
                         .signInWithCredential(credential)
                         .then(() => {
                             setOtp('');
-                            setFlagTabNewPW(true);
+                            setFlagNewUser(true);
                             Alert.alert('Thông báo', "Xác thực thành công. Vui lòng chuyển tab 'Mật khẩu mới'");
                         })
                         .catch((error) => {
@@ -81,7 +88,7 @@ function Register() {
                             <View style={{display: !Flag ? 'flex' : 'none',}}>
                                 <View style={{  backgroundColor:'white',
                                                 width:350,
-                                                height:330,
+                                                height:430,
                                                 margin:30,
                                                 marginTop:90,
                                                 borderRadius:30
@@ -90,17 +97,16 @@ function Register() {
                                     <Text style={styles.tittle}>Nhập số điện thoại của bạn</Text>
                                     <Text style={styles.info}> Vui lòng nhập số điện thoại đăng ký            của bạn</Text>
                                     <View style={{alignContent:'center', alignSelf:'center',marginTop:15}}>
-                                        <PhoneInput  defaultCode='VN' 
+                                        <PhoneInput  
+                                                    defaultCode='VN' 
                                                     ref={phoneInput}
-                                                    maxLength={9} autoComplete='cc-number'
+                                                    maxLength={9}
                                                     defaultValue={phonenumber}
                                                     withShadow
                                                     layout='first'
                                                     autoFocus
-                                                    placeholderTextColor={'#a9a9a9'}
                                                     onChangeFormattedText={(text) => setPhoneNumber(text)}
-                                                    textContentType='telephoneNumber'
-                                            placeholder='Số điện thoại'>
+                                                    placeholder='Số điện thoại'>
                                         </PhoneInput>
                                     </View>
                                     <Text style={[styles.info,{marginTop:18}]}>Bạn đã có tài khoản?</Text>
@@ -112,27 +118,20 @@ function Register() {
                                                 fontSize: 20,}}>Đăng nhập ngay!</Text>
                                     </Link>
 
-                                    <View style={{flexDirection:'row', alignContent:'space-around'}}>
-                                    <TouchableOpacity style={styles.btnCon} onPress={getOtp}>
-                                        <Text style={styles.txtCon}> Tiếp tục </Text>
-                                    </TouchableOpacity>
-                                    <Link to="/" style={styles.btnCon}>
-                                        <Text style={styles.txtCon}>Trở về </Text>
-                                    </Link>
-                                    </View>
-                                    <View>
-                                        <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
+                                    <View style={{flexDirection:'row',justifyContent:'space-around', alignContent:'space-between'}}>
+                                        <TouchableOpacity style={styles.btnCon} onPress={getOtp}>
+                                            <Text style={styles.txtCon}> Tiếp tục </Text>
+                                        </TouchableOpacity>
+                                        <Link to="/" style={styles.btnCon}>
+                                            <Text style={styles.txtCon}>Trở về </Text>  
+                                        </Link>
                                     </View>
                                 </View>
-                                
-                                
                         </View>
-
-
-                            <View style={{display: !Flag ? 'none' : 'flex'}}>
+                        <View style={{display: !Flag ? 'none' : 'flex'}}>
                                 <View style={{  backgroundColor:'white',
                                                     width:350,
-                                                    height:300,
+                                                    height:420,
                                                     margin:30,
                                                     marginTop:90,
                                                     borderRadius:30
@@ -141,10 +140,7 @@ function Register() {
                                         <Text style={[styles.info, {fontWeight:'300',marginBottom:20,opacity:0.6}]}> Hệ thống vừa gửi OTP đến số điện thoại {phonenumber}</Text>
                                         <View style={{flexDirection:'row', alignItems:'space-around'} }>
                                                 <TextInput  keyboardType='number-pad' 
-                                                    maxLength={6} autoComplete='cc-number'
-                                                    // blurOnSubmit='true'
-                                                    placeholderTextColor={'#a9a9a9'}
-                                                    textContentType='oneTimeCode'
+                                                    maxLength={6} autoComplete='tel'
                                                     onChangeText={setOtp}
                                                     placeholder='Nhập OTP' style={styles.inputSDT}>
                                                 </TextInput>
@@ -156,15 +152,18 @@ function Register() {
                                                 textAlign:'center',
                                                 fontSize: 20,}
                                                 }>Gửi lại OTP</Text>
+                                        <View style={{flexDirection:'row',justifyContent:'space-around', alignContent:'space-around'}}>
+                                            <TouchableOpacity style={styles.btnCon} onPress={verifyyOtp}>
+                                                <Text style={styles.txtCon}>Xác nhận</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => setFlag(false)}  style={styles.btnCon}>
+                                                <Text style={styles.txtCon}>Trở về</Text>
+                                            </TouchableOpacity>
+                                        </View>                
                                 </View>
-                                <View style={{flexDirection:'row', marginTop:10, marginBottom:70, alignContent:'space-around'}}>
-                                    <Link to="/" style={styles.btnCon} onPress={verifyOtp}>
-                                        <Text style={styles.txtCon}> Xác nhận </Text>
-                                    </Link>
-                                    <TouchableOpacity onPress={() => setFlag(false)}  style={styles.btnCon}>
-                                        <Text style={styles.txtCon}>   Trở về </Text>
-                                    </TouchableOpacity>
-                                </View>
+                            </View>
+                            <View>
+                                <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig}/>
                             </View>
                         </View>
                     </ImageBackground>
