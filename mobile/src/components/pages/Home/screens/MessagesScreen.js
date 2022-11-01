@@ -27,9 +27,29 @@ const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
 
 export default function MessagesScreen() {
+    const [flagSearch, setFlagSearch] = useState(false);
+
     return (
         <SafeAreaView style={styles.container}>
-            <Text>messages screen</Text>
+            <View style={{ display: !flagSearch ? 'flex' : 'none' }}>
+                <View style={styles.headingChatTab}>
+                    <Text style={{ fontSize: 24, marginLeft: '5%' }}>Messages</Text>
+                    <TouchableOpacity style={{ marginLeft: widthScreen - 200 }} onPress={() => setFlagSearch(true)}>
+                        <Icon name="search-circle" size={50} color="rgb(250, 139, 158)" />
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <Text>Flatlist chats</Text>
+                </View>
+            </View>
+            <View style={{ display: flagSearch ? 'flex' : 'none' }}>
+                <View style={styles.headingChatTab}>
+                    <TouchableOpacity style={{}} onPress={() => setFlagSearch(false)}>
+                        <Icon name="md-arrow-back-circle" size={50} color="rgb(250, 139, 158)" />
+                    </TouchableOpacity>
+                    <TextInput placeholder="Tìm kiếm" autoFocus style={styles.searchChat} />
+                </View>
+            </View>
         </SafeAreaView>
     );
 }
@@ -37,6 +57,26 @@ export default function MessagesScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'lightgray',
+        backgroundColor: '#fff',
+    },
+    headingChatTab: {
+        flexDirection: 'row',
+        borderBottomColor: 'rgb(250, 139, 158)',
+        borderBottomWidth: 1,
+        borderStyle: 'solid',
+        alignItems: 'center',
+        padding: '1%',
+        paddingTop: '3%',
+        // width: widthScreen,
+    },
+    searchChat: {
+        backgroundColor: '#EEEEEE',
+        width: '80%',
+        height: '80%',
+        marginLeft: '4%',
+        padding: 10,
+        paddingLeft: 20,
+        borderRadius: 15,
+        fontSize: 18
     },
 });
