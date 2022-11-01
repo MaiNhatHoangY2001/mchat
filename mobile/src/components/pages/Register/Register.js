@@ -25,20 +25,6 @@ function Register() {
         const [verificationId, setVerificationId] = useState(null);
         const recaptchaVerifier = useRef(null);        
         const phoneInput = useRef(PhoneInput);
-        // const otp1ref = useRef(null)
-        // const otp2ref = useRef(null)
-        // const otp3ref = useRef(null)
-        // const otp4ref = useRef(null)
-        // const otp5ref = useRef(null)
-        // const otp6ref = useRef(null)
-
-        // const [otp1, setOtp1] = useState("")
-        // const [otp2, setOtp2] = useState("")
-        // const [otp3, setOtp3] = useState("")
-        // const [otp4, setOtp4] = useState("")
-        // const [otp5, setOtp5] = useState("")
-        // const [otp6, setOtp6] = useState("")
-
         const getOtp = () => {
                 let phoneNumber = phonenumber.trim();
                 if (phoneNumber === '' || phoneNumber === undefined)
@@ -57,8 +43,7 @@ function Register() {
                     }
                 }
             };
-
-            const verifyOtp = () => {
+        const verifyyOtp = () => {
                 if (otp === '' || otp === undefined) Alert.alert('Thông báo', 'Vui lòng nhập mã xác thực!');
                 else if (otp.length !== 6) Alert.alert('Thông báo', 'Vui lòng nhập 6 ký tự!');
                 else {
@@ -78,6 +63,7 @@ function Register() {
                     console.log(otp);
                 }
             };
+
         return (
             <SafeAreaView style={{margin:0, padding:0}}>
                 <View style={styles.registercontainer}>
@@ -125,20 +111,22 @@ function Register() {
                                                 margin:10,
                                                 fontSize: 20,}}>Đăng nhập ngay!</Text>
                                     </Link>
-                                </View>
-                                
-                                <View style={{flexDirection:'row', alignContent:'space-around'}}>
+
+                                    <View style={{flexDirection:'row', alignContent:'space-around'}}>
                                     <TouchableOpacity style={styles.btnCon} onPress={getOtp}>
                                         <Text style={styles.txtCon}> Tiếp tục </Text>
                                     </TouchableOpacity>
                                     <Link to="/" style={styles.btnCon}>
-                                        <Text style={styles.txtCon}>   Trở về </Text>
+                                        <Text style={styles.txtCon}>Trở về </Text>
                                     </Link>
+                                    </View>
+                                    <View>
+                                        <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
+                                    </View>
                                 </View>
-                                <View>
-                            <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
+                                
+                                
                         </View>
-                            </View>
 
 
                             <View style={{display: !Flag ? 'none' : 'flex'}}>
@@ -267,6 +255,7 @@ function Register() {
             </SafeAreaView>
         )
     }
+    
     return(
         // <SafeAreaView style={{margin:0, padding:0}}>
         //         <View style={styles.registercontainer}>
