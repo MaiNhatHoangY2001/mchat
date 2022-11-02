@@ -34,7 +34,7 @@ export default function MessagesScreen() {
             <View style={{ display: !flagSearch ? 'flex' : 'none' }}>
                 <View style={styles.headingChatTab}>
                     <Text style={{ fontSize: 24, marginLeft: '5%' }}>Messages</Text>
-                    <TouchableOpacity style={{ marginLeft: widthScreen - 200 }} onPress={() => setFlagSearch(true)}>
+                    <TouchableOpacity style={{ marginLeft: widthScreen - 210 }} onPress={() => setFlagSearch(true)}>
                         <Icon name="search-circle" size={50} color="rgb(250, 139, 158)" />
                     </TouchableOpacity>
                 </View>
@@ -47,7 +47,7 @@ export default function MessagesScreen() {
                     <TouchableOpacity style={{}} onPress={() => setFlagSearch(false)}>
                         <Icon name="md-arrow-back-circle" size={50} color="rgb(250, 139, 158)" />
                     </TouchableOpacity>
-                    <TextInput placeholder="Tìm kiếm" autoFocus style={styles.searchChat} />
+                    <TextInput placeholder="Tìm kiếm" autoFocus style={styles.txtSearch} />
                 </View>
             </View>
         </SafeAreaView>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         paddingTop: '3%',
         // width: widthScreen,
     },
-    searchChat: {
+    txtSearch: {
         backgroundColor: '#EEEEEE',
         width: '80%',
         height: '80%',
