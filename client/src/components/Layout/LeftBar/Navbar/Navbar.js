@@ -34,7 +34,7 @@ export default function Navbar({ setContainer }) {
                     <div className={cx('contain-avata')}>
                         <img
                             className={cx('image-avata')}
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                            src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png`}
                             alt={'avata'}
                         />
                     </div>

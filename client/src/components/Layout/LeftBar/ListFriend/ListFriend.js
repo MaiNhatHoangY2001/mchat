@@ -168,6 +168,8 @@ export default function ListFriend() {
                 return `${profileName}: Gửi hình ảnh`;
             case TYPE_NOTIFICATION:
                 return `${profileName}: Gửi tin nhắn thông báo`;
+            default:
+                return `${profileName}: ${content}`;
         }
     };
 

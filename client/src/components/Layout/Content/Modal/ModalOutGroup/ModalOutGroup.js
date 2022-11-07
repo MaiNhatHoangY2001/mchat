@@ -1,4 +1,4 @@
-import { Button, IconButton, Modal } from '@mui/material';
+import { Button, Modal } from '@mui/material';
 import classNames from 'classnames/bind';
 import React, { useState } from 'react';
 import LogoutIcon from '@mui/icons-material/Logout';
