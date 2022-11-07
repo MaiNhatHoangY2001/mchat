@@ -34,7 +34,7 @@ export default function Navbar({ setContainer }) {
                     <div className={cx('contain-avata')}>
                         <img
                             className={cx('image-avata')}
-                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                            src={user?.profileImg}
                             alt={'avata'}
                         />
                     </div>

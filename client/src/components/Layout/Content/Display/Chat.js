@@ -461,10 +461,7 @@ function Chat() {
                                                 <ListItem key={index}>
                                                     <ListItemAvatar>
                                                         <Avatar>
-                                                            <img
-                                                                src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
-                                                                alt={item.profileName}
-                                                            />
+                                                            <img src={item.profileImg} alt={item.profileName} />
                                                         </Avatar>
                                                     </ListItemAvatar>
                                                     <ListItemText primary={name} />
@@ -534,7 +531,7 @@ function Chat() {
                                     <div className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}>
                                         <img
                                             className={cx('imgChat')}
-                                            src={`https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`}
+                                            src={isGroupChat ? mess.message.userGroupChat?.profileImg : currentSender?.profileImg}
                                             alt="avata"
                                         />
                                         <Tooltip
