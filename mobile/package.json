@@ -52,5 +52,8 @@
     "@types/react-native": "^0.70.6",
     "@types/react-native-vector-icons": "^6.4.12"
   },
+  "overrides": {
+    "react-devtools-core": "~4.25.0"
+  },
   "private": true
 }
