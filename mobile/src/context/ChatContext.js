@@ -187,7 +187,6 @@ function ChatContextProvider({ children }) {
                 }
 
                 if (chatMessage.sender !== currentSenderId) {
-                    console.log('run');
                     window.setTimeout(function () {
                         getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
                     }, 1000);
@@ -198,9 +197,13 @@ function ChatContextProvider({ children }) {
                         return [...prev, chatMessage];
                     });
                 }
+                if (chatMessage.sender === currentUserId) {
+                    window.setTimeout(function () {
+                        getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+                    }, 1000);
+                }
 
                 if (chatMessage.receiver === currentUserId) {
-                    console.log("run");
                     window.setTimeout(function () {
                         getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
                     }, 1000);
