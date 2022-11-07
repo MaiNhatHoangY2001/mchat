@@ -16,7 +16,7 @@ import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 
 import { createAxios } from '../../../redux/createInstance';
-import { logoutSuccess } from '../../../redux/authSlice';
+import { loginSuccess, logoutSuccess } from '../../../redux/authSlice';
 import { logOut } from '../../../redux/apiRequest/authApiRequest';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -27,6 +27,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import MessageHome from './screens/Message/MessageHome.js';
 import CallsScreen from './screens/CallsScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import { getListGroupChat, getListIndividualChat } from '../../../redux/apiRequest/chatApiRequest';
 
 const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
@@ -36,6 +37,28 @@ const heightScreen = Dimensions.get('window').height;
 const Tab = createMaterialTopTabNavigator();
 
 function Home() {
+    const user = useSelector((state) => state.auth.login?.currentUser);
+    const navigate = useNavigate();
+
+    const dispatch = useDispatch();
+
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
+    let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
+
+    const accessToken = currentUser?.accessToken;
+    const id = currentUser?._id;
+
+    useEffect(() => {
+        getListIndividualChat(accessToken, id, dispatch, axiosJWT);
+        getListGroupChat(accessToken, id, dispatch, axiosJWT);
+    }, []);
+
+    useEffect(() => {
+        if (!user) {
+            navigate('/login');
+        }
+    }, [user]);
+
     return (
         <SafeAreaView>
             <Animatable.View animation="bounceInRight">
