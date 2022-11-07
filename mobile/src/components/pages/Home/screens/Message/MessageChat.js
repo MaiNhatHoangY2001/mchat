@@ -1,16 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Item({ item }) {
+export default function MessageChat() {
     return (
         <View style={styles.container}>
-            <Text> {item.name} </Text>
+            <Text>Chat</Text>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10,
-        margin: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

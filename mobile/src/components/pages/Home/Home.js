@@ -24,9 +24,9 @@ import { NavigationContainer } from '@react-navigation/native';
 //link doc top tabs: https://reactnavigation.org/docs/material-top-tab-navigator/
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import MessagesScreen from './screens/MessagesScreen';
+import MessageHome from './screens/Message/MessageHome.js';
 import CallsScreen from './screens/CallsScreen';
-import ProfileScreen from './screens/ProfileScreen'
+import ProfileScreen from './screens/ProfileScreen';
 
 const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
@@ -40,29 +40,37 @@ function Home() {
         <SafeAreaView>
             <Animatable.View animation="bounceInRight">
                 <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={styles.imgBG}>
-                    <View style={{ width: widthScreen, height: '100%', alignItems: 'center', }}>
+                    <View style={{ width: widthScreen, height: '100%', alignItems: 'center' }}>
                         <NavigationContainer>
                             <Tab.Navigator
                                 initialRouteName="Trò chuyện"
-                                tabBarPosition= 'bottom'
+                                tabBarPosition="bottom"
                                 screenOptions={({ route }) => ({
                                     tabBarIcon: ({ focused, color, size }) => {
                                         let iconNameAntDesign, iconNameIcon, iconNameFA;
-                                        if (route.name === 'Trò chuyện') {
+                                        if (route.name === 'homeMessage') {
                                             iconNameAntDesign = 'message1';
                                             size = focused ? 25 : 22;
                                             color = focused ? 'rgb(250, 139, 158)' : '#fff';
-                                        } else if (route.name === 'Cuộc gọi') {
+                                        } else if (route.name === 'call') {
                                             iconNameIcon = 'md-call-sharp';
                                             size = focused ? 25 : 22;
                                             color = focused ? 'rgb(250, 139, 158)' : '#fff';
-                                        } else if (route.name === 'Hồ sơ') {
+                                        } else if (route.name === 'profile') {
                                             iconNameFA = 'user-circle-o';
                                             size = focused ? 25 : 22;
                                             color = focused ? 'rgb(250, 139, 158)' : '#fff';
                                         }
                                         return (
-                                            <View style={{ flexDirection: 'row', height: '110%', width: '130%', justifyContent: 'center', marginLeft: '-12%' }}>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    height: '110%',
+                                                    width: '130%',
+                                                    justifyContent: 'center',
+                                                    marginLeft: '-12%',
+                                                }}
+                                            >
                                                 <IconAntDesign name={iconNameAntDesign} size={size} color={color} />
                                                 <Icon name={iconNameIcon} size={size} color={color} />
                                                 <IconFontAwesome name={iconNameFA} size={size} color={color} />
@@ -86,9 +94,15 @@ function Home() {
                                     // tabBarVisibilityAnimationConfig
                                 })}
                             >
-                                <Tab.Screen name="Trò chuyện" component={MessagesScreen} />
-                                <Tab.Screen name="Cuộc gọi" component={CallsScreen} />
-                                <Tab.Screen name="Hồ sơ" component={ProfileScreen} />
+                                <Tab.Screen
+                                    name="homeMessage"
+                                    options={{
+                                        title: 'Cuộc trò chuyện',
+                                    }}
+                                    component={MessageHome}
+                                />
+                                <Tab.Screen name="call" options={{ title: 'Cuộc gọi' }} component={CallsScreen} />
+                                <Tab.Screen name="profile" options={{ title: 'Thông tin' }} component={ProfileScreen} />
                             </Tab.Navigator>
                         </NavigationContainer>
                     </View>
