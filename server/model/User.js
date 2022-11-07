@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
 	},
 	profileImg: {
 		type: String,
-		default: `https://demoaccesss3week2.s3.ap-southeast-1.amazonaws.com/avata01.png`,
+		default: `https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png`,
 	},
 	individualChats: [
 		{
