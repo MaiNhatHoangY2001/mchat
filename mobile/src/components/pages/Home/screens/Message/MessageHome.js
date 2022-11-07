@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, TextInput, Image } from 'react-native';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import MessagesScreen from '../MessagesScreen';
 import MessageChat from './MessageChat';

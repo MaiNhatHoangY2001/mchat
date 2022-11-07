@@ -13,7 +13,6 @@ import { ChatContext } from '../../../../context/ChatContext';
 import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeChat';
 import { useContext, useEffect, useState } from 'react';
 
-
 export default function MessagesScreen({ navigation }) {
     // Create Hook Item in FlatList
     const [selectedId, setSelectedId] = useState(null);
@@ -164,14 +163,14 @@ export default function MessagesScreen({ navigation }) {
 
     // Get Item
     const renderItem = ({ item }) => {
-        const backgroundColor = item.id === selectedId ? '#f9c2ff' : '#ffffff';
+        const backgroundColor = item._id === selectedId ? '#f9c2ff' : '#ffffff';
 
         return (
             <Item
                 item={item}
                 onPress={() => {
-                    setSelectedId(item.id);
-                    navigation.navigate('Chat');
+                    setSelectedId(item._id);
+                    navigation.navigate('Chat', { item: item });
                 }}
                 backgroundColor={{ backgroundColor }}
             />
