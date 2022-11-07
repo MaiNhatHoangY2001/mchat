@@ -1,25 +1,55 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../../../context/TypeChat';
 
 export default function Item({ item, onPress, backgroundColor }) {
     const imgage = item.img;
+
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
+    const currentSender = useSelector((state) => state.user.sender?.user);
+
+    const isActorSenderActive = currentSender?._id === (item?.sender?._id || item?._id);
+    const isGroupChat = item?.sender?._id === undefined;
+    const actorGroupChat = {
+        _id: item?._id,
+        profileName: item?.groupName,
+        profileImg: item?.groupImage,
+    };
+
+    const newMessage = (mess) => {
+        const typeMess = mess?.type_Msg;
+        const content = mess?.content;
+        const profileName = currentUser.profileName === mess?.profileName ? 'Bạn' : mess?.profileName;
+        switch (typeMess) {
+            case TYPE_MSG:
+                return `${profileName}: ${content}`;
+            case TYPE_IMG:
+                return `${profileName}: Gửi hình ảnh`;
+            case TYPE_NOTIFICATION:
+                return `${profileName}: Gửi tin nhắn thông báo`;
+            default:
+                return `${profileName}: ${content}`;
+        }
+    };
+
     return (
         <TouchableOpacity style={[styles.container, backgroundColor]} onPress={onPress}>
             <View style={styles.avata}>
                 <Image
                     style={styles.image}
                     source={{
-                        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
+                        uri: item?.sender?.profileImg || item?.groupImage,
                     }}
                 />
             </View>
             <View style={styles.content}>
                 <View style={styles.contentText}>
-                    <Text style={[styles.name]}>{item.name}</Text>
-                    <Text style={[styles.chat]}>Tin nhắn mới nhất</Text>
+                    <Text style={[styles.name]}>{item?.sender?.profileName || item?.groupName}</Text>
+                    <Text style={[styles.chat]}>{newMessage(item?.newMsg)}</Text>
                 </View>
                 <View style={styles.contentSub}>
-                    <Text style={styles.time}>9:30</Text>
-                    <View style={styles.active}></View>
+                    {/* <Text style={styles.time}>{item?.status}</Text> */}
+                    <View style={[styles.dot, item?.status === 'Active' ? styles.active : styles.disable]}></View>
                 </View>
             </View>
         </TouchableOpacity>
@@ -75,12 +105,15 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         color: '#9E9F9F',
     },
-    active: {
-        backgroundColor: '#34C759',
-
+    dot: {
         width: 10,
         height: 10,
-
         borderRadius: 100,
+    },
+    active: {
+        backgroundColor: '#00ff66',
+    },
+    disable: {
+        backgroundColor: '#c4c4c4',
     },
 });
