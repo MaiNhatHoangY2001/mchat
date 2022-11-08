@@ -28,8 +28,9 @@ export default function Navbar({ setContainer }) {
     let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
 
     const handleLogout = () => {
-        logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
         removeUserActive2Socket(user?.phoneNumber);
+        localStorage.removeItem('phones');
+        logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
     };
 
     return (

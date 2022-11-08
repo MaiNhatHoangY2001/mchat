@@ -21,10 +21,21 @@ function UserContextProvider({ children }) {
 
         if (phones !== null) {
             setUsersActive(phones);
+        } else {
+            setEmitUserPhone();
         }
     }, []);
 
     useEffect(() => {
+        setEmitUserPhone();
+        vis(function () {
+            //document.title = vis() ? 'Visible' : 'Not visible';
+            if (vis()) addUserActive2Socket(user?.phoneNumber);
+            else removeUserActive2Socket(user?.phoneNumber);
+        });
+    }, []);
+
+    const setEmitUserPhone = () => {
         const handler = (users) => {
             setUsersActive(users);
             saveToLocalStorage(users, 'phones');
@@ -32,7 +43,7 @@ function UserContextProvider({ children }) {
         if (user?.accessToken) {
             socket.current.on('user-active', handler);
         }
-    }, [usersActive]);
+    };
 
     const addUserActive2Socket = (phoneNumber) => {
         setUsersActive((prev) => {
@@ -53,9 +64,9 @@ function UserContextProvider({ children }) {
     };
 
     const removeUserActive2Socket = (phoneNumber) => {
-        setUsersActive((prev) => {
-            const usersNumber = prev.filter((item) => item !== phoneNumber);
-
+        setUsersActive(() => {
+            const phones = getFromLocalStorage('phones');
+            const usersNumber = phones.filter((item) => item !== phoneNumber);
             socket.current.emit('user', usersNumber);
 
             saveToLocalStorage(usersNumber, 'phones');
@@ -93,6 +104,28 @@ function UserContextProvider({ children }) {
             return phone === phoneActor1;
         });
     };
+
+    // Detect if browser tab is active or user has switched away
+    const vis = (function () {
+        var stateKey,
+            eventKey,
+            keys = {
+                hidden: 'visibilitychange',
+                webkitHidden: 'webkitvisibilitychange',
+                mozHidden: 'mozvisibilitychange',
+                msHidden: 'msvisibilitychange',
+            };
+        for (stateKey in keys) {
+            if (stateKey in document) {
+                eventKey = keys[stateKey];
+                break;
+            }
+        }
+        return function (c) {
+            if (c) document.addEventListener(eventKey, c);
+            return !document[stateKey];
+        };
+    })();
 
     const contextValue = { addUserActive2Socket, removeUserActive2Socket, usersActive, setActiveUser };
 
