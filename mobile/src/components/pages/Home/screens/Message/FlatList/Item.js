@@ -1,12 +1,19 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useContext, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../../../context/TypeChat';
+import { UserContext } from '../../../../../../context/UserContext';
 
 export default function Item({ item, onPress, backgroundColor }) {
-    const imgage = item.img;
-
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
     const currentSender = useSelector((state) => state.user.sender?.user);
+
+    const [status, setStatus] = useState(false);
+
+    const userContext = useContext(UserContext);
+    const setActiveUser = userContext.setActiveUser;
+
+    const imgage = item.img;
 
     const isActorSenderActive = currentSender?._id === (item?.sender?._id || item?._id);
     const isGroupChat = item?.sender?._id === undefined;
@@ -19,7 +26,7 @@ export default function Item({ item, onPress, backgroundColor }) {
     const newMessage = (mess) => {
         const typeMess = mess?.type_Msg;
         const content = mess?.content;
-        const profileName = currentUser.profileName === mess?.profileName ? 'Bạn' : mess?.profileName;
+        const profileName = currentUser?.profileName === mess?.profileName ? 'Bạn' : mess?.profileName;
         switch (typeMess) {
             case TYPE_MSG:
                 return `${profileName}: ${content}`;
@@ -31,6 +38,12 @@ export default function Item({ item, onPress, backgroundColor }) {
                 return `${profileName}: ${content}`;
         }
     };
+
+    useEffect(() => {
+        setActiveUser(item, isGroupChat).then((value) => {
+            setStatus(value);
+        });
+    }, [setActiveUser]);
 
     return (
         <TouchableOpacity style={[styles.container, backgroundColor]} onPress={onPress}>
@@ -49,7 +62,7 @@ export default function Item({ item, onPress, backgroundColor }) {
                 </View>
                 <View style={styles.contentSub}>
                     {/* <Text style={styles.time}>{item?.status}</Text> */}
-                    <View style={[styles.dot, item?.status === 'Active' ? styles.active : styles.disable]}></View>
+                    <View style={[styles.dot, status ? styles.active : styles.disable]}></View>
                 </View>
             </View>
         </TouchableOpacity>

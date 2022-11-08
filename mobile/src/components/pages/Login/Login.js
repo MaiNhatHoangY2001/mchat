@@ -1,5 +1,5 @@
 import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Animated, Dimensions, Linking, Alert } from 'react-native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState, useContext } from 'react';
 import styles from './Login.module.scss';
 import { Link, useNavigate } from 'react-router-native';
 import { loginUser } from '../../../redux/apiRequest/authApiRequest';
@@ -13,6 +13,7 @@ import * as Animatable from 'react-native-animatable';
 
 //link all icons react-native: https://oblador.github.io/react-native-vector-icons/
 import Icon from 'react-native-vector-icons/Ionicons';
+import { UserContext } from '../../../context/UserContext';
 
 const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
@@ -118,6 +119,9 @@ function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const userContext = useContext(UserContext);
+    const addUserActive2Socket = userContext.addUserActive2Socket;
+
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     // const [linkToHome, setLinkToHome] = useState('');
@@ -127,8 +131,8 @@ function Login() {
             phoneNumber: phoneNumber,
             password: password,
         };
-        console.log(newUser);
         loginUser(newUser, dispatch, navigate, setIsLoading);
+        addUserActive2Socket(phoneNumber);
     };
 
     //check regex sdt

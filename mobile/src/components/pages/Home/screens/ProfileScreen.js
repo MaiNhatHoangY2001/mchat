@@ -1,5 +1,5 @@
 import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Dimensions, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-native';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -22,6 +22,7 @@ import { NavigationContainer } from '@react-navigation/native';
 // import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //link doc top tabs: https://reactnavigation.org/docs/material-top-tab-navigator/
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { UserContext } from '../../../../context/UserContext';
 
 const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
@@ -31,12 +32,16 @@ export default function ProfileScreen() {
     const userId = user?._id;
     const accessToken = user?.accessToken;
 
+    const userContext = useContext(UserContext);
+    const removeUserActive2Socket = userContext.removeUserActive2Socket;
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
 
     const handleLogout = () => {
         logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
+        removeUserActive2Socket(user?.phoneNumber);
     };
 
     useEffect(() => {
@@ -44,7 +49,7 @@ export default function ProfileScreen() {
             navigate('/login');
         }
     }, [user]);
-    
+
     return (
         <SafeAreaView style={styles.container}>
             <Text>profile screen</Text>
