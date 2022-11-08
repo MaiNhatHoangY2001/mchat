@@ -56,10 +56,18 @@
                     text-overflow: ellipsis;
                 }
 
-                .active {
+                .status {
                     font-weight: 400;
                     font-size: 12px;
+                }
+
+                .active:after {
                     color: #00d254;
+                    content: 'Đang hoạt động';
+                }
+                .disable:after {
+                    color: #c4c4c4;
+                    content: 'Không hoạt động';
                 }
             }
         }

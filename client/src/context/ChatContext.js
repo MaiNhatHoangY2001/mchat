@@ -187,7 +187,6 @@ function ChatContextProvider({ children }) {
                 }
 
                 if (chatMessage.sender !== currentSenderId) {
-                    console.log('run');
                     window.setTimeout(function () {
                         getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
                     }, 1000);
@@ -200,7 +199,6 @@ function ChatContextProvider({ children }) {
                 }
 
                 if (chatMessage.receiver === currentUserId) {
-                    console.log("run");
                     window.setTimeout(function () {
                         getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
                     }, 1000);

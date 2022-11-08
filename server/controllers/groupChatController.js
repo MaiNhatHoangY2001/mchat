@@ -96,7 +96,7 @@ const groupChatController = {
 
 			const listGroupChat = await GroupChat.find({ user: idUser })
 				.populate('message', 'time')
-				.populate('user', 'profileName')
+				.populate('user', 'profileName phoneNumber profileImg')
 				.populate('groupAdmin', 'profileName');
 			res.status(200).json(listGroupChat);
 		} catch (error) {

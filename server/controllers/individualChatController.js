@@ -20,7 +20,7 @@ const individualChatController = {
 		try {
 			const idUser = mongoose.Types.ObjectId(req.params.id);
 
-			const listInvidualChat = await IndividualChat.find({ user: idUser }).populate('message').populate('sender', 'profileName profileImg');
+			const listInvidualChat = await IndividualChat.find({ user: idUser }).populate('message').populate('sender', 'profileName profileImg phoneNumber');
 			res.status(200).json(listInvidualChat);
 		} catch (error) {
 			res.status(500).json(error);

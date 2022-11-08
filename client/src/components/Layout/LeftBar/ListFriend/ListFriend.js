@@ -28,6 +28,7 @@ import {
 } from '@mui/material';
 import { ChatContext } from '../../../../context/ChatContext';
 import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeChat';
+import { UserContext } from '../../../../context/UserContext';
 
 const cx = classNames.bind(styles);
 
@@ -37,6 +38,9 @@ export default function ListFriend() {
     const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
     const currentSearch = useSelector((state) => state.user.users?.allUsers);
     const currentSender = useSelector((state) => state.user.sender?.user);
+
+    const userContext = useContext(UserContext);
+    const setActiveUser = userContext.setActiveUser;
 
     const chatContext = useContext(ChatContext);
     const setListFriend = chatContext.setListFriend;
@@ -353,6 +357,7 @@ export default function ListFriend() {
                         _id: actor?._id,
                         profileName: actor?.groupName,
                         profileImg: actor?.groupImage,
+                        user: actor?.user,
                     };
 
                     return (
@@ -370,7 +375,13 @@ export default function ListFriend() {
                                 <p>{actor?.sender?.profileName || actor?.groupName}</p>
                                 <p className={cx('supchat')}>{newMessage(actor?.newMsg)}</p>
                             </div>
-                            <span className={cx('dot', actor?.status === 'Active' ? 'active' : 'disable')}></span>
+                            <span
+                                className={cx(
+                                    'dot',
+
+                                    setActiveUser(actor, isGroupChat) ? 'active' : 'disable',
+                                )}
+                            ></span>
                         </button>
                     );
                 })}

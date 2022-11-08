@@ -11,12 +11,11 @@ import { loginSuccess } from '../../../redux/authSlice';
 const cx = classNames.bind(styles);
 
 function Home() {
-    const user = useSelector((state) => state.auth.login?.currentUser);
-    const navigate = useNavigate();
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const currentUser = useSelector((state) => state.auth.login?.currentUser);
     let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
 
     const accessToken = currentUser?.accessToken;
@@ -28,10 +27,10 @@ function Home() {
     }, []);
 
     useEffect(() => {
-        if (!user) {
+        if (!currentUser) {
             navigate('/login');
         }
-    }, [user]);
+    }, [currentUser]);
 
     // useEffect(() => {
     //     const handleTabClose = event => {

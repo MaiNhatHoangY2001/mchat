@@ -47,6 +47,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ModalOutGroup from '../Modal/ModalOutGroup/ModalOutGroup';
 import { setSender } from '../../../../redux/userSlice';
 import ModalRemoveGroup from '../Modal/ModalRemoveGroup/ModalRemoveGroup';
+import { UserContext } from '../../../../context/UserContext';
 
 const cx = classNames.bind(styles);
 
@@ -64,6 +65,9 @@ function Chat() {
     const setSendData = chatContext.setSendData;
     const sendData = chatContext.sendData;
     const setIndividualChatId = chatContext.setIndividualChatId;
+
+    const userContext = useContext(UserContext);
+    const setActiveUser = userContext.setActiveUser;
 
     const bottomRef = useRef(null);
 
@@ -368,7 +372,9 @@ function Chat() {
                     <img src={currentSender?.profileImg} alt="avata" />
                     <div className={cx('infoText')}>
                         {<p className={cx('name')}>{currentSender?.profileName}</p>}
-                        <span className={cx('active')}>Đang hoạt động</span>
+                        <span
+                            className={cx('status', setActiveUser(currentSender, isGroupChat) ? 'active' : 'disable')}
+                        ></span>
                     </div>
                 </div>
 
@@ -531,7 +537,11 @@ function Chat() {
                                     <div className={cx(mess.sender === currentUserId ? 'userSend' : 'friendSend')}>
                                         <img
                                             className={cx('imgChat')}
-                                            src={isGroupChat ? mess.message.userGroupChat?.profileImg : currentSender?.profileImg}
+                                            src={
+                                                isGroupChat
+                                                    ? mess.message.userGroupChat?.profileImg
+                                                    : currentSender?.profileImg
+                                            }
                                             alt="avata"
                                         />
                                         <Tooltip

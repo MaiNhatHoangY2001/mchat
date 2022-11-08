@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Data from './Data';
 import styles from './Navbar.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,11 +8,15 @@ import { useNavigate } from 'react-router-dom';
 import { createAxios } from '../../../../redux/createInstance';
 import { logoutSuccess } from '../../../../redux/authSlice';
 import { Tooltip } from '@mui/material';
+import { UserContext } from '../../../../context/UserContext';
 
 const cx = classNames.bind(styles);
 
 export default function Navbar({ setContainer }) {
     const [select, setSelect] = useState(0);
+
+    const userContext = useContext(UserContext);
+    const removeUserActive2Socket = userContext.removeUserActive2Socket;
 
     const user = useSelector((state) => state.auth.login?.currentUser);
     const userId = user?._id;
@@ -25,6 +29,7 @@ export default function Navbar({ setContainer }) {
 
     const handleLogout = () => {
         logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
+        removeUserActive2Socket(user?.phoneNumber);
     };
 
     return (
@@ -32,18 +37,14 @@ export default function Navbar({ setContainer }) {
             <div className={cx('avata')}>
                 <Tooltip title={user?.profileName} placement="right" disableInteractive arrow>
                     <div className={cx('contain-avata')}>
-                        <img
-                            className={cx('image-avata')}
-                            src={user?.profileImg}
-                            alt={'avata'}
-                        />
+                        <img className={cx('image-avata')} src={user?.profileImg} alt={'avata'} />
                     </div>
                 </Tooltip>
             </div>
             <ul className={cx('list-button')}>
                 {Data.map((item, index) => {
                     const background = select === index ? item.backgroundSelect : item.background;
-                    const imgae = select === index ? item.urcSelect : item.urc;
+                    const image = select === index ? item.urcSelect : item.urc;
                     const toolTip = item.toolTip;
 
                     return (
@@ -56,7 +57,7 @@ export default function Navbar({ setContainer }) {
                                     if (index === 3) handleLogout();
                                 }}
                             >
-                                <img className={cx('iconButon')} src={imgae} alt={'icon-message'} />
+                                <img className={cx('iconButon')} src={image} alt={'icon-message'} />
                             </li>
                         </Tooltip>
                     );
