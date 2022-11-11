@@ -6,8 +6,12 @@ import Peer from 'simple-peer';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 
+//link: https://github.com/yocontra/react-responsive
+import { useMediaQuery } from 'react-responsive';
+
 const cx = classNames.bind(styles);
 
+//link yt: https://www.youtube.com/watch?v=gnM3Ld6_upE&list=PLylRck1PF4D6EQxHfxfeU8nhMgrP4hrRR&index=69
 const socket = io('http://localhost:8000');
 // const host = '../call';
 // const socket = io('../call');
@@ -131,19 +135,44 @@ function Call() {
     // UI call
     const [widthVid, setWidthVid] = useState('');
     const [hieghtVid, setHeighthVid] = useState('');
+
+    const widthBrowser = window.innerWidth
+        ? window.innerWidth
+        : document.documentElement.clientWidth
+        ? document.documentElement.clientWidth
+        : Screen.width;
+    const systemZoom = widthBrowser / window.screen.availWidth;
+    const widthPopupCeter = 500 / systemZoom;
+
     return (
         <div className={cx('container-call')}>
             <div className={cx('container-top')}>
                 <p style={{ color: '#D57AD4' }}>{currentUser.profileName}</p>
             </div>
-            <div className={cx('video-container')}>
+            <div
+                className={cx('video-container')}
+                style={{
+                    width: widthPopupCeter,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
                 <div className={cx('videoCaller')}>
-                    <video playsInline ref={myVideo} autoPlay muted={muteVoice} style={{ width: '80%' }} />
+                    <video
+                        playsInline
+                        ref={myVideo}
+                        autoPlay
+                        muted={muteVoice}
+                        style={{ height: '50%' }}
+                    />
                 </div>
                 <div className={cx('videoReceiver')}>
                     {callAccepted && !callEnded ? (
                         <video playsInline ref={userVideo} autoPlay style={{ width: '300px' }} />
-                    ) : null}
+                    ) : (
+                        <p>null</p>
+                    )}
                 </div>
             </div>
             <div className={cx('myId')}>

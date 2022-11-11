@@ -24,10 +24,17 @@
     background-color: #160029;
 }
 
-.video-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+// .video-container {
+//     // display: flex;
+//     justify-content: space-around;
+//     align-items: center;
+//     flex-direction: column;
+//     // width: 100%;
+// }
+@media screen and (max-width: 100%) {
+    .video-container {
+        flex-direction: row;
+    }
 }
 
 .videoCaller {
