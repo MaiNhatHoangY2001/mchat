@@ -8,10 +8,12 @@ import {FirebaseRecaptchaVerifierModal} from 'expo-firebase-recaptcha';
 import { firebaseConfig } from '../../../firebase-config-mobile';
 import firebase from 'firebase/compat/app';
 
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useDispatch } from 'react-redux';
 
+const Tab = createBottomTabNavigator();
 
 const widthScreen = Dimensions.get('window').width
 
@@ -21,7 +23,7 @@ function Register() {
     const navigate = useNavigate()
 
     const [FlagNewUser, setFlagNewUser] = useState(false)
-    function verifyOtp(){
+    function VerifyOtp(){
 
         const [Flag, setFlag] = useState(false)
         
@@ -267,15 +269,54 @@ function Register() {
         //                         />
         //                         <Text style={styles.line}>LINE</Text>
         //                     </View>
-                            
+        //                     <NavigationContainer>
+        //                         <Tab.Navigator
+        //                             initialRouteName="Xác thực SĐT"
+        //                             screenOptions={({ route }) => ({
+        //                                 tabBarIcon: ({ focused, color, size }) => {
+        //                                     let iconName;
+        //                                     if (route.name === 'Xác thực SĐT') {
+        //                                         iconName = 'sms';
+        //                                         size = focused ? 24 : 18;
+        //                                         color = focused ? '#fff' : '#555';
+        //                                     } else if (route.name === 'Mật khẩu mới') {
+        //                                         iconName = focused ? 'lock-open' : 'lock';
+        //                                         size = focused ? 22 : 18;
+        //                                         color = focused ? '#fff' : '#555';
+        //                                     }
+        //                                     return <Icon name={iconName} size={size} color={color} />;
+        //                                 },
+        //                                 tabBarStyle: {
+        //                                     width: widthScreen - 100,
+        //                                     height: 60,
+        //                                 },
+        //                                 tabBarItemStyle: {
+        //                                     margin: 2,
+        //                                     padding: 5,
+        //                                 },
+        //                                 tabBarActiveTintColor: '#fff',
+        //                                 tabBarActiveBackgroundColor: 'rgb(250, 139, 158)',
+        //                                 tabBarInactiveTintColor: '#555',
+        //                                 tabBarInactiveBackgroundColor: '#fff',
+        //                                 headerTitleAlign: 'center',
+        //                                 headerTitleStyle: {
+        //                                     color: 'rgb(250, 139, 158)',
+        //                                 },
+        //                             })}
+        //                         >
+        //                             <Tab.Screen name="Xác thực SĐT" component={VerifyOtp} />
+        //                             {/* <Tab.Screen name="Mật khẩu mới" component={RenewPWScreen} /> */}
+        //                         </Tab.Navigator>
+        //                     </NavigationContainer>
                             
 
         //                     </View>
         //             </ImageBackground>
         //         </View>
         //     </SafeAreaView>
-        verifyOtp() 
+        VerifyOtp() 
         // verifyUser()
+
         ) 
 }
 
