@@ -38,27 +38,8 @@ const cx = classNames.bind(styles);
 //link stack: https://github.com/NikValdez/VideoChatTut
 //link doc socket: https://socket.io/docs/v3/client-socket-instance
 const socket = io('http://localhost:8000');
-// const host = '../call';
-// const socket = io('../call');
 function Call() {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
-    // let socket = useRef(null);
-    // useEffect(() => {
-    //     socket.current = io(host, {
-    //        autoConnect: true,
-    //     });
-    //     console.log(socket.current);
-    // }, [host]);
-
-    // const [host, setHost] = useState(null);
-    // useEffect(() => {
-    //     const newSocket = io('http://localhost:3000/call');
-    //     setHost(newSocket);
-
-    //     return socket.disconnect();
-    // }, []);
-
-    // const socketRef = useRef();
 
     const [me, setMe] = useState('');
     const [currentStream, setCurrentStream] = useState();
@@ -73,36 +54,7 @@ function Call() {
     const userVideo = useRef();
     const connectionRef = useRef();
 
-    // useEffect(() => {
-    //     // if(mic) {
-    //         navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
-    //             setCurrentStream(stream);
-    //             myVideo.current.srcObject = stream;
-    //         });
-    //         console.log('mic: ' +mic);
-    //     // }
-    //     // if(!mic) {
-    //     //     navigator.mediaDevices.getUserMedia({ video: true, audio: !mic }).then((stream) => {
-    //     //         setCurrentStream(stream);
-    //     //         myVideo.current.srcObject = stream;
-    //     //     });
-    //     //     console.log('mic: ' + mic);
-    //     // }
-    // }, [mic])
-
     useEffect(() => {
-        // const getDeviceMedia = async () => {
-        //     const stream = await navigator.mediaDevices.getUserMedia({
-        //         video: true,
-        //         audio: true,
-        //     });
-        //     // setStream(stream);
-        //     if (myVideo.current) {
-        //         myVideo.current.srcObject = stream;
-        //         // myVideo.current.play();
-        //     }
-        // };
-        // getDeviceMedia();
         console.log(socket);
 
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
@@ -195,8 +147,6 @@ function Call() {
     };
 
     // UI call
-    const [widthVid, setWidthVid] = useState('');
-    const [hieghtVid, setHeighthVid] = useState('');
     const [clickShowId, setClickShowId] = useState('');
     const [mesSystem, setMessSystem] = useState('');
     const [copied, setCopied] = useState('');
@@ -211,13 +161,6 @@ function Call() {
     }
 
     const [flag, setFlag] = useState(false);
-    // function defaultVideoStream() {
-    //     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-    //         setCurrentStream(stream);
-    //         myVideo.current.srcObject = stream;
-    //     });
-    // }
-
     const [heightContainerCenter, setHeightContainerCenter] = useState('');
     const [placeholderInputId, setPlaceholderInputId] = useState('Nhập mã mời của bạn bè');
     const [widthOptionsCall, setWidthOptionsCall] = useState('');
@@ -225,101 +168,23 @@ function Call() {
     //handle micro
     const [mic, setMic] = useState(true);
     function checkMic() {
-        // const tracks = stream.getAudioTracks();
-        // if (mic===false) {
-        //     tracks[0].stop();
-        // } else tracks[0].play();
-        if(mic === true) {
-            // myVideo.current.srcObject = null;
-            // navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-            //     setCurrentStream(stream);
-            //     userVideo.current.srcObject = stream;
-            //     const tracks = stream.getAudioTracks();
-            //     tracks[0].stop();
-            // });
-            myVideo.current.srcObject.getAudioTracks().forEach(track => track.enabled = false);
-        } 
-        if(mic === false) {
-            // myVideo.current.srcObject = null;
-            // navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-            //     setCurrentStream(stream);
-            //     userVideo.current.srcObject = stream;
-            // });
+        if(mic === true)
+            myVideo.current.srcObject.getAudioTracks().forEach(track => track.enabled = false);       
+        if(mic === false)
             myVideo.current.srcObject.getAudioTracks().forEach(track => track.enabled = true);
-        }
     }
 
     //handle webcam
     const [webcam, setWebcam] = useState(true);
     function checkWebcam() {
-        if (webcam === true) {
-            // navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-            //     setCurrentStream(stream);
-            //     myVideo.current.srcObject = stream;
-            //     // const tracks = stream.getVideoTracks();
-            //     // tracks[0].stop();
-
-            //     const videoTrack = stream.getTracks().find(track => track.kind === 'video');
-            //     if(videoTrack.enabled)
-            //         videoTrack.enabled = false;
-            // });
-
+        if (webcam === true)
             myVideo.current.srcObject.getVideoTracks().forEach(track => track.enabled = false);
-        }
-        if (webcam === false) {
+        if (webcam === false)
             myVideo.current.srcObject.getVideoTracks().forEach(track => track.enabled = true);
-            // // if(!myVideo.current.srcObject.enabled || myVideo.current.srcObject===null) {
-            //     // myVideo.current.srcObject.enabled = true;
-
-            //     // myVideo.current.srcObject = null;
-            //     leaveCall();
-            //     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((newStream) => {
-            //         setCurrentStream(newStream);
-            //         myVideo.current.srcObject = newStream;
-
-            //         setCallAccepted(true);
-            //         const peer = new Peer({
-            //             initiator: false,
-            //             trickle: false,
-            //             stream: newStream,
-            //         });
-            //         peer.on('signal', (data) => {
-            //             socket.emit('answerCall', { signal: data, to: caller });
-            //         });
-            //         peer.on('stream', (newStream) => {
-            //             userVideo.current.srcObject = newStream;
-            //             // currentStream.getVideoTracks()[0].stop();
-            //         });
-
-            //         peer.signal(callerSignal);
-            //         connectionRef.current = peer;
-
-            //         // const videoTrack = stream.getTracks().find((track) => track.kind === 'video');
-            //         // if (!videoTrack.enabled)
-            //         //     videoTrack.enabled = true;
-            //     });
-            //     callUser(idToCall);
-            // // }
-
-            
-        }
     }
 
     //handle test only your mic 
     const [muteVoice, setMuteVoice] = useState(true);
-    
-    // useEffect(() => {
-    //     if(!mic) {
-    //         if (navigator.mediaDevices.getUserMedia) {
-    //             navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
-    //                 setCurrentStream(stream);
-    //                 myVideo.current.srcObject = stream;
-    //                 console.log('audio false');
-    //             });
-    //         }
-    //     }
-
-    // })
 
     const widthBrowser = window.innerWidth
         ? window.innerWidth
@@ -335,58 +200,21 @@ function Call() {
         <div className={cx('container-call')}>
             <div className={cx('container-top')}>
                 <p className={cx('txtProfileName')}>{currentUser.profileName}</p>
-                {/* <img src="../../../../public/assets/images/logoMLine-no-bg.png" alt="logoMLine" style={{alignSelf: 'flex-end'}} /> */}
                 <span className={cx('imgLogoPageCall')}></span>
             </div>
-            <div
-                className={cx('container-center')}
-                style={{height: heightContainerCenter}}
-            >
-                {/* <div style={{ display: !flag ? 'block' : 'none' }}>
-                    <button className={cx('btnShowVid')} onClick={() => {setFlag(true); defaultVideoStream();}}>
-                        Xem trước video
-                    </button>
-                </div> */}
-                {/* <div style={{ display: !flag ? 'none' : 'block' }}> */}
-                    <div style={{ alignSelf: 'center' }}>
-                        <video
-                            className={cx('videoCaller')}
-                            playsInline
-                            ref={myVideo}
-                            autoPlay
-                            muted={muteVoice}
-                            // style={{ width: '100%', height: '50%' }}
-                            // style={{ height: '50%' }} //when open full screen
-                        />
-                    </div>
-                    <div style={{ alignSelf: 'center' }}>
-                        {callAccepted && !callEnded ? (
-                            <video
-                                className={cx('videoReceiver')}
-                                playsInline
-                                ref={userVideo}
-                                autoPlay
-                                // style={{ width: '300px' }}
-                            />
-                        ) : null}
-                        {!callAccepted && callEnded && null}
-                    </div>
-                {/* </div> */}
+            <div className={cx('container-center')} style={{ height: heightContainerCenter }}>
+                <div style={{ alignSelf: 'center' }}>
+                    <video className={cx('videoCaller')} playsInline ref={myVideo} autoPlay muted={muteVoice} />
+                </div>
+                <div style={{ alignSelf: 'center' }}>
+                    {callAccepted && !callEnded ? (
+                        <video className={cx('videoReceiver')} playsInline ref={userVideo} autoPlay />
+                    ) : null}
+                    {!callAccepted && callEnded && null}
+                </div>
             </div>
-            <div 
-                className={cx('container-bottom')} 
-            >
+            <div className={cx('container-bottom')}>
                 <div className={cx('myId')}>
-                    {/* <input
-                        id="filled-basic"
-                        placeholder="Name"
-                        // label="Name"
-                        // variant="filled"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        style={{ marginBottom: '20px' }}
-                    /> */}
-
                     <div className={cx('yourId')} style={{ display: !flag ? 'flex' : 'none' }}>
                         <Tooltip title="Nhấn để nhận mã mời" placement="top" disableInteractive arrow>
                             <button className={cx('btnGetYourId')} onClick={() => setClickShowId(me)}>
@@ -394,21 +222,15 @@ function Call() {
                             </button>
                         </Tooltip>
                         <input
-                            // id="filled-basic"
-                            // placeholder="ID của bạn"
-                            // label="ID to call"
-                            // variant="filled"
                             defaultValue={clickShowId}
                             disabled
                             style={{ width: 250, height: 40, paddingLeft: 5, marginLeft: '2%', marginRight: '2%' }}
-                            // onChange={(e) => setIdToCall(e.target.value)}
                         />
                         <CopyToClipboard
                             text={clickShowId}
                             style={{
                                 paddingLeft: '2%',
                                 paddingRight: '2%',
-                                // marginBottom: '2rem',
                                 height: '2.5rem',
                                 fontSize: '1rem',
                                 color: '#fff',
@@ -425,15 +247,16 @@ function Call() {
                             {/* </Tooltip> */}
                         </CopyToClipboard>
                     </div>
-                    <div className={cx('txtCopied')} style={{ display: !flag ? 'block' : 'none', color: mesSystem, fontStyle: 'italic' }}>
+                    <div
+                        className={cx('txtCopied')}
+                        style={{ display: !flag ? 'block' : 'none', color: mesSystem, fontStyle: 'italic' }}
+                    >
                         {copied}
                     </div>
-                    <div className={cx('optionsCall')} style={{width: widthOptionsCall, marginTop: '1.2%'}}>
+                    <div className={cx('optionsCall')} style={{ width: widthOptionsCall, marginTop: '1.2%' }}>
                         <input
                             id="filled-basic"
                             placeholder={placeholderInputId}
-                            // label="ID to call"
-                            // variant="filled"
                             value={idToCall}
                             onChange={(e) => setIdToCall(e.target.value)}
                             className={cx('stylePlaceholderInputId')}
@@ -462,11 +285,17 @@ function Call() {
                                 </button>
                             </Tooltip>
                         )}
-                        
+
                         {/* btn micro */}
                         {mic ? (
                             <Tooltip title="Bạn đang bật mic, nhấn để tắt" placement="top" disableInteractive arrow>
-                                <button className={cx('btnMic')} onClick={() => {setMic(false); checkMic();}}>
+                                <button
+                                    className={cx('btnMic')}
+                                    onClick={() => {
+                                        setMic(false);
+                                        checkMic();
+                                    }}
+                                >
                                     <IconContext.Provider value={{ color: '#fff' }}>
                                         <i>
                                             <IoMic size={25} />
@@ -476,7 +305,13 @@ function Call() {
                             </Tooltip>
                         ) : (
                             <Tooltip title="Bạn đang tắt mic, nhấn để bật" placement="top" disableInteractive arrow>
-                                <button className={cx('btnMic')} onClick={() => {setMic(true); checkMic();}}>
+                                <button
+                                    className={cx('btnMic')}
+                                    onClick={() => {
+                                        setMic(true);
+                                        checkMic();
+                                    }}
+                                >
                                     <IconContext.Provider value={{ color: '#fff' }}>
                                         <i>
                                             <IoMicOffOutline size={25} />
@@ -489,7 +324,13 @@ function Call() {
                         {/* btn webcam */}
                         {webcam ? (
                             <Tooltip title="Bạn đang bật camera, nhấn để tắt" placement="top" disableInteractive arrow>
-                                <button className={cx('btnCam')} onClick={() => {setWebcam(false); checkWebcam();}}>
+                                <button
+                                    className={cx('btnCam')}
+                                    onClick={() => {
+                                        setWebcam(false);
+                                        checkWebcam();
+                                    }}
+                                >
                                     <IconContext.Provider value={{ color: '#fff' }}>
                                         <i>
                                             <IoVideocam size={25} />
@@ -499,7 +340,13 @@ function Call() {
                             </Tooltip>
                         ) : (
                             <Tooltip title="Bạn đang tắt camera, nhấn để bật" placement="top" disableInteractive arrow>
-                                <button className={cx('btnCam')} onClick={() => {setWebcam(true); checkWebcam();}}>
+                                <button
+                                    className={cx('btnCam')}
+                                    onClick={() => {
+                                        setWebcam(true);
+                                        checkWebcam();
+                                    }}
+                                >
                                     <IconContext.Provider value={{ color: '#fff' }}>
                                         <i>
                                             <IoVideocamOffOutline size={25} />
@@ -511,9 +358,14 @@ function Call() {
 
                         {/* btn end call */}
                         {callAccepted && !callEnded ? (
-                            // <button color="secondary" onClick={leaveCall}>
                             <Tooltip title="Kết thúc" placement="top" disableInteractive arrow>
-                                <button className={cx('btnEndCall')} onClick={() => {leaveCall(); window.close();}}>
+                                <button
+                                    className={cx('btnEndCall')}
+                                    onClick={() => {
+                                        leaveCall();
+                                        window.close();
+                                    }}
+                                >
                                     <IconContext.Provider value={{ color: '#fff' }}>
                                         <i>
                                             <MdCallEnd size={25} />
@@ -522,11 +374,11 @@ function Call() {
                                 </button>
                             </Tooltip>
                         ) : (
-                            // End Call
-                            // </button>
                             <Tooltip title="Gọi" placement="top" disableInteractive arrow>
-                                <button className={cx('btnCall')} onClick={() => {
-                                        callUser(idToCall); 
+                                <button
+                                    className={cx('btnCall')}
+                                    onClick={() => {
+                                        callUser(idToCall);
                                     }}
                                 >
                                     <IconContext.Provider value={{ color: '#fff' }}>
@@ -542,13 +394,14 @@ function Call() {
                 <div className={cx('viewAnswerCall')}>
                     {receivingCall && !callAccepted ? (
                         <div className={cx('caller')}>
-                            <p className={cx('calling')}><b>{name} đang gọi...</b></p>
+                            <p className={cx('calling')}>
+                                <b>{name} đang gọi...</b>
+                            </p>
                             <Tooltip title="Nhấc máy" placement="top" disableInteractive arrow>
-                                <button 
-                                    className={cx('btnAnswerCall')} 
+                                <button
+                                    className={cx('btnAnswerCall')}
                                     onClick={() => {
-                                        answerCall(); 
-                                        
+                                        answerCall();
                                     }}
                                 >
                                     <IconContext.Provider value={{ color: '#fff' }}>

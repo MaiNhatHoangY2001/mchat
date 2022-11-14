@@ -61,11 +61,6 @@ io.on('connection', (socket) => {
 	});
 	socket.on('user', (data) => {
 		io.emit('user-active', data);
-
-		// io.emit('me', socket.id);
-		// console.log("New socket client connected: " +socket.id);
-		// io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, userId: data.userId })
-
 	});
 
 	//call video
