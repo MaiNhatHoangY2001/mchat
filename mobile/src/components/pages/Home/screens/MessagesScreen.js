@@ -164,12 +164,19 @@ export default function MessagesScreen({ navigation }) {
     // Get Item
     const renderItem = ({ item }) => {
         const backgroundColor = item._id === selectedId ? '#f9c2ff' : '#ffffff';
+        const actorGroupChat = {
+            _id: item?._id,
+            profileName: item?.groupName,
+            profileImg: item?.groupImage,
+        };
+        const isGroupChat = item?.sender?._id === undefined;
 
         return (
             <Item
                 item={item}
                 onPress={() => {
                     setSelectedId(item._id);
+                    handleClick(item?._id, item?.sender || actorGroupChat, item?.user, isGroupChat);
                     navigation.navigate('Chat', { item: item });
                 }}
                 backgroundColor={{ backgroundColor }}
