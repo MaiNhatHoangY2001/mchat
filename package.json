@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/MaiNhatHoangY2001/Real-time-chat/issues"
   },
-  "homepage": "https://github.com/MaiNhatHoangY2001/Real-time-chat#readme"
+  "homepage": "https://github.com/MaiNhatHoangY2001/Real-time-chat#readme",
+  "dependencies": {
+    "@react-navigation/native": "^6.0.13"
+  }
 }

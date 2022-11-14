@@ -6,12 +6,17 @@ import {
     Button,
     Image,
     ImageBackground,
+    Keyboard,
+    KeyboardAvoidingView,
     SafeAreaView,
     ScrollView,
     ScrollViewBase,
     ScrollViewComponent,
     StyleSheet,
     Text,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
     View,
 } from 'react-native';
 
@@ -32,6 +37,7 @@ import {
     updateGroupChat,
     updateMsg,
 } from '../../../../../redux/apiRequest/chatApiRequest';
+import styles from './MessageChat_Styles';
 // import LoadingChat from './LoadingChat';
 
 export default function MessageChat({ navigation, route }) {
@@ -75,6 +81,8 @@ export default function MessageChat({ navigation, route }) {
     const currentUserId = user?._id;
     const currentSenderId = currentSender?._id;
     const accessToken = user?.accessToken;
+
+    const scrollViewRef = useRef();
 
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
 
@@ -373,147 +381,72 @@ export default function MessageChat({ navigation, route }) {
     }, [navigation]);
 
     return (
-        <ImageBackground
-            style={styles.container}
-            resizeMode="cover"
-            source={{
-                uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667673550/Avata/bgcolor_t3meet.png',
-            }}
+        <KeyboardAvoidingView
+            style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
+            behavior="padding"
+            enabled
+            keyboardVerticalOffset={85}
         >
-            <ScrollView>
-                <View style={[styles.chatAvata]}>
-                    {isUser ? (
-                        <Image style={styles.chatImage} source={{ uri: dataSender.sender.profileImg }} />
-                    ) : (
-                        <Image style={styles.image} source={{ uri: dataSender.groupImage }} />
-                    )}
-                </View>
-                <View style={styles.contentChat}>
-                    {sendData?.map((mess, index) => {
-                        const nameSender = mess.message.userGroupChat?.profileName || currentSender?.profileName;
-                        const nameUser = user?.profileName;
-                        const isUser = mess.sender === currentUserId;
+            <ImageBackground
+                style={styles.container}
+                resizeMode="cover"
+                source={{
+                    uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667673550/Avata/bgcolor_t3meet.png',
+                }}
+            >
+                <ScrollView
+                    style={{ flex: 1 }}
+                    ref={scrollViewRef}
+                    onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+                >
+                    <View style={[styles.chatAvata]}>
+                        {isUser ? (
+                            <Image style={styles.chatImage} source={{ uri: dataSender.sender.profileImg }} />
+                        ) : (
+                            <Image style={styles.image} source={{ uri: dataSender.groupImage }} />
+                        )}
+                    </View>
+                    <View style={styles.contentChat}>
+                        {sendData?.map((mess, index) => {
+                            const nameSender = mess.message.userGroupChat?.profileName || currentSender?.profileName;
+                            const nameUser = user?.profileName;
+                            const isUser = mess.sender === currentUserId;
 
-                        return (
-                            <React.Fragment key={index}>
-                                <View style={isUser ? styles.user : styles.sender}>
-                                    <Image
-                                        style={styles.userImage}
-                                        source={{
-                                            uri: isGroupChat
-                                                ? mess.message.userGroupChat?.profileImg
-                                                : isUser
-                                                ? currentSender?.profileImg
-                                                : currentSender?.profileImg,
-                                        }}
-                                    />
-                                    <View style={styles.contain}>
-                                        <Text style={styles.chatName}>
-                                            {mess.sender === currentUserId ? nameUser : nameSender}
-                                        </Text>
-                                        {typeChat(mess.message?.type_Msg, mess)}
+                            return (
+                                <React.Fragment key={index}>
+                                    <View style={isUser ? styles.user : styles.sender}>
+                                        <Image
+                                            style={isUser ? styles.userImage : styles.senderImage}
+                                            source={{
+                                                uri: isGroupChat
+                                                    ? mess.message.userGroupChat?.profileImg
+                                                    : isUser
+                                                    ? currentSender?.profileImg
+                                                    : currentSender?.profileImg,
+                                            }}
+                                        />
+                                        <View style={styles.contain}>
+                                            <Text style={styles.chatName}>
+                                                {mess.sender === currentUserId ? nameUser : nameSender}
+                                            </Text>
+                                            {typeChat(mess.message?.type_Msg, mess)}
+                                        </View>
                                     </View>
-                                </View>
-                            </React.Fragment>
-                        );
-                    })}
+                                </React.Fragment>
+                            );
+                        })}
+                    </View>
+                </ScrollView>
+                <View style={styles.footer}>
+                    <TouchableOpacity style={styles.Button}>
+                        <Text>icon</Text>
+                    </TouchableOpacity>
+                    <TextInput style={styles.inputText} placeholder="Nhập gì đi cha" />
+                    <TouchableOpacity style={styles.Button}>
+                        <Text>Send</Text>
+                    </TouchableOpacity>
                 </View>
-            </ScrollView>
-        </ImageBackground>
+            </ImageBackground>
+        </KeyboardAvoidingView>
     );
 }
-
-const styles = StyleSheet.create({
-    // Styles profile Sender
-    profileSender: {
-        flex: 1,
-        flexDirection: 'row',
-        marginRight: 90,
-    },
-    avata: {
-        marginRight: 10,
-    },
-    image: {
-        width: 50,
-        height: 50,
-        resizeMode: 'center',
-        borderRadius: 50,
-    },
-    textContent: {
-        flex: 1,
-        justifyContent: 'space-between',
-    },
-    name: {
-        fontSize: 20,
-        fontWeight: '500',
-    },
-    active: {
-        fontSize: 14,
-        fontWeight: '400',
-        color: '#34C759',
-    },
-
-    // Styles Main
-    container: {
-        flex: 1,
-    },
-    chatAvata: {
-        width: '100%',
-        height: 200,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    chatImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-    },
-
-    contentChat: {
-        flex: 1,
-        minHeight: 455,
-        justifyContent: 'flex-end',
-    },
-    sender: {
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        padding: 10,
-    },
-    user: {
-        flexDirection: 'row-reverse',
-        alignItems: 'flex-end',
-        padding: 10,
-    },
-    contain: {
-        padding: 10,
-        backgroundColor: '#f3a3ad',
-
-        borderRadius: 10,
-        elevation: 5,
-    },
-    userImage: {
-        resizeMode: 'center',
-        marginLeft: 10,
-
-        width: 40,
-        height: 40,
-
-        borderRadius: 50,
-    },
-    senderImage: {
-        resizeMode: 'center',
-        marginRight: 10,
-
-        width: 40,
-        height: 40,
-
-        borderRadius: 50,
-    },
-    chatName: {
-        fontSize: 14,
-        color: '#606060',
-    },
-    chatText: {
-        fontSize: 16,
-    },
-});
