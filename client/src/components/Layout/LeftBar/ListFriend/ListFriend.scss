@@ -142,16 +142,22 @@
     -ms-user-select: none;
     user-select: none;
 
+    display: flex;
+    flex-direction: column;
     position: absolute;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 700px;
-    height: 95%;
-    border-radius: 10px;
-
     background-color: #fff;
     box-shadow: 24px;
+
+    width: 50%;
+    height: 95%;
+    min-width: 500px;
+    min-height: 500px;
+
+    border-radius: 10px;
 
     &:focus-visible {
         outline: none;
@@ -160,11 +166,8 @@
     .headerModal {
         display: flex;
         justify-content: flex-start;
-        align-items: center;
-        padding: 0px 20px;
+        padding: 10px 20px;
         border-bottom: 1px solid #bbbbbb;
-
-        height: 60px;
 
         p {
             font-weight: 700;
@@ -173,103 +176,92 @@
         }
     }
 
-    .content {
+    .bodyModal {
+        flex: 1;
         display: flex;
         flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        overflow: hidden;
 
-        height: calc(100% - 60px);
-
-        .bodyModal {
-            flex: 1;
+        .boxTextInput {
             display: flex;
             flex-direction: column;
-            padding: 0 10px;
-            gap: 10px;
+            align-items: flex-start;
+            padding: 0 10px 20px;
+            gap: 20px;
 
-            .boxTextInput {
+            border-bottom: 1px solid #bbbbbb;
+
+            .groupName {
+                width: 100%;
+            }
+        }
+
+        .addUserGroup {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            overflow: hidden;
+
+            .scrollview {
+                overflow: hidden;
+                flex: 1;
                 display: flex;
                 flex-direction: column;
-                align-items: flex-start;
-                padding: 0 10px 20px;
-                gap: 20px;
 
-                width: 100%;
-
-                border-bottom: 1px solid #bbbbbb;
-
-                .groupName {
-                    width: 100%;
+                p {
+                    font-size: 18px;
+                    font-weight: 500px;
+                    margin: 0;
                 }
             }
 
-            .addUserGroup {
-                display: flex;
-                flex-direction: row;
-                gap: 10px;
+            .listFriendModal {
+                flex: 1;
+                overflow-y: scroll;
 
-                width: 100%;
-                height: 100%;
-
-                .listFriendModal {
-                    flex: 1;
-
-                    height: 100%;
-
-                    p {
-                        font-size: 18px;
-                        font-weight: 500px;
-                        margin: 0;
-                    }
-
-                    .listItem {
-                        overflow-y: scroll;
-                        height: 420px;
-
-                        img {
-                            width: 100%;
-                        }
+                .listItem {
+                    img {
+                        width: 100%;
                     }
                 }
+            }
 
-                .listFriendSelectModal {
-                    flex: 1;
+            .listFriendSelectModal {
+                flex: 1;
+                overflow-y: scroll;
 
-                    p {
-                        font-size: 18px;
-                        font-weight: 500px;
-                        margin: 0;
-                    }
+                p {
+                    font-size: 18px;
+                    font-weight: 500px;
+                    margin: 0;
+                }
 
-                    .listItem {
-                        overflow-y: scroll;
-                        height: 420px;
-
-                        img {
-                            width: 100%;
-                        }
+                .listItem {
+                    img {
+                        width: 100%;
                     }
                 }
             }
         }
+    }
 
-        .footerModal {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 10px 20px;
-            gap: 10px;
+    .footerModal {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        padding: 10px 20px;
+        gap: 10px;
 
-            height: 60px;
+        border-top: 1px solid #bbbbbb;
 
-            border-top: 1px solid #bbbbbb;
-
-            Button {
-                p {
-                    font-size: 16px;
-                    font-weight: 700;
-                    margin: 0;
-                }
+        Button {
+            p {
+                font-size: 16px;
+                font-weight: 700;
+                margin: 0;
             }
         }
     }

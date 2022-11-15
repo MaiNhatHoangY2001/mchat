@@ -241,30 +241,30 @@ export default function ListFriend() {
                             <div className={cx('headerModal')}>
                                 <p>Tạo nhóm</p>
                             </div>
-                            <div className={cx('content')}>
-                                <div className={cx('bodyModal')}>
-                                    <div className={cx('boxTextInput')}>
-                                        <TextField
-                                            className={cx('groupName')}
-                                            id="standard-basic"
-                                            label="Tên nhóm"
-                                            size="small"
-                                            variant="standard"
-                                            placeholder="Nhập tên nhóm"
-                                            onChange={(e) => setNameGroup(e.target.value)}
-                                        />
-                                        <TextField
-                                            className={cx('groupName')}
-                                            id="standard-basic"
-                                            label="Tìm kiếm bạn bè"
-                                            size="small"
-                                            onChange={setDataSelect}
-                                            placeholder="Nhập tên hoặc số điện thoại"
-                                        />
-                                    </div>
-                                    <div className={cx('addUserGroup')}>
+                            <div className={cx('bodyModal')}>
+                                <div className={cx('boxTextInput')}>
+                                    <TextField
+                                        className={cx('groupName')}
+                                        id="standard-basic"
+                                        label="Tên nhóm"
+                                        size="small"
+                                        variant="standard"
+                                        placeholder="Nhập tên nhóm"
+                                        onChange={(e) => setNameGroup(e.target.value)}
+                                    />
+                                    <TextField
+                                        className={cx('groupName')}
+                                        id="standard-basic"
+                                        label="Tìm kiếm bạn bè"
+                                        size="small"
+                                        onChange={setDataSelect}
+                                        placeholder="Nhập tên hoặc số điện thoại"
+                                    />
+                                </div>
+                                <div className={cx('addUserGroup')}>
+                                    <div className={cx('scrollview')}>
+                                        <p>Danh sách bạn bè</p>
                                         <div className={cx('listFriendModal')}>
-                                            <p>Danh sách bạn bè</p>
                                             <List className={cx('listItem')}>
                                                 {chatActors?.map((item, index) => {
                                                     const name = item?.sender?.profileName;
@@ -306,8 +306,10 @@ export default function ListFriend() {
                                                 })}
                                             </List>
                                         </div>
+                                    </div>
+                                    <div className={cx('scrollview')}>
+                                        <p>Danh sách bạn bè đã chọn {selectData.length}/100</p>
                                         <div className={cx('listFriendSelectModal')}>
-                                            <p>Danh sách bạn bè đã chọn {selectData.length}/100</p>
                                             <List className={cx('listItem')}>
                                                 {selectData.map((item, index) => {
                                                     return (
@@ -336,14 +338,14 @@ export default function ListFriend() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={cx('footerModal')}>
-                                    <Button color="error" onClick={handleClickExit}>
-                                        <p>Hủy</p>
-                                    </Button>
-                                    <Button color="success" onClick={() => handleCreateGroupChat(selectData)}>
-                                        <p>Tạo nhóm</p>
-                                    </Button>
-                                </div>
+                            </div>
+                            <div className={cx('footerModal')}>
+                                <Button color="error" onClick={handleClickExit}>
+                                    <p>Hủy</p>
+                                </Button>
+                                <Button color="success" onClick={() => handleCreateGroupChat(selectData)}>
+                                    <p>Tạo nhóm</p>
+                                </Button>
                             </div>
                         </div>
                     </Modal>
