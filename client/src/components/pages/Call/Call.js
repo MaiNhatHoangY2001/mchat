@@ -7,6 +7,8 @@ import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { Tooltip } from '@mui/material';
 
+import { url } from '../../../redux/createInstance';
+
 //https://stackoverflow.com/questions/11404744/css-media-queries-max-width-or-max-height
 //link: https://github.com/yocontra/react-responsive
 import { useMediaQuery } from 'react-responsive';
@@ -37,7 +39,8 @@ const cx = classNames.bind(styles);
 //link yt: https://www.youtube.com/watch?v=gnM3Ld6_upE&list=PLylRck1PF4D6EQxHfxfeU8nhMgrP4hrRR&index=69
 //link stack: https://github.com/NikValdez/VideoChatTut
 //link doc socket: https://socket.io/docs/v3/client-socket-instance
-const socket = io('http://localhost:8000');
+// const socket = io('http://localhost:8000');
+const socket = io(url);
 function Call() {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
 
