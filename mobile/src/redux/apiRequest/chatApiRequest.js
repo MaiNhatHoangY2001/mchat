@@ -11,6 +11,9 @@ import {
     getMessagesFailed,
     getMessagesStart,
     getMessagesSuccess,
+    updateIndividualChatFailed,
+    updateIndividualChatStart,
+    updateIndividualChatSuccess,
     updateMessageStart,
     updateMessageSuccess,
 } from '../chatSlice';
@@ -22,6 +25,9 @@ import {
     getGroupChatFailed,
     getGroupChatStart,
     getGroupChatSuccess,
+    updateGroupChatFailed,
+    updateGroupChatStart,
+    updateGroupChatSuccess,
 } from '../groupChatSlice';
 
 export const addIndividualChat4NewUser = async (
@@ -55,6 +61,19 @@ export const addIndividualChat4NewUser = async (
     }
 };
 
+export const updateIndividualChatNewMsg = async (accessToken, apiDataRequest, dispatch, axiosJWT) => {
+    dispatch(updateIndividualChatStart());
+    try {
+        await axiosJWT.put(`${url}/api/individualChat/newMsg`, apiDataRequest, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+
+        dispatch(updateIndividualChatSuccess());
+    } catch (error) {
+        dispatch(updateIndividualChatFailed());
+    }
+};
+
 export const addGroupChat = async (accessToken, dispatch, groupChat, axiosJWT) => {
     dispatch(addGroupChatStart());
     try {
@@ -68,15 +87,63 @@ export const addGroupChat = async (accessToken, dispatch, groupChat, axiosJWT) =
     }
 };
 
+export const updateGroupChat = async (accessToken, dispatch, id, apiUpdate, axiosJWT) => {
+    dispatch(updateGroupChatStart());
+    try {
+        await axiosJWT.put(`${url}/api/groupChat/${id}`, apiUpdate, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateGroupChatSuccess());
+    } catch (error) {
+        dispatch(updateGroupChatFailed());
+    }
+};
+
+export const updateGroupChatNewMsg = async (accessToken, apiDataRequest, dispatch, axiosJWT) => {
+    dispatch(updateGroupChatStart());
+    try {
+        await axiosJWT.post(`${url}/api/groupChat/newMsg`, apiDataRequest, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateGroupChatSuccess());
+    } catch (error) {
+        dispatch(updateGroupChatFailed());
+    }
+};
+
+export const deleteGroupChat = async (accessToken, dispatch, idGroupChat, axiosJWT) => {
+    dispatch(updateGroupChatStart());
+    try {
+        await axiosJWT.delete(`${url}/api/groupChat/` + idGroupChat, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateGroupChatSuccess());
+    } catch (error) {
+        dispatch(updateGroupChatFailed());
+    }
+};
+
 export const addUserGroupChat = async (accessToken, dispatch, apiGroupChat, axiosJWT) => {
-    dispatch(addGroupChatStart());
+    dispatch(updateGroupChatStart());
     try {
         await axiosJWT.post(`${url}/api/groupChat/addUser`, apiGroupChat, {
             headers: { token: `Bearer ${accessToken}` },
         });
-        dispatch(addGroupChatSuccess());
+        dispatch(updateGroupChatSuccess());
     } catch (error) {
-        dispatch(addGroupChatFailed());
+        dispatch(updateGroupChatFailed());
+    }
+};
+
+export const removeUserGroupChat = async (accessToken, dispatch, apiGroupChat, axiosJWT) => {
+    dispatch(updateGroupChatStart());
+    try {
+        await axiosJWT.post(`${url}/api/groupChat/removeUser`, apiGroupChat, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateGroupChatSuccess());
+    } catch (error) {
+        dispatch(updateGroupChatFailed());
     }
 };
 
@@ -109,7 +176,7 @@ export const getMsgs = async (accessToken, dispatch, actor, axiosJWT) => {
 export const updateMsg = async (accessToken, dispatch, id, content, axiosJWT) => {
     dispatch(updateMessageStart());
     try {
-        const res = await axiosJWT.put(`${url}/api/message/${id}`, content, {
+        await axiosJWT.put(`${url}/api/message/${id}`, content, {
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(updateMessageSuccess());
@@ -150,6 +217,7 @@ export const getListGroupChat = async (accessToken, userId, dispatch, axiosJWT) 
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(getGroupChatSuccess(res.data));
+        return res.data;
     } catch (error) {
         dispatch(getGroupChatFailed());
     }

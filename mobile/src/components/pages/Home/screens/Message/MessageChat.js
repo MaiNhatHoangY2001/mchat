@@ -441,8 +441,13 @@ export default function MessageChat({ navigation, route }) {
                     <TouchableOpacity style={styles.Button}>
                         <Text>icon</Text>
                     </TouchableOpacity>
-                    <TextInput style={styles.inputText} placeholder="Nhập gì đi cha" />
-                    <TouchableOpacity style={styles.Button}>
+                    <TextInput
+                        style={styles.inputText}
+                        placeholder="Nhập gì đi cha"
+                        onChangeText={(value) => setMessage(value)}
+                        value={message}
+                    />
+                    <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
                         <Text>Send</Text>
                     </TouchableOpacity>
                 </View>

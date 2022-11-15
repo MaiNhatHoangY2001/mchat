@@ -30,6 +30,17 @@ const chatSlice = createSlice({
             state.individualChat.isFetching = false;
             state.individualChat.error = true;
         },
+        updateIndividualChatStart: (state) => {
+            state.individualChat.isFetching = true;
+        },
+        updateIndividualChatSuccess: (state) => {
+            state.individualChat.isFetching = false;
+            state.individualChat.success = true;
+        },
+        updateIndividualChatFailed: (state) => {
+            state.individualChat.isFetching = false;
+            state.individualChat.error = true;
+        },
         getIndividualChatStart: (state) => {
             state.individualChat.isFetching = true;
         },
@@ -88,6 +99,9 @@ export const {
     addIndividualChatFailed,
     addIndividualChatStart,
     addIndividualChatSuccess,
+    updateIndividualChatStart,
+    updateIndividualChatFailed,
+    updateIndividualChatSuccess,
     addMessageFailed,
     addMessageStart,
     addMessageSuccess,
