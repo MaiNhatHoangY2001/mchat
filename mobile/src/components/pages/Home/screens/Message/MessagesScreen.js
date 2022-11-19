@@ -1,17 +1,25 @@
-import { FlatList, SafeAreaView, StyleSheet, Text } from 'react-native';
-import Item from './Message/FlatList/Item';
+import { FlatList, SafeAreaView, StyleSheet, Text, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAxios } from '../../../../redux/createInstance';
-import { addIndividualChatSuccess } from '../../../../redux/chatSlice';
-import { searchUser } from '../../../../redux/apiRequest/userApiRequest';
-import { setSender } from '../../../../redux/userSlice';
-import { addGroupChat, getListGroupChat, getMsgs, getMsgsGroupChat } from '../../../../redux/apiRequest/chatApiRequest';
-import { loginSuccess } from '../../../../redux/authSlice';
-import { getGroupChatSuccess, setIsGroupChat } from '../../../../redux/groupChatSlice';
+import { createAxios } from '../../../../../redux/createInstance';
+import { addIndividualChatSuccess } from '../../../../../redux/chatSlice';
+import { searchUser } from '../../../../../redux/apiRequest/userApiRequest';
+import { setSender } from '../../../../../redux/userSlice';
+import {
+    addGroupChat,
+    getListGroupChat,
+    getMsgs,
+    getMsgsGroupChat,
+} from '../../../../../redux/apiRequest/chatApiRequest';
+import { loginSuccess } from '../../../../../redux/authSlice';
+import { getGroupChatSuccess, setIsGroupChat } from '../../../../../redux/groupChatSlice';
 
-import { ChatContext } from '../../../../context/ChatContext';
-import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeChat';
+import { ChatContext } from '../../../../../context/ChatContext';
+import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../../context/TypeChat';
 import { useContext, useEffect, useState } from 'react';
+import Item from './FlatList/Item';
+
+// GET SIZE SREEN DRIVE
+const widthScreen = Dimensions.get('window').width;
 
 export default function MessagesScreen({ navigation }) {
     // Create Hook Item in FlatList
@@ -164,13 +172,20 @@ export default function MessagesScreen({ navigation }) {
     // Get Item
     const renderItem = ({ item }) => {
         const backgroundColor = item._id === selectedId ? '#f9c2ff' : '#ffffff';
+        const actorGroupChat = {
+            _id: item?._id,
+            profileName: item?.groupName,
+            profileImg: item?.groupImage,
+        };
+        const isGroupChat = item?.sender?._id === undefined;
 
         return (
             <Item
                 item={item}
                 onPress={() => {
                     setSelectedId(item._id);
-                    navigation.navigate('Chat', { item: item });
+                    handleClick(item?._id, item?.sender || actorGroupChat, item?.user, isGroupChat);
+                    navigation.navigate('MessageChat', { item: item });
                 }}
                 backgroundColor={{ backgroundColor }}
             />

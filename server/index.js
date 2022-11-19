@@ -61,16 +61,11 @@ io.on('connection', (socket) => {
 	});
 	socket.on('user', (data) => {
 		io.emit('user-active', data);
-
-		// io.emit('me', socket.id);
-		// console.log("New socket client connected: " +socket.id);
-		// io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, userId: data.userId })
-
 	});
 
 	//call video
 	socket.emit("me", socket.id);
-	console.log("New socket client connected: " +socket.id);
+	// console.log("New id socket client connected: " +socket.id);
 
 	socket.on("callUser", (data) => {
 		io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, name: data.name })
@@ -79,6 +74,7 @@ io.on('connection', (socket) => {
 		io.to(data.to).emit("callAccepted", data.signal)
 	});
 	socket.on("disconnect", () => {
-		socket.broadcast.emit("callEnded")
+		// socket.broadcast.emit("callEnded") //nào cũng đc
+		socket.emit("callEnded");
 	});
 });

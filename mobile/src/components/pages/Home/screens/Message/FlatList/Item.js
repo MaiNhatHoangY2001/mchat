@@ -17,11 +17,7 @@ export default function Item({ item, onPress, backgroundColor }) {
 
     const isActorSenderActive = currentSender?._id === (item?.sender?._id || item?._id);
     const isGroupChat = item?.sender?._id === undefined;
-    const actorGroupChat = {
-        _id: item?._id,
-        profileName: item?.groupName,
-        profileImg: item?.groupImage,
-    };
+   
 
     const newMessage = (mess) => {
         const typeMess = mess?.type_Msg;

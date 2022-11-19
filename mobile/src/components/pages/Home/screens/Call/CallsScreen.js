@@ -14,9 +14,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 
-import { createAxios } from '../../../../redux/createInstance';
-import { logoutSuccess } from '../../../../redux/authSlice';
-import { logOut } from '../../../../redux/apiRequest/authApiRequest';
+import { createAxios } from '../../../../../redux/createInstance';
+import { logoutSuccess } from '../../../../../redux/authSlice';
+import { logOut } from '../../../../../redux/apiRequest/authApiRequest';
 
 import { NavigationContainer } from '@react-navigation/native';
 // import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
