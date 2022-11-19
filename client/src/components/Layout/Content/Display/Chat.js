@@ -25,6 +25,7 @@ import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeC
 import {
     Avatar,
     Button,
+    IconButton,
     List,
     ListItem,
     ListItemAvatar,
@@ -39,6 +40,9 @@ import VideoCallIcon from '@mui/icons-material/VideoCall';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import ReplyIcon from '@mui/icons-material/Reply';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ModalKey from '../Modal/ModalKey/ModalKey';
@@ -559,12 +563,23 @@ function Chat() {
                                                 {typeChat(mess.message?.type_Msg, mess)}
                                             </div>
                                         </Tooltip>
-                                        {/* ... */}
-                                        {/* <div className={cx('boxEdite')}>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                        </div> */}
+                                        <div className={cx('boxEdite')}>
+                                            <Tooltip title="Thu hồi tin nhắn" placement="top" arrow>
+                                                <IconButton>
+                                                    <DeleteIcon sx={{ fontSize: 24 }} />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Sửa tin nhắn" placement="top" arrow>
+                                                <IconButton>
+                                                    <EditIcon sx={{ fontSize: 24 }} />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Chuyển tiếp" placement="top" arrow>
+                                                <IconButton>
+                                                    <ReplyIcon sx={{ fontSize: 24 }} />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </div>
                                     </div>
                                 </React.Fragment>
                             );

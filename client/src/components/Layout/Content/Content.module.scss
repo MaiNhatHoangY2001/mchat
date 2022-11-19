@@ -224,6 +224,16 @@
                         }
                     }
                 }
+
+                &:hover {
+                    .boxEdite {
+                        display: flex;
+                    }
+                }
+
+                .boxEdite {
+                    display: none;
+                }
             }
 
             .userSend {
@@ -285,6 +295,16 @@
                             border-radius: 10px;
                         }
                     }
+                }
+
+                &:hover {
+                    .boxEdite {
+                        display: flex;
+                    }
+                }
+
+                .boxEdite {
+                    display: none;
                 }
             }
         }
