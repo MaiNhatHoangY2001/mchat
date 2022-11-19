@@ -38,6 +38,7 @@ import CallIcon from '@mui/icons-material/Call';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ModalKey from '../Modal/ModalKey/ModalKey';
@@ -197,7 +198,8 @@ function Chat() {
     //POP THE EMOJI PICKER UP
     const [inputStr, setInputStr] = useState('');
     const [showPicker, setShowPicker] = useState(false);
-    const emojiPicker = (event, emojiObject) => {
+
+    const onEmojiClick = (emojiObject) => {
         setInputStr((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
     };
@@ -618,20 +620,16 @@ function Chat() {
                 </div>
                 <div className={cx('inputText')}>
                     <input type="text" placeholder="Aa" value={message} onChange={(e) => setMessage(e.target.value)} />
-                    <img
-                        className={cx('iconPicker')}
-                        src={`https://res.cloudinary.com/dxwhrjno5/image/upload/v1666631419/Images/220-2207946_png-file-svg-white-emoji-icon-png-transparent_pr7qbl.jpg`}
-                        alt="file"
-                        onClick={() => setShowPicker((val) => !val)}
-                    />
+                    <div className={cx('iconPicker')} onClick={() => setShowPicker((val) => !val)}>
+                        <EmojiEmotionsIcon />
+                    </div>
                     {showPicker && (
-                        <Picker
-                            pickerStyle={{ width: '25%', position: 'absolute', top: 5, index: 2 }}
-                            onEmojiClick={{ emojiPicker }}
-                        />
+                        <div className={cx('emojiPicker')}>
+                            <Picker width={400} height={400} onEmojiClick={onEmojiClick} />
+                        </div>
                     )}
                 </div>
-
+                <span>{inputStr}</span>
                 <div type="submit" className={cx('buttonInput')}>
                     {message === '' ? (
                         <img
