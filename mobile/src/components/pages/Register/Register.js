@@ -22,6 +22,7 @@ function Register() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
+    const [flagTabNewUser, setFlagTabNewUser] = useState(false);
     const [FlagNewUser, setFlagNewUser] = useState(false)
     function VerifyOtp(){
 
@@ -62,8 +63,8 @@ function Register() {
                         .signInWithCredential(credential)
                         .then(() => {
                             setOtp('');
-                            setFlagNewUser(true);
-                            Alert.alert('Thông báo', "Xác thực thành công. Vui lòng chuyển tab 'Mật khẩu mới'");
+                            setFlagTabNewUser(true);
+                            Alert.alert('Thông báo', "Xác thực thành công. Vui lòng chuyển tab 'Đăng ký'");
                         })
                         .catch((error) => {
                             console.log(error);
@@ -75,22 +76,31 @@ function Register() {
 
         return (
             <SafeAreaView style={{margin:0, padding:0}}>
-                <View style={styles.registercontainer}>
+                <View style={{borderRadius:20}}>
                     <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={[styles.ImageBackground,{}]}>
-                        <View>
-                            <View>
+                        <View
+                            style={{
+                                flex: 1,
+                                justifyContent: 'space-around',
+                                alignItems: 'center',
+                                borderTopColor: 'red',
+                                borderStyle: 'solid',
+                                borderTopWidth: 1,
+                                marginTop:-5
+                            }}>
+                            {/* <View>
                                 <Image
                                     source={require('../../../../assets/logo-no-bg.png')}
                                     style={styles.logo}
                                 />
                                 <Text style={styles.line}>LINE</Text>
-                            </View>
+                            </View> */}
                             
 
                             <View style={{display: !Flag ? 'flex' : 'none',}}>
                                 <View style={{  backgroundColor:'white',
                                                 width:350,
-                                                height:430,
+                                                height:485,
                                                 margin:30,
                                                 marginTop:90,
                                                 borderRadius:30
@@ -135,7 +145,7 @@ function Register() {
                                                     width:350,
                                                     height:420,
                                                     margin:30,
-                                                    marginTop:90,
+                                                    marginTop:150,
                                                     borderRadius:30
                                     }}>
                                         <Text style={styles.tittle}>     Vui lòng nhập mã OTP</Text>
@@ -173,19 +183,55 @@ function Register() {
             </SafeAreaView>
         );
     }
-    function verifyUser(){
+    function VerifyUser(){
         return(
             <SafeAreaView style={{margin:0, padding:0}}>
+                <View
+                    style={{
+                        display: !flagTabNewUser ? 'flex' : 'none',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#fff',
+                        width: '100%',
+                        height: '100%',
+                        marginBottom:52
+                    }}
+                >
+                    <Image source={require('../../../../assets/stop.gif')} style={{ height: '45%', width: '50%' }} />
+                    <Text
+                        style={{
+                            color: 'red',
+                            fontWeight: 'bold',
+                            fontSize: 16,
+                            backgroundColor: '#fff',
+                            marginTop: '-5%',
+                            paddingTop: '2%',
+                        }}
+                    >
+                        Vui lòng xác thực số điện thoại trước!
+                    </Text>
+                </View>
+
                 <View style={styles.registercontainer}>
                     <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={[styles.ImageBackground,{}]}>
-                        <View>
-                            <View>
+                        <View
+                            style={{
+                                flex: 1,
+                                justifyContent: 'space-around',
+                                alignItems: 'center',
+                                borderTopColor: 'red',
+                                borderStyle: 'solid',
+                                borderTopWidth: 1,
+                                marginTop:-5
+                            }}
+                            >
+                            {/* <View>
                                 <Image
                                     source={require('../../../../assets/logo-no-bg.png')}
                                     style={styles.logo}
                                 />
                                 <Text style={styles.line}>LINE</Text>
-                            </View>
+                            </View> */}
                             
                             <View style={{display: !FlagNewUser ? 'flex' : 'none',}}>
                                 <View style={{  backgroundColor:'white',
@@ -258,63 +304,62 @@ function Register() {
     }
     
     return(
-        // <SafeAreaView style={{margin:0, padding:0}}>
-        //         <View style={styles.registercontainer}>
-        //             <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={[styles.ImageBackground,{}]}>
-        //                 <View>
-        //                     <View>
-        //                         <Image
-        //                             source={require('../../../../assets/logo-no-bg.png')}
-        //                             style={styles.logo}
-        //                         />
-        //                         <Text style={styles.line}>LINE</Text>
-        //                     </View>
-        //                     <NavigationContainer>
-        //                         <Tab.Navigator
-        //                             initialRouteName="Xác thực SĐT"
-        //                             screenOptions={({ route }) => ({
-        //                                 tabBarIcon: ({ focused, color, size }) => {
-        //                                     let iconName;
-        //                                     if (route.name === 'Xác thực SĐT') {
-        //                                         iconName = 'sms';
-        //                                         size = focused ? 24 : 18;
-        //                                         color = focused ? '#fff' : '#555';
-        //                                     } else if (route.name === 'Mật khẩu mới') {
-        //                                         iconName = focused ? 'lock-open' : 'lock';
-        //                                         size = focused ? 22 : 18;
-        //                                         color = focused ? '#fff' : '#555';
-        //                                     }
-        //                                     return <Icon name={iconName} size={size} color={color} />;
-        //                                 },
-        //                                 tabBarStyle: {
-        //                                     width: widthScreen - 100,
-        //                                     height: 60,
-        //                                 },
-        //                                 tabBarItemStyle: {
-        //                                     margin: 2,
-        //                                     padding: 5,
-        //                                 },
-        //                                 tabBarActiveTintColor: '#fff',
-        //                                 tabBarActiveBackgroundColor: 'rgb(250, 139, 158)',
-        //                                 tabBarInactiveTintColor: '#555',
-        //                                 tabBarInactiveBackgroundColor: '#fff',
-        //                                 headerTitleAlign: 'center',
-        //                                 headerTitleStyle: {
-        //                                     color: 'rgb(250, 139, 158)',
-        //                                 },
-        //                             })}
-        //                         >
-        //                             <Tab.Screen name="Xác thực SĐT" component={VerifyOtp} />
-        //                             {/* <Tab.Screen name="Mật khẩu mới" component={RenewPWScreen} /> */}
-        //                         </Tab.Navigator>
-        //                     </NavigationContainer>
+        <SafeAreaView style={{margin:0, padding:0}}>
+                <View style={styles.registercontainer}>
+                <ImageBackground source={require('../../../../assets/bgcolor-vertical.png')} style={[styles.imgBackground,{}]}>
+                        <View
+                            style={{
+                                width: widthScreen - 100,
+                                height: '80%',
+                                alignItems: 'center',
+                            }}>
+                            <View style={{ marginBottom: 10 }}></View>
+                            <NavigationContainer>
+                                <Tab.Navigator
+                                    initialRouteName="Xác thực SĐT"
+                                    screenOptions={({ route }) => ({
+                                        tabBarIcon: ({ focused, color, size }) => {
+                                            let iconName;
+                                            if (route.name === 'Xác thực SĐT') {
+                                                iconName = 'sms';
+                                                size = focused ? 24 : 18;
+                                                color = focused ? '#fff' : '#555';
+                                            } else if (route.name === 'Đăng ký') {
+                                                iconName = focused ? 'lock-open' : 'lock';
+                                                size = focused ? 22 : 18;
+                                                color = focused ? '#fff' : '#555';
+                                            }
+                                            return <Icon name={iconName} size={size} color={color} />;
+                                        },
+                                        tabBarStyle: {
+                                            width: widthScreen - 100,
+                                            height: 60,
+                                        },
+                                        tabBarItemStyle: {
+                                            margin: 2,
+                                            padding: 5,
+                                        },
+                                        tabBarActiveTintColor: '#fff',
+                                        tabBarActiveBackgroundColor: 'rgb(250, 139, 158)',
+                                        tabBarInactiveTintColor: '#555',
+                                        tabBarInactiveBackgroundColor: '#fff',
+                                        headerTitleAlign: 'center',
+                                        headerTitleStyle: {
+                                            color: 'rgb(250, 139, 158)',
+                                        },
+                                    })}
+                                >
+                                    <Tab.Screen name="Xác thực SĐT" component={VerifyOtp} />
+                                    <Tab.Screen name="Đăng ký" component={VerifyUser} />
+                                </Tab.Navigator>
+                            </NavigationContainer>
                             
 
-        //                     </View>
-        //             </ImageBackground>
-        //         </View>
-        //     </SafeAreaView>
-        VerifyOtp() 
+                            </View>
+                    </ImageBackground>
+                </View>
+            </SafeAreaView>
+        // VerifyOtp() 
         // verifyUser()
 
         ) 
