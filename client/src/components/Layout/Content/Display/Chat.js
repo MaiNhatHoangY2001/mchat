@@ -200,11 +200,10 @@ function Chat() {
         return formattedDate;
     };
     //POP THE EMOJI PICKER UP
-    const [inputStr, setInputStr] = useState('');
     const [showPicker, setShowPicker] = useState(false);
 
     const onEmojiClick = (emojiObject) => {
-        setInputStr((prevInput) => prevInput + emojiObject.emoji);
+        setMessage((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
     };
 
@@ -644,7 +643,6 @@ function Chat() {
                         </div>
                     )}
                 </div>
-                <span>{inputStr}</span>
                 <div type="submit" className={cx('buttonInput')}>
                     {message === '' ? (
                         <img

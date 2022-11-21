@@ -195,7 +195,7 @@ export default function Home() {
     }, [user]);
 
     return (
-        <SafeAreaView style={{ width: width, height: height }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <NavigationContainer>
                 <Stack.Navigator>
                     <Stack.Screen options={{ headerShown: false }} name="HomeChat" component={TabScreen} />

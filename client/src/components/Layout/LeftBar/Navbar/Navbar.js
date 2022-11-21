@@ -201,7 +201,12 @@ export default function Navbar({ setContainer }) {
                                 <Grid container>
                                     <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                                         <InputLabel>Ngày</InputLabel>
-                                        <Select value={days} label="Ngày" onChange={handleChangeDays}>
+                                        <Select
+                                            MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
+                                            value={days}
+                                            label="Ngày"
+                                            onChange={handleChangeDays}
+                                        >
                                             {range(1, new Date(years, months, 0).getDate()).map((item, index) => {
                                                 return (
                                                     <MenuItem key={index} value={item}>
@@ -213,7 +218,12 @@ export default function Navbar({ setContainer }) {
                                     </FormControl>
                                     <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                                         <InputLabel>Tháng</InputLabel>
-                                        <Select value={months} label="Tháng" onChange={handleChangeMonths}>
+                                        <Select
+                                            MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
+                                            value={months}
+                                            label="Tháng"
+                                            onChange={handleChangeMonths}
+                                        >
                                             {range(1, 12).map((item, index) => {
                                                 return (
                                                     <MenuItem key={index} value={item}>
@@ -225,7 +235,12 @@ export default function Navbar({ setContainer }) {
                                     </FormControl>
                                     <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                                         <InputLabel>Năm</InputLabel>
-                                        <Select value={years} label="Năm" onChange={handleChangeYears}>
+                                        <Select
+                                            MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
+                                            value={years}
+                                            label="Năm"
+                                            onChange={handleChangeYears}
+                                        >
                                             {range(1950, today.getFullYear()).map((item, index) => {
                                                 return (
                                                     <MenuItem key={index} value={item}>
