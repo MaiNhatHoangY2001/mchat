@@ -1,7 +1,10 @@
 import { Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Dimensions, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-native';
 import { useDispatch, useSelector } from 'react-redux';
+
+import io from 'socket.io-client';
+import { url } from '../../../../../redux/createInstance';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,13 +26,47 @@ import { NavigationContainer } from '@react-navigation/native';
 //link doc top tabs: https://reactnavigation.org/docs/material-top-tab-navigator/
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
+//https://docs.expo.dev/versions/latest/sdk/video
+//npx expo install expo-av
+import { Video, AVPlaybackStatus } from 'expo-av';
+
+//npm i @cometchat-pro/react-native-calls
+// import cometChat from '@cometchat-pro/react-native-calls';
+
 const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
 
+const socket = io(url);
 export default function CallsScreen() {
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
+
+    const myVideo = useRef(null);
+    // const [status, setStatus] = useState({});
+
+    // const [callType, setCallType] = useState(null);
+    // const [callSettings, setCallSettings] = useState(null);
+    // const [call, setCall] = useState(null);
+    // const [isSomeoneCalling, setIsSomeoneCalling] = useState(false);
+
+    useEffect(() => {
+        console.log('connect: ' +socket.connected);
+        console.log('current socket id: ' +socket.id);
+    })
+    
+
     return (
         <SafeAreaView style={styles.container}>
-            <Text>calls screen</Text>
+            {/* <Text>calls screen</Text> */}
+            <Video
+                ref={myVideo}
+                style={styles.video}
+                // source={{
+                //     uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+                // }}
+                // useNativeControls //options: play, pause,...
+                resizeMode="cover"
+                // onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+            />
         </SafeAreaView>
     );
 }
@@ -39,4 +76,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'lightgray',
     },
+    video: {
+        width: '90%',
+        height: '50%',
+        borderColor: 'red',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        alignSelf: 'center'
+    }
 });
