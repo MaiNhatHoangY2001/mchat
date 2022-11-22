@@ -54,6 +54,7 @@ import { setSender } from '../../../../redux/userSlice';
 import ModalRemoveGroup from '../Modal/ModalRemoveGroup/ModalRemoveGroup';
 import { UserContext } from '../../../../context/UserContext';
 
+
 const cx = classNames.bind(styles);
 
 function Chat() {
@@ -88,6 +89,8 @@ function Chat() {
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
+
+    const [visible, setVisible] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -560,6 +563,7 @@ function Chat() {
                                                     {mess.sender === currentUserId ? nameUser : nameSender}
                                                 </p>
                                                 {typeChat(mess.message?.type_Msg, mess)}
+
                                             </div>
                                         </Tooltip>
                                         <div className={cx('boxEdite')}>

@@ -52,7 +52,6 @@ export default function MessageChat({ navigation, route }) {
     const chat = useSelector((state) => state.chat.message?.content);
     const individualChat = useSelector((state) => state.chat.individualChat);
     const isGroupChat = useSelector((state) => state.groupChat?.groupChat.isGroupChat);
-    const listGroupChat = useSelector((state) => state.groupChat?.groupChat.actor);
     // const urlImage = useSelector((state) => state.file?.upload?.url.url);
 
     const chatContext = useContext(ChatContext);
@@ -68,15 +67,10 @@ export default function MessageChat({ navigation, route }) {
 
     const [currentSender, setCurrentSender] = useState(sender);
 
-    const [currentListGroupChat, setCurrentListGroupChat] = useState(listGroupChat);
-    const [currentGroupChat, setCurrentGroupChat] = useState(
-        currentListGroupChat.filter((groupChat) => groupChat.groupName === currentSender?.profileName)[0],
-    );
-    const [changeNameGroup, setChangeNameGroup] = useState(currentGroupChat?.groupName);
-    const [adminGroup, setAdminGroup] = useState(currentGroupChat?.groupAdmin._id);
-    const [isListUser, setListUser] = useState(currentGroupChat?.user);
+
 
     const [open, setOpen] = useState(false);
+
     const [message, setMessage] = useState('');
 
     const dispatch = useDispatch();
@@ -96,9 +90,7 @@ export default function MessageChat({ navigation, route }) {
                     <TouchableOpacity
                         onPress={() =>
                             navigation.navigate('MessageInfoGroup', {
-                                group: currentGroupChat,
                                 user: user,
-                                members: isListUser,
                             })
                         }
                     >
@@ -111,77 +103,7 @@ export default function MessageChat({ navigation, route }) {
         });
     }, [navigation]);
 
-    const handleRemoveUser = (item) => async () => {
-        setListUser(isListUser.filter((user) => user._id !== item._id));
-        const apiGroupChat = {
-            idGroup: currentGroupChat._id,
-            idUser: item._id,
-        };
-        await removeUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
-    };
 
-    const setNameGroup = (event) => {
-        setChangeNameGroup(event.target.value);
-    };
-
-    const handleSetKeyAdmin = (userAdmin) => async () => {
-        setAdminGroup(userAdmin?._id);
-        const apiSetAdmin = {
-            groupAdmin: userAdmin,
-        };
-        await updateGroupChat(accessToken, dispatch, currentGroupChat._id, apiSetAdmin, axiosJWTLogin);
-    };
-
-    const handleClickApply = async () => {
-        if (currentGroupChat.groupName !== changeNameGroup.trim()) {
-            const apiSetGroupName = {
-                groupName: changeNameGroup.trim(),
-            };
-
-            //update group name in chat
-            const updateSenderName = {
-                ...currentSender,
-                profileName: changeNameGroup.trim(),
-            };
-            setCurrentSender(updateSenderName);
-            await updateGroupChat(accessToken, dispatch, currentGroupChat._id, apiSetGroupName, axiosJWTLogin);
-            getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        }
-
-        if (currentGroupChat?.groupImage !== urlImage) {
-            //upload image to cloud
-            const bodyFormData = new FormData();
-            bodyFormData.append('file', image);
-            const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
-            setUrlImage(uploadImage.url);
-
-            window.setTimeout(async function () {
-                //set group chat profile img
-                const apiSetGroupProfileImg = {
-                    groupImage: uploadImage.url[0],
-                };
-
-                //update group profile img in chat
-                const updateSenderProfileImg = {
-                    ...currentSender,
-                    profileImg: uploadImage.url,
-                };
-                await setCurrentSender(updateSenderProfileImg);
-
-                await updateGroupChat(
-                    accessToken,
-                    dispatch,
-                    currentGroupChat._id,
-                    apiSetGroupProfileImg,
-                    axiosJWTLogin,
-                );
-
-                getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-            }, 1000);
-        }
-
-        handleClose();
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -300,36 +222,7 @@ export default function MessageChat({ navigation, route }) {
         } else return <Image alt="not fount" width={'20px'} source={''} />;
     };
 
-    // MODAL CHANGE IMAGE IN GROUP
-    const [urlImage, setUrlImage] = useState(currentGroupChat?.groupImage);
-    const [image, setImage] = useState({});
-    const handleChangeImageGroup = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setUrlImage(URL.createObjectURL(event.target.files[0]));
-            setImage(event.target.files[0]);
-        }
-    };
 
-    // EVENT OUT GROUP
-    const handleOutGroup = () => {
-        const userOutGroup = {
-            _id: currentUserId,
-            profileName: user.profileName,
-        };
-
-        handleRemoveUser(userOutGroup)();
-        dispatch(setSender(null));
-        dispatch(getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin));
-        handleClose();
-    };
-
-    // EVENT REMOVE GROUP
-    const handleClickRemoveGroup = async () => {
-        await deleteGroupChat(accessToken, dispatch, currentGroupChat._id, axiosJWTLogin);
-        dispatch(setSender(null));
-        await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        handleClose();
-    };
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -391,15 +284,7 @@ export default function MessageChat({ navigation, route }) {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [sendData]);
 
-    useEffect(() => {
-        setCurrentGroupChat(
-            currentListGroupChat.filter((groupChat) => groupChat.groupName === currentSender?.profileName)[0],
-        );
-        setChangeNameGroup(currentGroupChat?.groupName);
-        setAdminGroup(currentGroupChat?.groupAdmin._id);
-        setListUser(currentGroupChat?.user);
-        setUrlImage(currentGroupChat?.groupImage);
-    }, [currentListGroupChat, currentGroupChat]);
+
 
     useEffect(() => {
         navigation.setOptions({
@@ -457,8 +342,8 @@ export default function MessageChat({ navigation, route }) {
                                                 uri: isGroupChat
                                                     ? mess.message.userGroupChat?.profileImg
                                                     : isUser
-                                                    ? currentSender?.profileImg
-                                                    : currentSender?.profileImg,
+                                                        ? currentSender?.profileImg
+                                                        : currentSender?.profileImg,
                                             }}
                                         />
                                         <View style={styles.contain}>
