@@ -167,6 +167,7 @@ import { getListGroupChat, getListIndividualChat } from '../../../redux/apiReque
 
 // IMPORT ICON LINK ==> https://icons.expo.fyi/
 import { Ionicons } from '@expo/vector-icons';
+import MessageNewGroup from './screens/Message/MessageNewGroup';
 
 // KHAI BAO STACK NAVIGATION
 const Stack = createNativeStackNavigator();
@@ -204,6 +205,7 @@ export default function Home() {
                 <Stack.Navigator>
                     <Stack.Screen options={{ headerShown: false }} name="HomeChat" component={TabScreen} />
                     <Stack.Screen name="MessageChat" component={MessageChat} />
+                    <Stack.Screen name="MassageNewGroup" component={MessageNewGroup} />
                     <Stack.Screen
                         style={{ flex: 1 }}
                         options={({ navigation, route }) => ({
