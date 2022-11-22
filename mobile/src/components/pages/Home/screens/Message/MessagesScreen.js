@@ -30,7 +30,6 @@ export default function MessagesScreen({ navigation }) {
 
     const chatContext = useContext(ChatContext);
     const setListFriend = chatContext.setListFriend;
-    const sendText4JoinGroup = chatContext.sendText4JoinGroup;
     const chatActors = chatContext.chatActors;
     const setChatActors = chatContext.setChatActors;
 
@@ -38,7 +37,6 @@ export default function MessagesScreen({ navigation }) {
     const [textSearchUser, setTextSearchUser] = useState('');
     const [openModal, setOpenModal] = useState(false);
     const [searchGroup, setSearchGroup] = useState('');
-    const [nameGroup, setNameGroup] = useState('');
 
     const dispatch = useDispatch();
     const accessToken = currentUser?.accessToken;
@@ -93,13 +91,6 @@ export default function MessagesScreen({ navigation }) {
         }
 
         dispatch(setSender(sender));
-    };
-
-    
-
-    const handleClickExit = () => {
-        setOpenModal(false);
-        setSelectData([]);
     };
 
 

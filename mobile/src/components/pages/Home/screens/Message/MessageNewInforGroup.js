@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
     FlatList,
     Image,
@@ -10,10 +10,16 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // IMPORT ICON LINK ==> https://icons.expo.fyi/
 import { Ionicons } from '@expo/vector-icons';
+import { addGroupChat, getMsgsGroupChat } from '../../../../../redux/apiRequest/chatApiRequest';
+import { getGroupChatSuccess, setIsGroupChat } from '../../../../../redux/groupChatSlice';
+import { setSender } from '../../../../../redux/userSlice';
+import { ChatContext } from '../../../../../context/ChatContext';
+import { createAxios } from '../../../../../redux/createInstance';
+import { loginSuccess } from '../../../../../redux/authSlice';
 
 const Item = ({ item }) => (
     <TouchableOpacity style={[styles.item]}>
@@ -30,13 +36,21 @@ const Item = ({ item }) => (
 );
 
 export default function MessageNewInforGroup({ navigation, route }) {
-    
+
     const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
 
+    const chatContext = useContext(ChatContext);
+    const { sendText4JoinGroup } = chatContext;
+
+
+    const dispatch = useDispatch();
+    const accessToken = currentUser?.accessToken;
+    let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
+
 
     const members = route.params.checked;
-    const accessToken = currentUser?.accessToken;
+
 
     const [image, setImage] = useState(
         'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667061870/Avata/computer-science-1331579_1280_nomqbh.png',
@@ -75,12 +89,14 @@ export default function MessageNewInforGroup({ navigation, route }) {
 
                 const newGroupChat = await addGroupChat(accessToken, dispatch, apiNewGroupChat, axiosJWT);
                 dispatch(getGroupChatSuccess([...currentGroupChat, newGroupChat]));
+
+                const sender = {
+                    _id: newGroupChat._id,
+                    profileName: newGroupChat.groupName,
+                    profileImg: newGroupChat?.groupImage,
+                }
                 dispatch(
-                    setSender({
-                        _id: newGroupChat._id,
-                        profileName: newGroupChat.groupName,
-                        profileImg: newGroupChat?.groupImage,
-                    }),
+                    setSender(sender),
                 );
                 //reload chat when create new group
                 const apiSent = {
@@ -90,7 +106,7 @@ export default function MessageNewInforGroup({ navigation, route }) {
                 //send text join group to friend
                 sendText4JoinGroup(listFriend, name, newGroupChat._id);
                 dispatch(setIsGroupChat(true));
-                handleClickExit();
+                navigation.navigate('MessageChat', { item: { sender } });
             }
         }
     };
@@ -98,7 +114,7 @@ export default function MessageNewInforGroup({ navigation, route }) {
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity onPress={handleCreateGroupChat}>
+                <TouchableOpacity onPress={() => handleCreateGroupChat(members)}>
                     <Ionicons name="checkmark" size={30} color="green" />
                 </TouchableOpacity>
             ),
