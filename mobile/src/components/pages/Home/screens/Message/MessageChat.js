@@ -27,6 +27,8 @@ import { ChatContext } from '../../../../../context/ChatContext';
 import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../../context/TypeChat';
 import { setSender } from '../../../../../redux/userSlice';
 
+import * as ImagePicker from 'expo-image-picker';
+
 import {
     addUserGroupChat,
     deleteGroupChat,
@@ -333,6 +335,57 @@ export default function MessageChat({ navigation, route }) {
     //     }
     // }, []);
 
+    // const [image, setImage] = useState(null);
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,
+            aspect: [4, 3],
+            base64: true,
+            quality: 1,
+            allowsMultipleSelection: true,
+        });
+
+        // console.log(result);
+
+
+        if (!result.cancelled) {
+            const files = result;
+            const bodyFormData = new FormData();
+            if (files.uri !== undefined) {
+
+                bodyFormData.append('file', configImageToFile(files));
+            }
+            else {
+                if (files.selected.length > 0) {
+                    for (const element of files.selected)
+                        bodyFormData.append('file', configImageToFile(element));
+                }
+            }
+
+
+            const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+            window.setTimeout(async function () {
+                //wait upload image on google cloud
+                await addMsgImgWithInfo(uploadImage.url);
+            }, 1000);
+
+        }
+    };
+
+    const configImageToFile = (files) => {
+        let localUri = files.uri;
+        let filename = localUri.split('/').pop();
+
+        // Infer the type of the image
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        return { type: type, uri: localUri, name: filename };
+    }
+
     useEffect(() => {
         setIndividualChatId(individualChat.idChat);
     }, [individualChat.idChat]);
@@ -416,8 +469,8 @@ export default function MessageChat({ navigation, route }) {
                                                 uri: isGroupChat
                                                     ? mess.message.userGroupChat?.profileImg
                                                     : isUser
-                                                    ? currentSender?.profileImg
-                                                    : currentSender?.profileImg,
+                                                        ? currentSender?.profileImg
+                                                        : currentSender?.profileImg,
                                             }}
                                         />
                                         <View style={styles.contain}>
@@ -433,7 +486,7 @@ export default function MessageChat({ navigation, route }) {
                     </View>
                 </ScrollView>
                 <View style={styles.footer}>
-                    <TouchableOpacity style={styles.Button}>
+                    <TouchableOpacity style={styles.Button} onPress={pickImage}>
                         <Text>icon</Text>
                     </TouchableOpacity>
                     <TextInput

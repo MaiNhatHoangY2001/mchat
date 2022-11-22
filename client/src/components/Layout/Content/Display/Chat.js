@@ -603,6 +603,7 @@ function Chat() {
                             for (let index = 0; index < files.length; index++) {
                                 bodyFormData.append('file', files[index]);
                             }
+
                             const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
                             window.setTimeout(async function () {
                                 //wait upload image on google cloud

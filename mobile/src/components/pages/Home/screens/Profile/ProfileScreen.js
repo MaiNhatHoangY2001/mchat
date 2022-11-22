@@ -28,36 +28,36 @@ const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
 
 export default function ProfileScreen() {
-    const user = useSelector((state) => state.auth.login?.currentUser);
-    const userId = user?._id;
-    const accessToken = user?.accessToken;
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
+    const userId = currentUser?._id;
+    const accessToken = currentUser?.accessToken;
 
     const userContext = useContext(UserContext);
     const removeUserActive2Socket = userContext.removeUserActive2Socket;
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
+    let axiosJWTLogout = createAxios(currentUser, dispatch, logoutSuccess);
 
     const handleLogout = () => {
         logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
-        removeUserActive2Socket(user?.phoneNumber);
+        removeUserActive2Socket(currentUser?.phoneNumber);
     };
 
     useEffect(() => {
-        if (!user) {
+        if (!currentUser) {
             navigate('/login');
         }
-    }, [user]);
+    }, [currentUser]);
 
     return (
         <SafeAreaView style={styles.container}>
-            <Image source={require('../../../../../../assets/avatar.png')} style={styles.imgAva} resizeMode="contain" />
+            <Image source={{ uri: currentUser?.profileImg }} style={styles.imgAva} resizeMode="contain" />
             <View>
                 <View style={styles.viewInfoLine}>
                     <IconAntDesign name="user" size={30} color="black" />
                     <View style={{ width: '70%', backgroundColor: '#fff', marginLeft: '5%', marginRight: '5%' }}>
-                        <Text style={styles.txtInfo}>Tuấn Đinh</Text>
+                        <Text style={styles.txtInfo}>{currentUser?.profileName}</Text>
                         <Text style={styles.txtSystem}>Tên của bạn</Text>
                     </View>
                     <TouchableOpacity>
@@ -67,7 +67,7 @@ export default function ProfileScreen() {
                 <View style={[styles.viewInfoLine, { borderTopColor: 'lightgray', borderTopWidth: 1 }]}>
                     <IconIon name="phone-portrait-outline" size={30} color="black" />
                     <View style={{ width: '70%', backgroundColor: '#fff', marginLeft: '5%', marginRight: '5%' }}>
-                        <Text style={styles.txtInfo}>0944302210</Text>
+                        <Text style={styles.txtInfo}>{currentUser?.phoneNumber}</Text>
                         <Text style={styles.txtSystem}>Số điện thoại của bạn</Text>
                     </View>
                     <TouchableOpacity>
