@@ -66,7 +66,7 @@ function UserContextProvider({ children }) {
     const removeUserActive2Socket = (phoneNumber) => {
         setUsersActive(() => {
             const phones = getFromLocalStorage('phones');
-            const usersNumber = phones.filter((item) => item !== phoneNumber);
+            const usersNumber = phones?.filter((item) => item !== phoneNumber);
             socket.current.emit('user', usersNumber);
 
             saveToLocalStorage(usersNumber, 'phones');

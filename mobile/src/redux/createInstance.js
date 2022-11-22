@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
-export const url = 'https://real-time-chat-server-123.herokuapp.com';
+export const url = 'https://realtimechat-mchat-server.onrender.com';
 
 const refreshToken = async (refreshToken) => {
     try {
