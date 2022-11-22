@@ -381,12 +381,7 @@ export default function MessageChat({ navigation, route }) {
     }, [navigation]);
 
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
-            behavior="padding"
-            enabled
-            keyboardVerticalOffset={85}
-        >
+        <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }} enabled>
             <ImageBackground
                 style={styles.container}
                 resizeMode="cover"

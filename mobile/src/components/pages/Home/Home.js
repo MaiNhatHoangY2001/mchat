@@ -148,7 +148,7 @@
 // export default Home;
 
 // IMPORT REACT NATIVE
-import { Dimensions, SafeAreaView, Text, View } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 // IMPORT STACK NAVIGATION
 import { NavigationContainer } from '@react-navigation/native';
@@ -157,12 +157,16 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // IMPORT SCREEN
 import TabScreen from './screens/TabScreen';
 import MessageChat from './screens/Message/MessageChat';
+import MessageSearch from './screens/Message/MessageSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-native';
 import { createAxios } from '../../../redux/createInstance';
 import { loginSuccess } from '../../../redux/authSlice';
 import { useEffect } from 'react';
 import { getListGroupChat, getListIndividualChat } from '../../../redux/apiRequest/chatApiRequest';
+
+// IMPORT ICON LINK ==> https://icons.expo.fyi/
+import { Ionicons } from '@expo/vector-icons';
 
 // KHAI BAO STACK NAVIGATION
 const Stack = createNativeStackNavigator();
@@ -200,8 +204,42 @@ export default function Home() {
                 <Stack.Navigator>
                     <Stack.Screen options={{ headerShown: false }} name="HomeChat" component={TabScreen} />
                     <Stack.Screen name="MessageChat" component={MessageChat} />
+                    <Stack.Screen
+                        style={{ flex: 1 }}
+                        options={({ navigation, route }) => ({
+                            headerTitle: () => (
+                                <View style={styles.bgSearch}>
+                                    <TextInput style={styles.inputSearch} placeholder="Tìm Kiếm" />
+                                    <TouchableOpacity>
+                                        <Ionicons name="search" size={20} color="black" />
+                                    </TouchableOpacity>
+                                </View>
+                            ),
+                        })}
+                        name="MessageSearch"
+                        component={MessageSearch}
+                    />
                 </Stack.Navigator>
             </NavigationContainer>
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    bgSearch: {
+        flex: 0.9,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: -15,
+        marginRight: 20,
+        paddingVertical: 4,
+        paddingHorizontal: 16,
+
+        borderWidth: 1,
+        borderRadius: 100,
+    },
+    inputSearch: {
+        flex: 1,
+    },
+});
