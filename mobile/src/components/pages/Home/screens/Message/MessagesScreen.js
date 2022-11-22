@@ -62,9 +62,9 @@ export default function MessagesScreen({ navigation }) {
     const handleToggle = (item) => () => {
         const currentIndex = selectData
             .map((item1) => {
-                return item1._id;
+                return item1?._id;
             })
-            .indexOf(item._id);
+            .indexOf(item?._id);
         const newData = [...selectData];
 
         if (currentIndex === -1) {
@@ -112,8 +112,8 @@ export default function MessagesScreen({ navigation }) {
                 const apiNewGroupChat = {
                     groupName: name,
                     chatStatus: '0',
-                    user: [currentUser._id],
-                    groupAdmin: currentUser._id,
+                    user: [currentUser?._id],
+                    groupAdmin: currentUser?._id,
                     newMsg: {
                         type_Msg: 0,
                         content: '',
@@ -126,18 +126,18 @@ export default function MessagesScreen({ navigation }) {
                 dispatch(getGroupChatSuccess([...currentGroupChat, newGroupChat]));
                 dispatch(
                     setSender({
-                        _id: newGroupChat._id,
-                        profileName: newGroupChat.groupName,
+                        _id: newGroupChat?._id,
+                        profileName: newGroupChat?.groupName,
                         profileImg: newGroupChat?.groupImage,
                     }),
                 );
                 //reload chat when create new group
                 const apiSent = {
-                    groupId: newGroupChat._id,
+                    groupId: newGroupChat?._id,
                 };
                 getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWT);
                 //send text join group to friend
-                sendText4JoinGroup(listFriend, name, newGroupChat._id);
+                sendText4JoinGroup(listFriend, name, newGroupChat?._id);
                 dispatch(setIsGroupChat(true));
                 handleClickExit();
             }
@@ -171,7 +171,7 @@ export default function MessagesScreen({ navigation }) {
 
     // Get Item
     const renderItem = ({ item }) => {
-        const backgroundColor = item._id === selectedId ? '#f9c2ff' : '#ffffff';
+        const backgroundColor = item?._id === selectedId ? '#f9c2ff' : '#ffffff';
         const actorGroupChat = {
             _id: item?._id,
             profileName: item?.groupName,
@@ -183,7 +183,7 @@ export default function MessagesScreen({ navigation }) {
             <Item
                 item={item}
                 onPress={() => {
-                    setSelectedId(item._id);
+                    setSelectedId(item?._id);
                     handleClick(item?._id, item?.sender || actorGroupChat, item?.user, isGroupChat);
                     navigation.navigate('MessageChat', { item: item });
                 }}
