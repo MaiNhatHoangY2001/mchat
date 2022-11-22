@@ -26,7 +26,6 @@ export default function MessagesScreen({ navigation }) {
     const [selectedId, setSelectedId] = useState(null);
 
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
-    const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
     const currentSearch = useSelector((state) => state.user.users?.allUsers);
 
     const chatContext = useContext(ChatContext);

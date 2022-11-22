@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 
 const Item = ({ item }) => (
     <TouchableOpacity style={[styles.item]}>
@@ -26,7 +27,14 @@ const Item = ({ item }) => (
 );
 
 export default function MessageNewInforGroup({ navigation, route }) {
+    
+    const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
+
+
     const members = route.params.checked;
+    const accessToken = currentUser?.accessToken;
+
     const [image, setImage] = useState(
         'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667061870/Avata/computer-science-1331579_1280_nomqbh.png',
     );
