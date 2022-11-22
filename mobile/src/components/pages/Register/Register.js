@@ -103,6 +103,7 @@ function Register() {
                                                 height:485,
                                                 margin:30,
                                                 marginTop:90,
+                                                justifyContent:'center',
                                                 borderRadius:30
                                                 ,opacity:0.99999
                                 }}>
@@ -194,7 +195,7 @@ function Register() {
                         backgroundColor: '#fff',
                         width: '100%',
                         height: '100%',
-                        marginBottom:52
+                        marginBottom:70
                     }}
                 >
                     <Image source={require('../../../../assets/stop.gif')} style={{ height: '45%', width: '50%' }} />
@@ -223,22 +224,15 @@ function Register() {
                                 borderStyle: 'solid',
                                 borderTopWidth: 1,
                                 marginTop:-5
-                            }}
-                            >
-                            {/* <View>
-                                <Image
-                                    source={require('../../../../assets/logo-no-bg.png')}
-                                    style={styles.logo}
-                                />
-                                <Text style={styles.line}>LINE</Text>
-                            </View> */}
-                            
+                            }}>
+                
                             <View style={{display: !FlagNewUser ? 'flex' : 'none',}}>
                                 <View style={{  backgroundColor:'white',
                                                 width:350,
-                                                height:250,
+                                                height:700,
                                                 margin:30,
-                                                marginTop:90,
+                                                justifyContent:'center',
+                                                marginTop:350,
                                                 borderRadius:30
                                                 ,opacity:0.99999
                                 }}>
@@ -252,17 +246,15 @@ function Register() {
                                                         textContentType='oneTimeCode'
                                                         placeholder='Tên của bạn' style={styles.inputSDT}>
                                                     </TextInput>
+                                        <View style={{flexDirection:'row', alignSelf:'center'}}>
+                                            <TouchableOpacity style={[styles.btnCon,{marginLeft:30}]} onPress={() => setFlagNewUser(true)}>
+                                                <Text style={styles.txtCon}> Tiếp tục </Text>
+                                            </TouchableOpacity>
+                                            {/* <Link to="/" style={styles.btnCon}>
+                                                <Text style={styles.txtCon}>   Trở về </Text>
+                                            </Link> */}
+                                        </View>
                                     </View>
-                                    
-                                </View>
-                                
-                                <View style={{flexDirection:'row', alignSelf:'center',marginBottom:80}}>
-                                    <TouchableOpacity style={[styles.btnConUser]} onPress={() => setFlagNewUser(true)}>
-                                        <Text style={styles.txtCon}> Tiếp tục </Text>
-                                    </TouchableOpacity>
-                                    {/* <Link to="/" style={styles.btnCon}>
-                                        <Text style={styles.txtCon}>   Trở về </Text>
-                                    </Link> */}
                                 </View>
                             </View>
 
@@ -270,29 +262,29 @@ function Register() {
                             <View style={{display: !FlagNewUser ? 'none' : 'flex'}}>
                                 <View style={{  backgroundColor:'white',
                                                     width:350,
-                                                    height:300,
+                                                    height:540,
                                                     margin:30,
-                                                    marginTop:90,
+                                                    marginTop:500,
                                                     borderRadius:30,
-                                                    alignSelf:'center'
+                                                    justifyContent:'center'
                                     }}>
                                         <Text style={[styles.tittle, {alignSelf:'center'}]}>Chọn ảnh đại diện</Text>
-                                        <View style={{flexDirection:'row', alignSelf:'center'} }>
+                                        <View style={{alignSelf:'center'} }>
                                             <TouchableOpacity style={styles.btnImgPicker}>
                                                 <Image source={require('../../../../assets/camera.png')}
                                                 style={styles.ImgPicker}/>
                                             </TouchableOpacity>
-                                        </View>
-                                        
+                                            <View style={{flexDirection:'row', marginTop:10, marginBottom:70, alignSelf:'center'}}>
+                                                <Link to="/" style={styles.btnCon} onPress={() => setFlagNewUser(false)}>
+                                                    <Text style={styles.txtCon}> Xác nhận </Text>
+                                                </Link>
+                                                {/* <TouchableOpacity onPress={() => setFlagNewUser(false)}  style={styles.btnCon}>
+                                                    <Text style={styles.txtCon}>   Trở về </Text>
+                                                </TouchableOpacity> */}
+                                            </View>
+                                        </View> 
                                 </View>
-                                <View style={{flexDirection:'row', marginTop:10, marginBottom:70, alignSelf:'center'}}>
-                                    <Link to="/" style={styles.btnConUser} onPress={() => setFlagNewUser(false)}>
-                                        <Text style={styles.txtCon}> Xác nhận </Text>
-                                    </Link>
-                                    {/* <TouchableOpacity onPress={() => setFlagNewUser(false)}  style={styles.btnCon}>
-                                        <Text style={styles.txtCon}>   Trở về </Text>
-                                    </TouchableOpacity> */}
-                                </View>
+                                
                             </View>
                             
 

@@ -172,8 +172,8 @@ import { Ionicons } from '@expo/vector-icons';
 const Stack = createNativeStackNavigator();
 
 // GET SIZE MOBILE
-const width = Dimensions.get('screen').width;
-const height = Dimensions.get('screen').height;
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 export default function Home() {
     const user = useSelector((state) => state.auth.login?.currentUser);

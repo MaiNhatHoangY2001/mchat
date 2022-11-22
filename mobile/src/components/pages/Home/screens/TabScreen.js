@@ -21,7 +21,7 @@ const Tab = createBottomTabNavigator();
 export default function TabScreen({ navigation }) {
     return (
         <Tab.Navigator
-            initialRouteName="Trò chuyện"
+            initialRouteName="homeMessage"
             tabBarPosition="bottom"
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
@@ -46,7 +46,6 @@ export default function TabScreen({ navigation }) {
                                 height: '110%',
                                 width: '130%',
                                 justifyContent: 'center',
-                                marginLeft: '-12%',
                             }}
                         >
                             <IconAntDesign name={iconNameAntDesign} size={size} color={color} />
@@ -57,7 +56,7 @@ export default function TabScreen({ navigation }) {
                 },
                 tabBarStyle: {
                     width: widthScreen,
-                    height: '8%',
+                    height: '10%',
                     backgroundColor: '#303030',
                 },
                 tabBarItemStyle: {
