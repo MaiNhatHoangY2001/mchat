@@ -26,7 +26,7 @@ export default function TabScreen() {
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconNameAntDesign, iconNameIcon, iconNameFA;
-                    if (route.name === 'homeMessage') {
+                    if (route.name === 'Trò chuyện') {
                         iconNameAntDesign = 'message1';
                         size = focused ? 25 : 22;
                         color = focused ? 'rgb(250, 139, 158)' : '#fff';
@@ -46,7 +46,6 @@ export default function TabScreen() {
                                 height: '110%',
                                 width: '130%',
                                 justifyContent: 'center',
-                                marginLeft: '-12%',
                             }}
                         >
                             <IconAntDesign name={iconNameAntDesign} size={size} color={color} />
@@ -57,7 +56,7 @@ export default function TabScreen() {
                 },
                 tabBarStyle: {
                     width: widthScreen,
-                    height: '8%',
+                    height: '10%',
                     backgroundColor: '#303030',
                 },
                 tabBarItemStyle: {
@@ -68,13 +67,7 @@ export default function TabScreen() {
                 tabBarLabelStyle: { fontSize: 12, fontWeight: 'bold' },
             })}
         >
-            <Tab.Screen
-                name="homeMessage"
-                options={{
-                    headerShown: false,
-                }}
-                component={MessageHome}
-            />
+            <Tab.Screen name="Trò chuyện" options={{ headerShown: false }} component={MessageHome} />
             <Tab.Screen name="call" options={{ title: 'Cuộc gọi' }} component={CallsScreen} />
             <Tab.Screen name="profile" options={{ title: 'Thông tin' }} component={ProfileScreen} />
         </Tab.Navigator>
