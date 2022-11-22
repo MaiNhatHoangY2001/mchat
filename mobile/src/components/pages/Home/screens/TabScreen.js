@@ -21,12 +21,12 @@ const Tab = createBottomTabNavigator();
 export default function TabScreen({ navigation }) {
     return (
         <Tab.Navigator
-            initialRouteName="homeMessage"
+            initialRouteName="Trò chuyện"
             tabBarPosition="bottom"
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconNameAntDesign, iconNameIcon, iconNameFA;
-                    if (route.name === 'homeMessage') {
+                    if (route.name === 'Trò chuyện') {
                         iconNameAntDesign = 'message1';
                         size = focused ? 25 : 22;
                         color = focused ? 'rgb(250, 139, 158)' : '#fff';
@@ -80,7 +80,7 @@ export default function TabScreen({ navigation }) {
                         </TouchableOpacity>
                     ),
                 })}
-                name="homeMessage"
+                name="Trò chuyện"
                 component={MessagesScreen}
             />
             {/* <Tab.Screen name="call" options={{ title: 'Cuộc gọi' }} component={CallsScreen} /> */}
