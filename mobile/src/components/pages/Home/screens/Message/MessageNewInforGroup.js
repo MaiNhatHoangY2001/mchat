@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     FlatList,
     Image,
@@ -11,6 +11,9 @@ import {
     View,
 } from 'react-native';
 import { useSelector } from 'react-redux';
+
+// IMPORT ICON LINK ==> https://icons.expo.fyi/
+import { Ionicons } from '@expo/vector-icons';
 
 const Item = ({ item }) => (
     <TouchableOpacity style={[styles.item]}>
@@ -92,6 +95,15 @@ export default function MessageNewInforGroup({ navigation, route }) {
         }
     };
 
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={handleCreateGroupChat}>
+                    <Ionicons name="checkmark" size={30} color="green" />
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
 
     return (
         <View style={styles.container}>

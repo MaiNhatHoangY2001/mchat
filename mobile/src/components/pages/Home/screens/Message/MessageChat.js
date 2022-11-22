@@ -28,6 +28,7 @@ import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../../context/Ty
 import { setSender } from '../../../../../redux/userSlice';
 
 import * as ImagePicker from 'expo-image-picker';
+import { Ionicons } from '@expo/vector-icons';
 
 import {
     addUserGroupChat,
@@ -461,16 +462,16 @@ export default function MessageChat({ navigation, route }) {
                 </ScrollView>
                 <View style={styles.footer}>
                     <TouchableOpacity style={styles.Button} onPress={pickImage}>
-                        <Text>icon</Text>
+                        <Ionicons name="image" size={24} color="black" />
                     </TouchableOpacity>
                     <TextInput
                         style={styles.inputText}
-                        placeholder="Nhập gì đi cha"
+                        placeholder="Aa"
                         onChangeText={(value) => setMessage(value)}
                         value={message}
                     />
                     <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
-                        <Text>Send</Text>
+                        <Ionicons name="send" size={24} color="black" />
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
