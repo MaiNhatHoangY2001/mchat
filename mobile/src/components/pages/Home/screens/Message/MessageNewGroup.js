@@ -114,11 +114,11 @@ export default function MessageNewGroup({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={[{ flex: 1, paddingBottom: 10 }, styles.borderBottom]}>
+            <View style={[{ flex: 1, padding: 10 }, styles.borderBottom]}>
                 <Text style={[styles.title]}>Danh danh người dùng </Text>
                 <FlatList style={[{ flex: 1 }]} data={filteredData} renderItem={renderItem} />
             </View>
-            <View style={[{ flex: 1 }]}>
+            <View style={[{ flex: 1, padding: 10 }]}>
                 <Text style={styles.title}>Danh danh đã chọn {check.length}</Text>
                 <FlatList style={{ flex: 1 }} data={check} renderItem={renderItemChecked} />
             </View>
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#c4c4c4',
     },
     title: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: '600',
     },
 
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     bgImage: {
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
 
         marginRight: 10,
     },
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     },
     titleItem: {
         flex: 1,
-        fontSize: 20,
+        fontSize: 16,
     },
 
     buttonBottom: {
