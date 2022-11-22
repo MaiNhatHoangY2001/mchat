@@ -17,11 +17,11 @@ const Item = ({ item }) => (
             <Image
                 style={styles.image}
                 source={{
-                    uri: item.uri,
+                    uri: item?.sender?.profileImg,
                 }}
             />
         </View>
-        <Text style={[styles.titleItem]}>{item.name}</Text>
+        <Text style={[styles.titleItem]}>{item?.sender?.profileName}</Text>
     </TouchableOpacity>
 );
 
@@ -35,6 +35,55 @@ export default function MessageNewInforGroup({ navigation, route }) {
     const renderItem = ({ item }) => {
         return <Item item={item} />;
     };
+
+    const handleCreateGroupChat = async (listFriend) => {
+        if (listFriend.length > 1) {
+            let name;
+            if (nameGroup === '') {
+                name = listFriend?.reduce((list, friend) => {
+                    return `${list}, ${friend.sender.profileName}`;
+                }, `${currentUser.profileName}`);
+            } else name = nameGroup.trim();
+
+            const isHaveGroupChat = currentGroupChat.some((group) => group.groupName === name);
+            if (isHaveGroupChat) {
+                console.log('Đã tồn tại nhóm');
+            } else {
+                const apiNewGroupChat = {
+                    groupName: name,
+                    chatStatus: '0',
+                    user: [currentUser._id],
+                    groupAdmin: currentUser._id,
+                    newMsg: {
+                        type_Msg: 0,
+                        content: '',
+                        imageContent: [],
+                        profileName: currentUser?.profileName,
+                    },
+                };
+
+                const newGroupChat = await addGroupChat(accessToken, dispatch, apiNewGroupChat, axiosJWT);
+                dispatch(getGroupChatSuccess([...currentGroupChat, newGroupChat]));
+                dispatch(
+                    setSender({
+                        _id: newGroupChat._id,
+                        profileName: newGroupChat.groupName,
+                        profileImg: newGroupChat?.groupImage,
+                    }),
+                );
+                //reload chat when create new group
+                const apiSent = {
+                    groupId: newGroupChat._id,
+                };
+                getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWT);
+                //send text join group to friend
+                sendText4JoinGroup(listFriend, name, newGroupChat._id);
+                dispatch(setIsGroupChat(true));
+                handleClickExit();
+            }
+        }
+    };
+
 
     return (
         <View style={styles.container}>

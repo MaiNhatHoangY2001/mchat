@@ -4,60 +4,55 @@ import { FlatList, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOp
 // IMPORT ICON LINK ==> https://icons.expo.fyi/
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { searchUser } from '../../../../../redux/apiRequest/userApiRequest';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess } from '../../../../../redux/authSlice';
+import { createAxios } from '../../../../../redux/createInstance';
+import { setSender } from '../../../../../redux/userSlice';
+import { setIsGroupChat } from '../../../../../redux/groupChatSlice';
+import { getMsgs } from '../../../../../redux/apiRequest/chatApiRequest';
 
-const DATA = [
-    {
-        id: 0,
-        name: 'Ngoc Long',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 1,
-        name: 'Nhat Hoang',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 2,
-        name: 'Minh Hung',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 3,
-        name: 'Minh Hieu',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 4,
-        name: 'Dinh Tuan',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 5,
-        name: 'Con Cho',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-];
 
-const Item = ({ item }) => (
-    <TouchableOpacity style={[styles.item]}>
-        <View style={styles.bgImage}>
-            <Image
-                style={styles.image}
-                source={{
-                    uri: item.uri,
-                }}
-            />
-        </View>
-        <Text style={[styles.title]}>{item.name}</Text>
-    </TouchableOpacity>
-);
+
 
 export default function MessageSearch({ navigation }) {
-    const [textSearch, setTextSearch] = useState('');
 
-    const filteredData = DATA.filter((item) => {
-        return item.name.toLowerCase().includes(textSearch.toLowerCase());
-    });
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
+    const currentSearch = useSelector((state) => state.user.users?.allUsers);
+
+    const dispatch = useDispatch();
+    const accessToken = currentUser?.accessToken;
+
+    let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
+
+
+    const [textSearch, setTextSearch] = useState('');
+    const [usersSearch, setUsersSearch] = useState([]);
+
+
+    const handleGetUser = (sender) => {
+        const actor = { sender: currentUser._id, user: sender._id };
+
+        getMsgs(currentUser.accessToken, dispatch, actor, axiosJWT);
+        dispatch(setSender(sender));
+        dispatch(setIsGroupChat(false));
+        navigation.navigate('MessageChat', { item: { sender } });
+    };
+
+    const Item = ({ item }) => (
+        <TouchableOpacity style={[styles.item]} onPress={() => handleGetUser(item)}>
+            <View style={styles.bgImage}>
+                <Image
+                    style={styles.image}
+                    source={{
+                        uri: item?.profileImg,
+                    }}
+                />
+            </View>
+            <Text style={[styles.title]}>{item?.profileName}</Text>
+        </TouchableOpacity>
+    );
+
 
     useEffect(() => {
         navigation.setOptions({
@@ -71,6 +66,14 @@ export default function MessageSearch({ navigation }) {
             ),
         });
     }, [navigation, textSearch]);
+
+    useEffect(() => {
+        const search = textSearch === '' ? '@' : textSearch;
+        searchUser(accessToken, dispatch, search, axiosJWT);
+        if (currentSearch !== null) {
+            setUsersSearch(currentSearch?.filter((user) => user?.profileName !== currentUser?.profileName));
+        }
+    }, [textSearch]);
 
     const renderItem = ({ item }) => {
         return <Item item={item} />;
@@ -86,7 +89,8 @@ export default function MessageSearch({ navigation }) {
                     <Text style={[styles.title, styles.bool]}>New Group</Text>
                 </TouchableOpacity>
             </View>
-            <FlatList style={{ width: '100%' }} data={filteredData} renderItem={renderItem} />
+
+            <FlatList style={{ width: '100%' }} data={usersSearch} renderItem={renderItem} />
         </SafeAreaView>
     );
 }

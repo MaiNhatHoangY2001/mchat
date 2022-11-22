@@ -26,17 +26,17 @@ export default function MessagesScreen({ navigation }) {
     const [selectedId, setSelectedId] = useState(null);
 
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
-    const currentIndividualChat = useSelector((state) => state.chat.individualChat?.actor);
     const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
     const currentSearch = useSelector((state) => state.user.users?.allUsers);
 
     const chatContext = useContext(ChatContext);
     const setListFriend = chatContext.setListFriend;
     const sendText4JoinGroup = chatContext.sendText4JoinGroup;
+    const chatActors = chatContext.chatActors;
+    const setChatActors = chatContext.setChatActors;
 
     const [usersSearch, setUsersSearch] = useState([]);
     const [textSearchUser, setTextSearchUser] = useState('');
-    const [chatActors, setChatActors] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [searchGroup, setSearchGroup] = useState('');
     const [nameGroup, setNameGroup] = useState('');
@@ -75,7 +75,7 @@ export default function MessagesScreen({ navigation }) {
         setSelectData(newData);
     };
 
-    const handleClick = async (individualId, sender, userId, isGroupChat) => {
+    const handleSetSender = async (individualId, sender, userId, isGroupChat) => {
         if (!isGroupChat) {
             const apiSent = {
                 sender: sender?._id,
@@ -96,70 +96,14 @@ export default function MessagesScreen({ navigation }) {
         dispatch(setSender(sender));
     };
 
-    const handleCreateGroupChat = async (listFriend) => {
-        if (listFriend.length > 1) {
-            let name;
-            if (nameGroup === '') {
-                name = listFriend?.reduce((list, friend) => {
-                    return `${list}, ${friend.sender.profileName}`;
-                }, `${currentUser.profileName}`);
-            } else name = nameGroup.trim();
-
-            const isHaveGroupChat = currentGroupChat.some((group) => group.groupName === name);
-            if (isHaveGroupChat) {
-                console.log('Đã tồn tại nhóm');
-            } else {
-                const apiNewGroupChat = {
-                    groupName: name,
-                    chatStatus: '0',
-                    user: [currentUser._id],
-                    groupAdmin: currentUser._id,
-                    newMsg: {
-                        type_Msg: 0,
-                        content: '',
-                        imageContent: [],
-                        profileName: currentUser?.profileName,
-                    },
-                };
-
-                const newGroupChat = await addGroupChat(accessToken, dispatch, apiNewGroupChat, axiosJWT);
-                dispatch(getGroupChatSuccess([...currentGroupChat, newGroupChat]));
-                dispatch(
-                    setSender({
-                        _id: newGroupChat._id,
-                        profileName: newGroupChat.groupName,
-                        profileImg: newGroupChat?.groupImage,
-                    }),
-                );
-                //reload chat when create new group
-                const apiSent = {
-                    groupId: newGroupChat._id,
-                };
-                getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWT);
-                //send text join group to friend
-                sendText4JoinGroup(listFriend, name, newGroupChat._id);
-                dispatch(setIsGroupChat(true));
-                handleClickExit();
-            }
-        }
-    };
+    
 
     const handleClickExit = () => {
         setOpenModal(false);
         setSelectData([]);
     };
 
-    useEffect(() => {
-        if (currentIndividualChat !== null) {
-            const listChat = currentIndividualChat?.concat(currentGroupChat);
-            const listSort = listChat?.sort(function (a, b) {
-                return new Date(b?.message[0]?.time) - new Date(a?.message[0]?.time);
-            });
-            setChatActors(listSort);
-            //set actor chat in context
-            setListFriend(currentIndividualChat);
-        }
-    }, [currentIndividualChat, currentGroupChat]);
+
 
     useEffect(() => {
         const search = textSearchUser === '' ? '@' : textSearchUser;
@@ -184,7 +128,7 @@ export default function MessagesScreen({ navigation }) {
                 item={item}
                 onPress={() => {
                     setSelectedId(item._id);
-                    handleClick(item?._id, item?.sender || actorGroupChat, item?.user, isGroupChat);
+                    handleSetSender(item?._id, item?.sender || actorGroupChat, item?.user, isGroupChat);
                     navigation.navigate('MessageChat', { item: item });
                 }}
                 backgroundColor={{ backgroundColor }}

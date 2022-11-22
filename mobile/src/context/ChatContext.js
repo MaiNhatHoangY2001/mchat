@@ -16,6 +16,9 @@ import { TYPE_NOTIFICATION } from './TypeChat';
 const ChatContext = createContext();
 
 function ChatContextProvider({ children }) {
+
+    const currentIndividualChat = useSelector((state) => state.chat.individualChat?.actor);
+    const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
     const user = useSelector((state) => state.auth.login?.currentUser);
     const sender = useSelector((state) => state.user.sender?.user);
     const isGroupChat = useSelector((state) => state.groupChat?.groupChat.isGroupChat);
@@ -30,6 +33,9 @@ function ChatContextProvider({ children }) {
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
 
     const [individualChatId, setIndividualChatId] = useState('');
+
+    const [chatActors, setChatActors] = useState([]);
+
 
     const [sendData, setSendData] = useState([
         {
@@ -169,6 +175,18 @@ function ChatContextProvider({ children }) {
         getListIndividualChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
     };
 
+    useEffect(() => {
+        if (currentIndividualChat !== null) {
+            const listChat = currentIndividualChat?.concat(currentGroupChat);
+            const listSort = listChat?.sort(function (a, b) {
+                return new Date(b?.message[0]?.time) - new Date(a?.message[0]?.time);
+            });
+            setChatActors(listSort);
+            //set actor chat in context
+            setListFriend(currentIndividualChat);
+        }
+    }, [currentIndividualChat, currentGroupChat]);
+
     //SOCKET CHAT
     useEffect(() => {
         const handler = (chatMessage) => {
@@ -247,6 +265,8 @@ function ChatContextProvider({ children }) {
         listFriend,
         setListFriend,
         sendText4JoinGroup,
+        chatActors,
+        setChatActors
     };
 
     return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>;

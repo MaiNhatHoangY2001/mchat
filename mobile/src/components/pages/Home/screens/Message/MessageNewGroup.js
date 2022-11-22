@@ -1,60 +1,30 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // IMPORT ICON LINK ==> https://icons.expo.fyi/
 import { Ionicons } from '@expo/vector-icons';
+import { ChatContext } from '../../../../../context/ChatContext';
 
-const DATA = [
-    {
-        id: 0,
-        name: 'Ngoc Long',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 1,
-        name: 'Nhat Hoang',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 2,
-        name: 'Minh Hung',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 3,
-        name: 'Minh Hieu',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 4,
-        name: 'Dinh Tuan',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-    {
-        id: 5,
-        name: 'Con Cho',
-        uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-    },
-];
+const Item = ({ item, onPress, check }) => {
+    const isGroupChat = item?.sender?._id === undefined;
 
-const Item = ({ item, onPress, check }) => (
-    <TouchableOpacity style={[styles.item]} onPress={onPress}>
+    return (isGroupChat ? (<></>) : (<TouchableOpacity style={[styles.item]} onPress={onPress}>
         <View style={styles.bgImage}>
             <Image
                 style={styles.image}
                 source={{
-                    uri: item.uri,
+                    uri: item?.sender?.profileImg,
                 }}
             />
         </View>
-        <Text style={[styles.titleItem]}>{item.name}</Text>
-        {check.find((checked) => checked.id === item.id) === undefined ? (
+        <Text style={[styles.titleItem]}>{item?.sender?.profileName}</Text>
+        {check.find((checked) => checked?._id === item?._id) === undefined ? (
             <></>
         ) : (
             <Ionicons name="checkmark" size={24} color="green" />
         )}
-    </TouchableOpacity>
-);
+    </TouchableOpacity>))
+};
 
 const ItemChecked = ({ item, onPress }) => (
     <TouchableOpacity style={[styles.item]} onPress={onPress}>
@@ -62,26 +32,23 @@ const ItemChecked = ({ item, onPress }) => (
             <Image
                 style={styles.image}
                 source={{
-                    uri: item.uri,
+                    uri: item?.sender?.profileImg,
                 }}
             />
         </View>
-        <Text style={[styles.titleItem]}>{item.name}</Text>
+        <Text style={[styles.titleItem]}>{item?.sender?.profileName}</Text>
         <Ionicons name="close-circle" size={24} color="black" />
     </TouchableOpacity>
 );
 
 export default function MessageNewGroup({ navigation }) {
+
+    const chatContext = useContext(ChatContext);
+    const { chatActors } = chatContext;
+
     const [search, setSearch] = useState('');
     const [check, setCheck] = useState([]);
 
-    const filteredData = DATA.filter((item) => {
-        return item.name.toLowerCase().includes(search.toLowerCase());
-    });
-
-    const handleCreateGroup = () => {
-        console.log('Create Group');
-    };
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -94,7 +61,7 @@ export default function MessageNewGroup({ navigation }) {
 
     const renderItem = ({ item }) => {
         const handleChecked = (value) => {
-            const isEmpty = check.find((item) => item.id === value.id) === undefined ? true : false;
+            const isEmpty = check.find((item) => item?._id === value?._id) === undefined ? true : false;
             if (isEmpty)
                 setCheck((prev) => {
                     return [...prev, value];
@@ -106,7 +73,7 @@ export default function MessageNewGroup({ navigation }) {
 
     const renderItemChecked = ({ item }) => {
         const handleRemove = (value) => {
-            setCheck(check.filter((item) => item.id !== value.id));
+            setCheck(check.filter((item) => item?._id !== value?._id));
         };
 
         return <ItemChecked item={item} onPress={() => handleRemove(item)} />;
@@ -116,7 +83,7 @@ export default function MessageNewGroup({ navigation }) {
         <SafeAreaView style={styles.container}>
             <View style={[{ flex: 1, paddingBottom: 10 }, styles.borderBottom]}>
                 <Text style={[styles.title]}>Danh danh người dùng </Text>
-                <FlatList style={[{ flex: 1 }]} data={filteredData} renderItem={renderItem} />
+                <FlatList style={[{ flex: 1 }]} data={chatActors} renderItem={renderItem} />
             </View>
             <View style={[{ flex: 1 }]}>
                 <Text style={styles.title}>Danh danh đã chọn {check.length}</Text>
