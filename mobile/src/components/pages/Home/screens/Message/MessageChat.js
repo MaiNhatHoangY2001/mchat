@@ -89,14 +89,27 @@ export default function MessageChat({ navigation, route }) {
 
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
 
-    const handleOpen = async () => {
-        setOpen(true);
-        const list = await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        setCurrentListGroupChat(list);
-    };
-    const handleClose = async () => {
-        setOpen(false);
-    };
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => {
+                return isGroupChat ? (
+                    <TouchableOpacity
+                        onPress={() =>
+                            navigation.navigate('MessageInfoGroup', {
+                                group: currentGroupChat,
+                                user: user,
+                                members: isListUser,
+                            })
+                        }
+                    >
+                        <Ionicons name="menu" size={24} color="black" />
+                    </TouchableOpacity>
+                ) : (
+                    <></>
+                );
+            },
+        });
+    }, [navigation]);
 
     const handleRemoveUser = (item) => async () => {
         setListUser(isListUser.filter((user) => user._id !== item._id));
