@@ -258,10 +258,17 @@ export default function MessageChat({ navigation, route }) {
     };
 
     const imgChat = (length, images) => {
-        const chatImage = (srcGroup) =>
-            images?.map((img, index) => {
-                return <Image key={index} style={styles.image} alt="not fount" source={{ uri: img + srcGroup }} />;
-            });
+        const chatImage = (srcGroup) => (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+                {images?.map((img, index) => {
+                    return (
+                        <View key={index} style={{ width: 300 / 3, height: 300 / 3 }}>
+                            <Image style={{ flex: 1, margin: 2 }} alt="not fount" source={{ uri: img + srcGroup }} />
+                        </View>
+                    );
+                })}
+            </View>
+        );
 
         if (length > 0) {
             switch (length) {
@@ -278,11 +285,6 @@ export default function MessageChat({ navigation, route }) {
             }
         } else return <Image alt="not fount" width={'20px'} source={''} />;
     };
-
-    // Modal Add user Open and Close
-    const [isModalAddUser, setModalAddUser] = useState(false);
-    const handleOpenModalAddUser = () => setModalAddUser(true);
-    const handleCloseModalAddUser = () => setModalAddUser(false);
 
     // MODAL CHANGE IMAGE IN GROUP
     const [urlImage, setUrlImage] = useState(currentGroupChat?.groupImage);
@@ -315,28 +317,6 @@ export default function MessageChat({ navigation, route }) {
         handleClose();
     };
 
-    // //SAVE MSG WHEN RELOAD PAGE
-    // useEffect(() => {
-    //     if (!isGroupChat) {
-    //         const apiSent = {
-    //             sender: currentSenderId,
-    //             user: currentUserId,
-    //         };
-    //         if (window.performance) {
-    //             if (performance.navigation.type == 1) {
-    //                 getMsgs(accessToken, dispatch, apiSent, axiosJWTLogin);
-    //             }
-    //         }
-    //     } else {
-    //         const apiSent = {
-    //             groupId: currentSenderId,
-    //         };
-    //         getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWTLogin);
-    //     }
-    // }, []);
-
-    // const [image, setImage] = useState(null);
-
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -350,28 +330,22 @@ export default function MessageChat({ navigation, route }) {
 
         // console.log(result);
 
-
         if (!result.cancelled) {
             const files = result;
             const bodyFormData = new FormData();
             if (files.uri !== undefined) {
-
                 bodyFormData.append('file', configImageToFile(files));
-            }
-            else {
+            } else {
                 if (files.selected.length > 0) {
-                    for (const element of files.selected)
-                        bodyFormData.append('file', configImageToFile(element));
+                    for (const element of files.selected) bodyFormData.append('file', configImageToFile(element));
                 }
             }
-
 
             const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
             window.setTimeout(async function () {
                 //wait upload image on google cloud
                 await addMsgImgWithInfo(uploadImage.url);
             }, 1000);
-
         }
     };
 
@@ -384,7 +358,7 @@ export default function MessageChat({ navigation, route }) {
         let type = match ? `image/${match[1]}` : `image`;
 
         return { type: type, uri: localUri, name: filename };
-    }
+    };
 
     useEffect(() => {
         setIndividualChatId(individualChat.idChat);
@@ -451,7 +425,7 @@ export default function MessageChat({ navigation, route }) {
                         {isUser ? (
                             <Image style={styles.chatImage} source={{ uri: dataSender.sender.profileImg }} />
                         ) : (
-                            <Image style={styles.image} source={{ uri: dataSender.groupImage }} />
+                            <Image style={styles.chatImage} source={{ uri: dataSender.groupImage }} />
                         )}
                     </View>
                     <View style={styles.contentChat}>
@@ -469,8 +443,8 @@ export default function MessageChat({ navigation, route }) {
                                                 uri: isGroupChat
                                                     ? mess.message.userGroupChat?.profileImg
                                                     : isUser
-                                                        ? currentSender?.profileImg
-                                                        : currentSender?.profileImg,
+                                                    ? currentSender?.profileImg
+                                                    : currentSender?.profileImg,
                                             }}
                                         />
                                         <View style={styles.contain}>

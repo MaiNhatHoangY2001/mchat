@@ -62,9 +62,9 @@ export default function MessagesScreen({ navigation }) {
     const handleToggle = (item) => () => {
         const currentIndex = selectData
             .map((item1) => {
-                return item1._id;
+                return item1?._id;
             })
-            .indexOf(item._id);
+            .indexOf(item?._id);
         const newData = [...selectData];
 
         if (currentIndex === -1) {
@@ -115,7 +115,7 @@ export default function MessagesScreen({ navigation }) {
 
     // Get Item
     const renderItem = ({ item }) => {
-        const backgroundColor = item._id === selectedId ? '#f9c2ff' : '#ffffff';
+        const backgroundColor = item?._id === selectedId ? '#f9c2ff' : '#ffffff';
         const actorGroupChat = {
             _id: item?._id,
             profileName: item?.groupName,
@@ -127,7 +127,7 @@ export default function MessagesScreen({ navigation }) {
             <Item
                 item={item}
                 onPress={() => {
-                    setSelectedId(item._id);
+                    setSelectedId(item?._id);
                     handleSetSender(item?._id, item?.sender || actorGroupChat, item?.user, isGroupChat);
                     navigation.navigate('MessageChat', { item: item });
                 }}

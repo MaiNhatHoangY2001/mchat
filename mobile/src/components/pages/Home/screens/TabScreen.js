@@ -4,62 +4,41 @@ import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 //link all icons react-native: https://oblador.github.io/react-native-vector-icons/
-import Icon from 'react-native-vector-icons/Ionicons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
-import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // IMPORT SCREEN
-import CallsScreen from './Call/CallsScreen';
 import ProfileScreen from './Profile/ProfileScreen';
 import MessagesScreen from './Message/MessagesScreen';
-
-// GET SIZE SCREEN DRIVE
-const widthScreen = Dimensions.get('window').width;
 
 const Tab = createBottomTabNavigator();
 
 export default function TabScreen({ navigation }) {
     return (
         <Tab.Navigator
-            initialRouteName="Trò chuyện"
-            tabBarPosition="bottom"
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
-                    let iconNameAntDesign, iconNameIcon, iconNameFA;
-                    if (route.name === 'Trò chuyện') {
-                        iconNameAntDesign = 'message1';
-                        size = focused ? 25 : 22;
-                        color = focused ? 'rgb(250, 139, 158)' : '#fff';
-                    } else if (route.name === 'profile') {
-                        iconNameFA = 'user-circle-o';
-                        size = focused ? 25 : 22;
-                        color = focused ? 'rgb(250, 139, 158)' : '#fff';
+                    let iconName;
+
+                    if (route.name === 'MessagesScreen') {
+                        iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
+                    } else if (route.name === 'ProfileScreen') {
+                        iconName = focused ? 'information-circle' : 'information-circle-outline';
                     }
-                    return (
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                height: '110%',
-                                width: '130%',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <IconAntDesign name={iconNameAntDesign} size={size} color={color} />
-                            <IconFontAwesome name={iconNameFA} size={size} color={color} />
-                        </View>
-                    );
-                },
-                tabBarStyle: {
-                    width: widthScreen,
-                    height: '10%',
-                    backgroundColor: '#303030',
-                },
-                tabBarItemStyle: {
-                    padding: '3%',
+                    size = focused ? 30 : 24;
+
+                    // You can return any component that you like here!
+                    return <Ionicons name={iconName} size={size} color={color} />;
                 },
                 tabBarActiveTintColor: 'rgb(250, 139, 158)',
                 tabBarInactiveTintColor: '#fff',
-                tabBarLabelStyle: { fontSize: 12, fontWeight: 'bold' },
+                tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold' },
+                tabBarStyle: {
+                    flex: 0.09,
+                    backgroundColor: '#303030',
+                    paddingBottom: 10,
+                },
+                tabBarItemStyle: {},
             })}
         >
             <Tab.Screen
@@ -73,11 +52,10 @@ export default function TabScreen({ navigation }) {
                         </TouchableOpacity>
                     ),
                 })}
-                name="Trò chuyện"
+                name="MessagesScreen"
                 component={MessagesScreen}
             />
-            {/* <Tab.Screen name="call" options={{ title: 'Cuộc gọi' }} component={CallsScreen} /> */}
-            <Tab.Screen name="profile" options={{ title: 'Thông tin' }} component={ProfileScreen} />
+            <Tab.Screen name="ProfileScreen" options={{ title: 'Thông tin' }} component={ProfileScreen} />
         </Tab.Navigator>
     );
 }
