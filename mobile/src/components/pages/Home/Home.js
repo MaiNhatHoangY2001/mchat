@@ -158,6 +158,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabScreen from './screens/TabScreen';
 import MessageChat from './screens/Message/MessageChat';
 import MessageSearch from './screens/Message/MessageSearch';
+import MessageNewGroup from './screens/Message/MessageNewGroup';
+import MessageNewInforGroup from './screens/Message/MessageNewInforGroup';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-native';
 import { createAxios } from '../../../redux/createInstance';
@@ -167,7 +170,6 @@ import { getListGroupChat, getListIndividualChat } from '../../../redux/apiReque
 
 // IMPORT ICON LINK ==> https://icons.expo.fyi/
 import { Ionicons } from '@expo/vector-icons';
-import MessageNewGroup from './screens/Message/MessageNewGroup';
 
 // KHAI BAO STACK NAVIGATION
 const Stack = createNativeStackNavigator();
@@ -205,10 +207,20 @@ export default function Home() {
                 <Stack.Navigator>
                     <Stack.Screen options={{ headerShown: false }} name="HomeChat" component={TabScreen} />
                     <Stack.Screen name="MessageChat" component={MessageChat} />
-                    <Stack.Screen name="MassageNewGroup" component={MessageNewGroup} />
+                    <Stack.Screen
+                        options={{
+                            title: 'Tạo nhóm (chọn thành viên)',
+                            headerSearchBarOptions: {
+                                placeholder: 'Tìm kiếm người dùng',
+                                onChangeText: {},
+                            },
+                        }}
+                        name="MassageNewGroup"
+                        component={MessageNewGroup}
+                    />
                     <Stack.Screen
                         style={{ flex: 1 }}
-                        options={({ navigation, route }) => ({
+                        options={() => ({
                             headerTitle: () => (
                                 <View style={styles.bgSearch}>
                                     <TextInput style={styles.inputSearch} placeholder="Tìm Kiếm" />
@@ -220,6 +232,18 @@ export default function Home() {
                         })}
                         name="MessageSearch"
                         component={MessageSearch}
+                    />
+                    <Stack.Screen
+                        options={(navigate) => ({
+                            title: 'Tạo Nhóm (thêm thông tin)',
+                            headerRight: () => (
+                                <TouchableOpacity>
+                                    <Ionicons name="checkmark" size={30} color="green" />
+                                </TouchableOpacity>
+                            ),
+                        })}
+                        name="MessageNewInforGroup"
+                        component={MessageNewInforGroup}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

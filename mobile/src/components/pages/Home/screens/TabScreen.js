@@ -30,13 +30,7 @@ export default function TabScreen({ navigation }) {
                         iconNameAntDesign = 'message1';
                         size = focused ? 25 : 22;
                         color = focused ? 'rgb(250, 139, 158)' : '#fff';
-                    }
-                    // else if (route.name === 'call') {
-                    //     iconNameIcon = 'md-call-sharp';
-                    //     size = focused ? 25 : 22;
-                    //     color = focused ? 'rgb(250, 139, 158)' : '#fff';
-                    // }
-                    else if (route.name === 'profile') {
+                    } else if (route.name === 'profile') {
                         iconNameFA = 'user-circle-o';
                         size = focused ? 25 : 22;
                         color = focused ? 'rgb(250, 139, 158)' : '#fff';
@@ -51,7 +45,6 @@ export default function TabScreen({ navigation }) {
                             }}
                         >
                             <IconAntDesign name={iconNameAntDesign} size={size} color={color} />
-                            {/* <Icon name={iconNameIcon} size={size} color={color} /> */}
                             <IconFontAwesome name={iconNameFA} size={size} color={color} />
                         </View>
                     );
