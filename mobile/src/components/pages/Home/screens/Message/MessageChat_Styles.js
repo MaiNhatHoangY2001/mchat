@@ -116,9 +116,6 @@ const styles = StyleSheet.create({
     },
     Button: {
         padding: 10,
-
-        borderWidth: 1,
-        borderRadius: 50,
     },
 });
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     FlatList,
     Image,
@@ -10,6 +10,9 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+
+// IMPORT ICON LINK ==> https://icons.expo.fyi/
+import { Ionicons } from '@expo/vector-icons';
 
 const Item = ({ item }) => (
     <TouchableOpacity style={[styles.item]}>
@@ -35,6 +38,20 @@ export default function MessageNewInforGroup({ navigation, route }) {
     const renderItem = ({ item }) => {
         return <Item item={item} />;
     };
+
+    const handleCreatGroup = () => {
+        console.log('Tao Nhom');
+    };
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={handleCreatGroup}>
+                    <Ionicons name="checkmark" size={30} color="green" />
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
 
     return (
         <View style={styles.container}>
