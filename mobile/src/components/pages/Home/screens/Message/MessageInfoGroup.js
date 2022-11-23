@@ -38,7 +38,10 @@ export default function MessageInfoGroup({ navigation, route }) {
     // MODAL CHANGE IMAGE IN GROUP
     const [urlImage, setUrlImage] = useState(currentGroupChat?.groupImage);
     const [image, setImage] = useState({});
+
+    // modal open and close
     const [modalRemoveGroup, setModalRemoveGroup] = useState(false);
+    const [modalLeaveGroup, setModalLeaveGroup] = useState(false);
 
     const isAdmin = user._id === currentGroupChat.groupAdmin._id ? true : false;
 
@@ -266,12 +269,47 @@ export default function MessageInfoGroup({ navigation, route }) {
                         </Modal>
                     </>
                 ) : (
-                    <TouchableOpacity
-                        style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'blue', borderRadius: 10 }}
-                        onPress={() => handleOutGroup()}
-                    >
-                        <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Rời nhóm</Text>
-                    </TouchableOpacity>
+                    <>
+                        <TouchableOpacity
+                            style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'blue', borderRadius: 10 }}
+                            // onPress={() => handleOutGroup()}
+                            onPress={() => setModalLeaveGroup(!modalLeaveGroup)}
+                        >
+                            <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Rời nhóm</Text>
+                        </TouchableOpacity>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalLeaveGroup}
+                            onRequestClose={() => {
+                                setModalLeaveGroup(!modalLeaveGroup);
+                            }}
+                        >
+                            <View style={styles.centeredView}>
+                                <View style={styles.modalView}>
+                                    <Text style={styles.modalText}>Xác nhận rời nhóm</Text>
+                                    <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                                        <Pressable
+                                            style={[
+                                                styles.button,
+                                                styles.buttonClose,
+                                                { marginHorizontal: 10, backgroundColor: 'red' },
+                                            ]}
+                                            onPress={() => setModalLeaveGroup(!modalLeaveGroup)}
+                                        >
+                                            <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Thoát</Text>
+                                        </Pressable>
+                                        <Pressable
+                                            style={[styles.button, styles.buttonClose, { marginHorizontal: 10 }]}
+                                            onPress={() => setModalLeaveGroup(!modalLeaveGroup)}
+                                        >
+                                            <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Xác nhận</Text>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            </View>
+                        </Modal>
+                    </>
                 )}
             </View>
         </View>
