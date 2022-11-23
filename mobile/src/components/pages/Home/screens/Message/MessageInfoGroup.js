@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Modal, Pressable } from 'react-native';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 // IMPORT ICON LINK ==> https://icons.expo.fyi/
@@ -7,15 +7,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../../../redux/createInstance';
 import { loginSuccess } from '../../../../../redux/authSlice';
-import { deleteGroupChat, getListGroupChat, removeUserGroupChat, updateGroupChat } from '../../../../../redux/apiRequest/chatApiRequest';
+import {
+    deleteGroupChat,
+    getListGroupChat,
+    removeUserGroupChat,
+    updateGroupChat,
+} from '../../../../../redux/apiRequest/chatApiRequest';
 import { setSender } from '../../../../../redux/userSlice';
-
-
 
 export default function MessageInfoGroup({ navigation, route }) {
     const listGroupChat = useSelector((state) => state.groupChat?.groupChat.actor);
     const currentSender = useSelector((state) => state.user.sender?.user);
-
 
     const user = route.params.user;
     const currentUserId = user?._id;
@@ -37,7 +39,9 @@ export default function MessageInfoGroup({ navigation, route }) {
     const [urlImage, setUrlImage] = useState(currentGroupChat?.groupImage);
     const [image, setImage] = useState({});
 
-
+    // modal open and close
+    const [modalRemoveGroup, setModalRemoveGroup] = useState(false);
+    const [modalLeaveGroup, setModalLeaveGroup] = useState(false);
 
     const isAdmin = user._id === currentGroupChat.groupAdmin._id ? true : false;
 
@@ -60,7 +64,6 @@ export default function MessageInfoGroup({ navigation, route }) {
             groupAdmin: userAdmin,
         };
         await updateGroupChat(accessToken, dispatch, currentGroupChat._id, apiSetAdmin, axiosJWTLogin);
-
     };
 
     const handleClickApply = async () => {
@@ -114,8 +117,6 @@ export default function MessageInfoGroup({ navigation, route }) {
         handleClose();
     };
 
-
-
     const handleChangeImageGroup = (event) => {
         if (event.target.files && event.target.files[0]) {
             setUrlImage(URL.createObjectURL(event.target.files[0]));
@@ -133,8 +134,7 @@ export default function MessageInfoGroup({ navigation, route }) {
         handleRemoveUser(userOutGroup);
         dispatch(setSender(null));
         await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        navigation.navigate("MessagesScreen")
-
+        navigation.navigate('MessagesScreen');
     };
 
     // EVENT REMOVE GROUP
@@ -142,7 +142,7 @@ export default function MessageInfoGroup({ navigation, route }) {
         await deleteGroupChat(accessToken, dispatch, currentGroupChat._id, axiosJWTLogin);
         dispatch(setSender(null));
         await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        navigation.navigate("MessagesScreen")
+        navigation.navigate('MessagesScreen');
     };
 
     const renderItem = ({ item }) => {
@@ -227,19 +227,89 @@ export default function MessageInfoGroup({ navigation, route }) {
                 style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginBottom: 10 }}
             >
                 {isAdmin ? (
-                    <TouchableOpacity
-                        style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'red', borderRadius: 10 }}
-                        onPress={() => handleClickRemoveGroup()}
-                    >
-                        <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xóa nhóm</Text>
-                    </TouchableOpacity>
+                    <>
+                        <TouchableOpacity
+                            style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'red', borderRadius: 10 }}
+                            onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
+                            // onPress={() => handleClickRemoveGroup()}
+                        >
+                            <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xóa nhóm</Text>
+                        </TouchableOpacity>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalRemoveGroup}
+                            onRequestClose={() => {
+                                setModalRemoveGroup(!modalRemoveGroup);
+                            }}
+                        >
+                            <View style={styles.centeredView}>
+                                <View style={styles.modalView}>
+                                    <Text style={styles.modalText}>Xác nhận xóa nhóm</Text>
+                                    <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                                        <Pressable
+                                            style={[
+                                                styles.button,
+                                                styles.buttonClose,
+                                                { marginHorizontal: 10, backgroundColor: 'red' },
+                                            ]}
+                                            onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
+                                        >
+                                            <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Thoát</Text>
+                                        </Pressable>
+                                        <Pressable
+                                            style={[styles.button, styles.buttonClose, { marginHorizontal: 10 }]}
+                                            onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
+                                        >
+                                            <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Xác nhận</Text>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            </View>
+                        </Modal>
+                    </>
                 ) : (
-                    <TouchableOpacity
-                        style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'blue', borderRadius: 10 }}
-                        onPress={() => handleOutGroup()}
-                    >
-                        <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Rời nhóm</Text>
-                    </TouchableOpacity>
+                    <>
+                        <TouchableOpacity
+                            style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'blue', borderRadius: 10 }}
+                            // onPress={() => handleOutGroup()}
+                            onPress={() => setModalLeaveGroup(!modalLeaveGroup)}
+                        >
+                            <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Rời nhóm</Text>
+                        </TouchableOpacity>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalLeaveGroup}
+                            onRequestClose={() => {
+                                setModalLeaveGroup(!modalLeaveGroup);
+                            }}
+                        >
+                            <View style={styles.centeredView}>
+                                <View style={styles.modalView}>
+                                    <Text style={styles.modalText}>Xác nhận rời nhóm</Text>
+                                    <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                                        <Pressable
+                                            style={[
+                                                styles.button,
+                                                styles.buttonClose,
+                                                { marginHorizontal: 10, backgroundColor: 'red' },
+                                            ]}
+                                            onPress={() => setModalLeaveGroup(!modalLeaveGroup)}
+                                        >
+                                            <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Thoát</Text>
+                                        </Pressable>
+                                        <Pressable
+                                            style={[styles.button, styles.buttonClose, { marginHorizontal: 10 }]}
+                                            onPress={() => setModalLeaveGroup(!modalLeaveGroup)}
+                                        >
+                                            <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Xác nhận</Text>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            </View>
+                        </Modal>
+                    </>
                 )}
             </View>
         </View>
@@ -291,5 +361,43 @@ const styles = StyleSheet.create({
     titleItem: {
         flex: 1,
         fontSize: 18,
+    },
+
+    modalView: {
+        margin: 20,
+        marginVertical: '100%',
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        fontSize: 16,
+        marginBottom: 15,
+        textAlign: 'center',
     },
 });

@@ -36,21 +36,17 @@ const Item = ({ item }) => (
 );
 
 export default function MessageNewInforGroup({ navigation, route }) {
-
     const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
 
     const chatContext = useContext(ChatContext);
     const { sendText4JoinGroup } = chatContext;
 
-
     const dispatch = useDispatch();
     const accessToken = currentUser?.accessToken;
     let axiosJWT = createAxios(currentUser, dispatch, loginSuccess);
 
-
     const members = route.params.checked;
-
 
     const [image, setImage] = useState(
         'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667061870/Avata/computer-science-1331579_1280_nomqbh.png',
@@ -94,10 +90,8 @@ export default function MessageNewInforGroup({ navigation, route }) {
                     _id: newGroupChat._id,
                     profileName: newGroupChat.groupName,
                     profileImg: newGroupChat?.groupImage,
-                }
-                dispatch(
-                    setSender(sender),
-                );
+                };
+                dispatch(setSender(sender));
                 //reload chat when create new group
                 const apiSent = {
                     groupId: newGroupChat._id,
@@ -202,5 +196,41 @@ const styles = StyleSheet.create({
     },
     titleItem: {
         fontSize: 18,
+    },
+
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
     },
 });
