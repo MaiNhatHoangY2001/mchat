@@ -7,7 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../../../redux/createInstance';
 import { loginSuccess } from '../../../../../redux/authSlice';
-import { updateGroupChat } from '../../../../../redux/apiRequest/chatApiRequest';
+import { deleteGroupChat, getListGroupChat, removeUserGroupChat, updateGroupChat } from '../../../../../redux/apiRequest/chatApiRequest';
+import { setSender } from '../../../../../redux/userSlice';
 
 
 
@@ -17,13 +18,10 @@ export default function MessageInfoGroup({ navigation, route }) {
 
 
     const user = route.params.user;
+    const currentUserId = user?._id;
     const accessToken = user?.accessToken;
     const dispatch = useDispatch();
     let axiosJWTLogin = createAxios(user, dispatch, loginSuccess);
-
-
-
-
 
     const [currentListGroupChat, setCurrentListGroupChat] = useState(listGroupChat);
     const [currentGroupChat, setCurrentGroupChat] = useState(
@@ -43,11 +41,11 @@ export default function MessageInfoGroup({ navigation, route }) {
 
     const isAdmin = user._id === currentGroupChat.groupAdmin._id ? true : false;
 
-    const handleRemoveUser = (item) => async () => {
-        setListUser(isListUser.filter((user) => user._id !== item._id));
+    const handleRemoveUser = async (currentUser) => {
+        setListUser(isListUser.filter((user) => user._id !== currentUser._id));
         const apiGroupChat = {
             idGroup: currentGroupChat._id,
-            idUser: item._id,
+            idUser: currentUser._id,
         };
         await removeUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
     };
@@ -126,16 +124,17 @@ export default function MessageInfoGroup({ navigation, route }) {
     };
 
     // EVENT OUT GROUP
-    const handleOutGroup = () => {
+    const handleOutGroup = async () => {
         const userOutGroup = {
             _id: currentUserId,
             profileName: user.profileName,
         };
 
-        handleRemoveUser(userOutGroup)();
+        handleRemoveUser(userOutGroup);
         dispatch(setSender(null));
-        dispatch(getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin));
-        handleClose();
+        await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        navigation.navigate("MessagesScreen")
+
     };
 
     // EVENT REMOVE GROUP
@@ -143,7 +142,7 @@ export default function MessageInfoGroup({ navigation, route }) {
         await deleteGroupChat(accessToken, dispatch, currentGroupChat._id, axiosJWTLogin);
         dispatch(setSender(null));
         await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        handleClose();
+        navigation.navigate("MessagesScreen")
     };
 
     const renderItem = ({ item }) => {
@@ -169,7 +168,7 @@ export default function MessageInfoGroup({ navigation, route }) {
                         <Ionicons name="key" size={24} color="black" />
                     </TouchableOpacity>
                     <TouchableOpacity style={{ marginLeft: 10 }}>
-                        <Ionicons name="close-circle" size={24} color="black" />
+                        <Ionicons name="close-circle" size={24} color="black" onPress={() => handleRemoveUser(item)} />
                     </TouchableOpacity>
                 </View>
             ) : (
@@ -230,12 +229,14 @@ export default function MessageInfoGroup({ navigation, route }) {
                 {isAdmin ? (
                     <TouchableOpacity
                         style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'red', borderRadius: 10 }}
+                        onPress={() => handleClickRemoveGroup()}
                     >
                         <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xóa nhóm</Text>
                     </TouchableOpacity>
                 ) : (
                     <TouchableOpacity
                         style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'blue', borderRadius: 10 }}
+                        onPress={() => handleOutGroup()}
                     >
                         <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Rời nhóm</Text>
                     </TouchableOpacity>

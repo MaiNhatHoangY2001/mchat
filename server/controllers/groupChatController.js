@@ -146,7 +146,7 @@ const groupChatController = {
 						'message.userGroupChat._id': 1,
 						'message.userGroupChat.profileName': 1,
 						'message.userGroupChat.profileImg': 1,
-
+						'message._id': 1,
 						_id: 0,
 					},
 				},
