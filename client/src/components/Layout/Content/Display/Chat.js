@@ -22,7 +22,7 @@ import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
 import moment from 'moment';
 import Picker from 'emoji-picker-react';
 import { ChatContext } from '../../../../context/ChatContext';
-import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION, TYPE_REMOVE_MSG } from '../../../../context/TypeChat';
+import { TYPE_FILE, TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION, TYPE_REMOVE_MSG } from '../../../../context/TypeChat';
 import {
     Avatar,
     Button,
@@ -54,6 +54,7 @@ import ModalOutGroup from '../Modal/ModalOutGroup/ModalOutGroup';
 import { setSender } from '../../../../redux/userSlice';
 import ModalRemoveGroup from '../Modal/ModalRemoveGroup/ModalRemoveGroup';
 import { UserContext } from '../../../../context/UserContext';
+import FilePreview from "react-file-preview-latest";
 
 
 const cx = classNames.bind(styles);
@@ -197,6 +198,9 @@ function Chat() {
     const addMsgImgWithInfo = (url) => {
         createChat(TYPE_IMG, '', url);
     };
+    const addMsgFileWithInfo = (url) => {
+        createChat(TYPE_FILE, '', url);
+    }
 
     const convertTime = (time) => {
         const formattedDate = moment(time).utcOffset('+0700').format('HH:mm DD [tháng] MM, YYYY');
@@ -216,7 +220,7 @@ function Chat() {
     const typeChat = (type, mess) => {
         switch (type) {
             case TYPE_MSG:
-                return <p className={cx('textChat')}>{mess.message.content}</p>;
+                return <p className={cx('textChat')}>{mess?.message?.content}</p>;
             case TYPE_IMG:
                 return imgChat(mess.message?.imageContent.length, mess.message?.imageContent);
             case TYPE_NOTIFICATION:
@@ -232,6 +236,8 @@ function Chat() {
                     );
             case TYPE_REMOVE_MSG:
                 return <p className={cx('textChat')} style={{ opacity: 0.4 }}>{mess.message.content}</p>;
+            case TYPE_FILE:
+                return fileChat(mess?.message?.imageContent);
             default:
                 return <></>;
         }
@@ -298,11 +304,20 @@ function Chat() {
         setSendData(newSendData);
     }
 
+    const fileChat = (url) => {
+        return <FilePreview
+            type={"url"}
+            url={url}
+        />
+    }
 
     const imgChat = (length, images) => {
         const chatImage = (srcGroup) =>
             images?.map((img, index) => {
-                return <img key={index} alt="not fount" width={'20px'} src={img + srcGroup} />;
+                return (
+                    <img key={index} alt="not fount" width={'20px'} src={img + srcGroup} />
+
+                );
             });
 
         if (length > 0) {
@@ -625,7 +640,7 @@ function Chat() {
             <form onSubmit={handleSubmit} className={cx('inputChat')} encType={'multipart/form-data'}>
                 <input
                     type="file"
-                    id="selectedFile"
+                    id="selectedImage"
                     name="myImage"
                     accept="image/*"
                     multiple
@@ -650,7 +665,7 @@ function Chat() {
                 <div
                     className={cx('buttonInput')}
                     type="button"
-                    onClick={() => document.getElementById('selectedFile').click()}
+                    onClick={() => document.getElementById('selectedImage').click()}
                 >
                     <img
                         src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666526090/samples/Icon/photo_yn6nra.png`}
@@ -659,7 +674,26 @@ function Chat() {
                 </div>
 
                 {/* Butotn file */}
-                <div className={cx('buttonInput')} type="button">
+                <input
+                    type="file"
+                    id="selectedFile"
+                    name="myImage"
+                    onChange={async (event) => {
+                        const bodyFormData = new FormData();
+                        const files = event.target.files;
+                        if (files.length > 0) {
+                            bodyFormData.append('file', files[0]);
+                            const result = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+                            window.setTimeout(async function () {
+                                //wait upload image on google cloud
+                                await addMsgFileWithInfo(result.url);
+                            }, 1000);
+                        }
+                    }}
+                    style={{ display: 'none' }}
+                />
+                <div className={cx('buttonInput')} type="button" onClick={() => document.getElementById('selectedFile').click()}>
+
                     <img
                         src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666602452/samples/Icon/document_mzbsif.png`}
                         alt="file"
