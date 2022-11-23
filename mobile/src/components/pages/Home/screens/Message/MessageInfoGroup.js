@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Modal, Pressable } from 'react-native';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 // IMPORT ICON LINK ==> https://icons.expo.fyi/
@@ -41,6 +41,7 @@ export default function MessageInfoGroup({ navigation, route }) {
     const isAdmin = user._id === group.groupAdmin._id ? true : false;
 
     const [groupName, setGroupName] = useState(group.groupName);
+    const [modalRemoveGroup, setModalRemoveGroup] = useState(false);
 
     const renderItem = ({ item }) => {
         return <Item item={item} idAdmin={group.groupAdmin._id} isAdmin={isAdmin} idUser={user._id} />;
@@ -86,11 +87,46 @@ export default function MessageInfoGroup({ navigation, route }) {
                 style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginBottom: 10 }}
             >
                 {isAdmin ? (
-                    <TouchableOpacity
-                        style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'red', borderRadius: 10 }}
-                    >
-                        <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xóa nhóm</Text>
-                    </TouchableOpacity>
+                    <>
+                        <TouchableOpacity
+                            style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'red', borderRadius: 10 }}
+                            onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
+                        >
+                            <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xóa nhóm</Text>
+                        </TouchableOpacity>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalRemoveGroup}
+                            onRequestClose={() => {
+                                setModalRemoveGroup(!modalRemoveGroup);
+                            }}
+                        >
+                            <View style={styles.centeredView}>
+                                <View style={styles.modalView}>
+                                    <Text style={styles.modalText}>Xác nhận xóa nhóm</Text>
+                                    <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                                        <Pressable
+                                            style={[
+                                                styles.button,
+                                                styles.buttonClose,
+                                                { marginHorizontal: 10, backgroundColor: 'red' },
+                                            ]}
+                                            onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
+                                        >
+                                            <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Thoát</Text>
+                                        </Pressable>
+                                        <Pressable
+                                            style={[styles.button, styles.buttonClose, { marginHorizontal: 10 }]}
+                                            onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
+                                        >
+                                            <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Xác nhận</Text>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            </View>
+                        </Modal>
+                    </>
                 ) : (
                     <TouchableOpacity
                         style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'blue', borderRadius: 10 }}
@@ -148,5 +184,43 @@ const styles = StyleSheet.create({
     titleItem: {
         flex: 1,
         fontSize: 18,
+    },
+
+    modalView: {
+        margin: 20,
+        marginVertical: '100%',
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        fontSize: 16,
+        marginBottom: 15,
+        textAlign: 'center',
     },
 });
