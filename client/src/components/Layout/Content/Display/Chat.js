@@ -366,6 +366,13 @@ function Chat() {
         handleClose();
     };
 
+    const isCurrentUserAndTypeRemoved = (typeChat, user) => {
+
+
+        return ((typeChat !== TYPE_REMOVE_MSG) && (user === currentUserId))
+
+    }
+
     //SAVE MSG WHEN RELOAD PAGE
     useEffect(() => {
         if (!isGroupChat) {
@@ -609,15 +616,10 @@ function Chat() {
 
 
 
-                                        {mess?.message?.type_Msg === TYPE_REMOVE_MSG ? <></> : (<div className={cx('boxEdite')}>
+                                        {isCurrentUserAndTypeRemoved(mess?.message?.type_Msg, mess.sender) ? (<div className={cx('boxEdite')}>
                                             <Tooltip title="Thu hồi tin nhắn" placement="top" arrow>
                                                 <IconButton onClick={() => recallMsg(mess?.message?._id)}>
                                                     <DeleteIcon sx={{ fontSize: 24 }} />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title="Sửa tin nhắn" placement="top" arrow>
-                                                <IconButton>
-                                                    <EditIcon sx={{ fontSize: 24 }} />
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title="Chuyển tiếp" placement="top" arrow>
@@ -625,7 +627,7 @@ function Chat() {
                                                     <ReplyIcon sx={{ fontSize: 24 }} />
                                                 </IconButton>
                                             </Tooltip>
-                                        </div>)}
+                                        </div>) : <></>}
 
                                     </div>
                                 </React.Fragment>
