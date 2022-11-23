@@ -9,6 +9,7 @@ import {
     addUserGroupChat,
     deleteGroupChat,
     getListGroupChat,
+    getListIndividualChat,
     getMsgs,
     getMsgsGroupChat,
     removeUserGroupChat,
@@ -21,7 +22,7 @@ import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
 import moment from 'moment';
 import Picker from 'emoji-picker-react';
 import { ChatContext } from '../../../../context/ChatContext';
-import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeChat';
+import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION, TYPE_REMOVE_MSG } from '../../../../context/TypeChat';
 import {
     Avatar,
     Button,
@@ -53,6 +54,7 @@ import ModalOutGroup from '../Modal/ModalOutGroup/ModalOutGroup';
 import { setSender } from '../../../../redux/userSlice';
 import ModalRemoveGroup from '../Modal/ModalRemoveGroup/ModalRemoveGroup';
 import { UserContext } from '../../../../context/UserContext';
+
 
 const cx = classNames.bind(styles);
 
@@ -88,6 +90,8 @@ function Chat() {
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
+
+    const [visible, setVisible] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -226,6 +230,8 @@ function Chat() {
                         isMessageQuestion === '' ? question[1] : isMessageQuestion,
                         mess.message._id,
                     );
+            case TYPE_REMOVE_MSG:
+                return <p className={cx('textChat')} style={{ opacity: 0.4 }}>{mess.message.content}</p>;
             default:
                 return <></>;
         }
@@ -270,6 +276,28 @@ function Chat() {
         }
         updateMsg(accessToken, dispatch, id, content, axiosJWTLogin);
     };
+
+    const recallMsg = (id) => {
+        const content = {
+            content: "Đã thu hồi tin nhắn này",
+            type_Msg: TYPE_REMOVE_MSG,
+            imageContent: []
+        };
+
+        updateMsg(accessToken, dispatch, id, content, axiosJWTLogin);
+
+
+        const newSendData = sendData.map(item => {
+            if (item?.message?._id === id) {
+                const newMsg = { ...item.message, ...content };
+                const newItem = { message: newMsg, sender: item.sender };
+                return newItem;
+            }
+            return item;
+        });
+        setSendData(newSendData);
+    }
+
 
     const imgChat = (length, images) => {
         const chatImage = (srcGroup) =>
@@ -560,11 +588,15 @@ function Chat() {
                                                     {mess.sender === currentUserId ? nameUser : nameSender}
                                                 </p>
                                                 {typeChat(mess.message?.type_Msg, mess)}
+
                                             </div>
                                         </Tooltip>
-                                        <div className={cx('boxEdite')}>
+
+
+
+                                        {mess?.message?.type_Msg === TYPE_REMOVE_MSG ? <></> : (<div className={cx('boxEdite')}>
                                             <Tooltip title="Thu hồi tin nhắn" placement="top" arrow>
-                                                <IconButton>
+                                                <IconButton onClick={() => recallMsg(mess?.message?._id)}>
                                                     <DeleteIcon sx={{ fontSize: 24 }} />
                                                 </IconButton>
                                             </Tooltip>
@@ -578,7 +610,8 @@ function Chat() {
                                                     <ReplyIcon sx={{ fontSize: 24 }} />
                                                 </IconButton>
                                             </Tooltip>
-                                        </div>
+                                        </div>)}
+
                                     </div>
                                 </React.Fragment>
                             );
