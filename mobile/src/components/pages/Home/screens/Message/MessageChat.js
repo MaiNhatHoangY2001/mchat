@@ -26,7 +26,9 @@ import { UserContext } from '../../../../../context/UserContext';
 import { ChatContext } from '../../../../../context/ChatContext';
 import { TYPE_FILE, TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION, TYPE_REMOVE_MSG } from '../../../../../context/TypeChat';
 import { setSender } from '../../../../../redux/userSlice';
+import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -305,9 +307,7 @@ export default function MessageChat({ navigation, route }) {
             <Text>{fileName}</Text>
             <Button
                 title="Download"
-                onPress={() => {
-                    makeDowload(url);
-                }} />
+                onPress={() => downloadFile(stringUrl)} />
         </View>
     }
 
@@ -319,6 +319,26 @@ export default function MessageChat({ navigation, route }) {
 
         await downloadInstance.downloadAsync();
     }
+
+    const downloadFile = (url) => {
+        let fileUri = FileSystem.documentDirectory + "small.mp4";
+        FileSystem.downloadAsync(url, fileUri)
+            .then(({ uri }) => {
+                saveFile(uri);
+            })
+            .catch(error => {
+                console.error(error);
+            })
+    }
+
+    const saveFile = async (fileUri) => {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status === "granted") {
+            const asset = await MediaLibrary.createAssetAsync(fileUri)
+            await MediaLibrary.createAlbumAsync("Download", asset, false)
+        }
+    }
+
 
     useEffect(() => {
         setIndividualChatId(individualChat.idChat);

@@ -80,7 +80,7 @@ export default function Navbar({ setContainer }) {
 
     const handleLogout = () => {
         removeUserActive2Socket(user?.phoneNumber);
-        localStorage.removeItem('phones');
+        localStorage.setItem("phones", JSON.stringify([]));
         logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
     };
     const handleCloseModal = () => {
