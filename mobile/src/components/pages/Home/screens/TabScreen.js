@@ -20,7 +20,7 @@ export default function TabScreen({ navigation }) {
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
 
-                    if (route.name === 'MessagesScreen') {
+                    if (route.name === 'Trò chuyện') {
                         iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
                     } else if (route.name === 'ProfileScreen') {
                         iconName = focused ? 'information-circle' : 'information-circle-outline';
@@ -52,7 +52,7 @@ export default function TabScreen({ navigation }) {
                         </TouchableOpacity>
                     ),
                 })}
-                name="MessagesScreen"
+                name="Trò chuyện"
                 component={MessagesScreen}
             />
             <Tab.Screen name="ProfileScreen" options={{ title: 'Thông tin' }} component={ProfileScreen} />
