@@ -24,10 +24,11 @@ import { uploadFile } from '../../../../../redux/apiRequest/fileApiRequest';
 
 import { UserContext } from '../../../../../context/UserContext';
 import { ChatContext } from '../../../../../context/ChatContext';
-import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../../context/TypeChat';
+import { TYPE_FILE, TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION, TYPE_REMOVE_MSG } from '../../../../../context/TypeChat';
 import { setSender } from '../../../../../redux/userSlice';
-
+import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
 
 import {
@@ -41,6 +42,7 @@ import {
     updateMsg,
 } from '../../../../../redux/apiRequest/chatApiRequest';
 import styles from './MessageChat_Styles';
+import { FontAwesome } from '@expo/vector-icons';
 // import LoadingChat from './LoadingChat';
 
 export default function MessageChat({ navigation, route }) {
@@ -149,6 +151,10 @@ export default function MessageChat({ navigation, route }) {
                         isMessageQuestion === '' ? question[1] : isMessageQuestion,
                         mess.message._id,
                     );
+            case TYPE_REMOVE_MSG:
+                return <Text style={[styles.chatText, { opacity: 0.4 }]}>{mess.message.content}</Text>;
+            case TYPE_FILE:
+                return fileChat(mess?.message?.imageContent);
             default:
                 return <></>;
         }
@@ -267,6 +273,53 @@ export default function MessageChat({ navigation, route }) {
         return { type: type, uri: localUri, name: filename };
     };
 
+    const addMsgFileWithInfo = (url) => {
+        createChat(TYPE_FILE, '', url);
+    }
+
+
+    const pickFile = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await DocumentPicker.getDocumentAsync({});
+
+
+        const bodyFormData = new FormData();
+        bodyFormData.append('file', { type: result?.mimeType, uri: result?.uri, name: result?.name });
+
+
+        const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+        window.setTimeout(async function () {
+            //wait upload image on google cloud
+            await addMsgFileWithInfo(uploadImage.url);
+        }, 1000);
+    };
+
+    const fileChat = (url) => {
+        const stringUrl = `${url}`;
+
+        const fileName = stringUrl?.replace("https://storage.googleapis.com/cloud-storage-mchat/", "");
+
+
+        return <View
+        >
+            <Text>{fileName}</Text>
+            <Button
+                title="Download"
+                onPress={() => {
+                    makeDowload(url);
+                }} />
+        </View>
+    }
+
+    const makeDowload = async (url) => {
+        const downloadInstance = FileSystem.createDownloadResumable(
+            url,
+            FileSystem.documentDirectory + "file.pdf"
+        );
+
+        await downloadInstance.downloadAsync();
+    }
+
     useEffect(() => {
         setIndividualChatId(individualChat.idChat);
     }, [individualChat.idChat]);
@@ -361,6 +414,9 @@ export default function MessageChat({ navigation, route }) {
                 <View style={styles.footer}>
                     <TouchableOpacity style={styles.Button} onPress={pickImage}>
                         <Ionicons name="image" size={24} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.Button} onPress={pickFile}>
+                        <FontAwesome name="file-text" size={20} color="black" />
                     </TouchableOpacity>
                     <TextInput
                         style={styles.inputText}

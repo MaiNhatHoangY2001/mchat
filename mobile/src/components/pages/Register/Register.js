@@ -151,7 +151,7 @@ function Register() {
                                     }}>
                                         <Text style={styles.tittle}>     Vui lòng nhập mã OTP</Text>
                                         <Text style={[styles.info, {fontWeight:'300',marginBottom:20,opacity:0.6}]}> Hệ thống vừa gửi OTP đến số điện thoại {phonenumber}</Text>
-                                        <View style={{flexDirection:'row',marginLeft:-17,justifyContent:'center'} }>
+                                        <View style={{flexDirection:'row', alignItems:'space-around'} }>
                                                 <TextInput  keyboardType='number-pad' 
                                                     maxLength={6} autoComplete='tel'
                                                     onChangeText={setOtp}
@@ -236,40 +236,6 @@ function Register() {
                                                 borderRadius:30
                                                 ,opacity:0.99999
                                 }}>
-                                    <Text style={[styles.tittle,{alignSelf:'center'}]}>Nhập mật khẩu của bạn</Text>
-                                    <Text style={styles.info}> Vui lòng nhập mật khẩu của bạn</Text>
-                                    <View style={{alignContent:'center', alignSelf:'center',marginTop:15, marginLeft:-28}}>
-                                        <TextInput      
-                                                        maxLength={15} 
-                                                        secureTextEntry={true}
-                                                        // blurOnSubmit='true'
-                                                        placeholderTextColor={'#a9a9a9'}
-                                                        textContentType='password'
-                                                        placeholder='Mật khẩu của bạn' style={styles.inputSDT}>
-                                                    </TextInput>
-                                        <View style={{flexDirection:'row', alignSelf:'center'}}>
-                                            <TouchableOpacity style={[styles.btnCon,{marginLeft:30}]} onPress={() => setFlagNewUser(true)}>
-                                                <Text style={styles.txtCon}> Tiếp tục </Text>
-                                            </TouchableOpacity>
-                                            {/* <Link to="/" style={styles.btnCon}>
-                                                <Text style={styles.txtCon}>   Trở về </Text>
-                                            </Link> */}
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-
-
-                            <View style={{display: !FlagNewUser ? 'none' : 'flex'}}>
-                            <View style={{  backgroundColor:'white',
-                                                width:350,
-                                                height:700,
-                                                margin:30,
-                                                justifyContent:'center',
-                                                marginTop:350,
-                                                borderRadius:30
-                                                ,opacity:0.99999
-                                }}>
                                     <Text style={[styles.tittle,{alignSelf:'center'}]}>Nhập tên của bạn</Text>
                                     <Text style={styles.info}> Vui lòng nhập tên của bạn</Text>
                                     <View style={{alignContent:'center', alignSelf:'center',marginTop:15, marginLeft:-28}}>
@@ -289,6 +255,34 @@ function Register() {
                                             </Link> */}
                                         </View>
                                     </View>
+                                </View>
+                            </View>
+
+
+                            <View style={{display: !FlagNewUser ? 'none' : 'flex'}}>
+                                <View style={{  backgroundColor:'white',
+                                                    width:350,
+                                                    height:540,
+                                                    margin:30,
+                                                    marginTop:500,
+                                                    borderRadius:30,
+                                                    justifyContent:'center'
+                                    }}>
+                                        <Text style={[styles.tittle, {alignSelf:'center'}]}>Chọn ảnh đại diện</Text>
+                                        <View style={{alignSelf:'center'} }>
+                                            <TouchableOpacity style={styles.btnImgPicker}>
+                                                <Image source={require('../../../../assets/camera.png')}
+                                                style={styles.ImgPicker}/>
+                                            </TouchableOpacity>
+                                            <View style={{flexDirection:'row', marginTop:10, marginBottom:70, alignSelf:'center'}}>
+                                                <Link to="/" style={styles.btnCon} onPress={() => setFlagNewUser(false)}>
+                                                    <Text style={styles.txtCon}> Xác nhận </Text>
+                                                </Link>
+                                                {/* <TouchableOpacity onPress={() => setFlagNewUser(false)}  style={styles.btnCon}>
+                                                    <Text style={styles.txtCon}>   Trở về </Text>
+                                                </TouchableOpacity> */}
+                                            </View>
+                                        </View> 
                                 </View>
                                 
                             </View>

@@ -134,6 +134,7 @@ export default function MessageInfoGroup({ navigation, route }) {
         handleRemoveUser(userOutGroup);
         dispatch(setSender(null));
         await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        setModalLeaveGroup(!modalLeaveGroup)
         navigation.navigate('MessagesScreen');
     };
 
@@ -142,6 +143,7 @@ export default function MessageInfoGroup({ navigation, route }) {
         await deleteGroupChat(accessToken, dispatch, currentGroupChat._id, axiosJWTLogin);
         dispatch(setSender(null));
         await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
+        setModalLeaveGroup(!modalLeaveGroup)
         navigation.navigate('MessagesScreen');
     };
 
@@ -187,6 +189,16 @@ export default function MessageInfoGroup({ navigation, route }) {
         setUrlImage(currentGroupChat?.groupImage);
     }, [currentListGroupChat, currentGroupChat]);
 
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={() => handleClickApply()}>
+                    <Ionicons name="checkmark" size={30} color="green" />
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
+
     return (
         <View style={styles.container}>
             <View>
@@ -231,7 +243,7 @@ export default function MessageInfoGroup({ navigation, route }) {
                         <TouchableOpacity
                             style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'red', borderRadius: 10 }}
                             onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
-                            // onPress={() => handleClickRemoveGroup()}
+                        // onPress={() => handleClickRemoveGroup()}
                         >
                             <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xóa nhóm</Text>
                         </TouchableOpacity>
@@ -259,7 +271,7 @@ export default function MessageInfoGroup({ navigation, route }) {
                                         </Pressable>
                                         <Pressable
                                             style={[styles.button, styles.buttonClose, { marginHorizontal: 10 }]}
-                                            onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
+                                            onPress={() => handleClickRemoveGroup()}
                                         >
                                             <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Xác nhận</Text>
                                         </Pressable>
@@ -301,7 +313,7 @@ export default function MessageInfoGroup({ navigation, route }) {
                                         </Pressable>
                                         <Pressable
                                             style={[styles.button, styles.buttonClose, { marginHorizontal: 10 }]}
-                                            onPress={() => setModalLeaveGroup(!modalLeaveGroup)}
+                                            onPress={() => handleOutGroup()}
                                         >
                                             <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Xác nhận</Text>
                                         </Pressable>

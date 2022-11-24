@@ -49,16 +49,17 @@ function UserContextProvider({ children }) {
         setUsersActive((prev) => {
             let usersNumber;
 
-            if (!prev.includes(phoneNumber)) {
-                usersNumber = [...prev, phoneNumber];
-            } else {
-                usersNumber = prev;
+            if (prev !== undefined) {
+                if (!prev.includes(phoneNumber)) {
+                    usersNumber = [...prev, phoneNumber];
+                } else {
+                    usersNumber = prev;
+                }
+
+                socket.current.emit('user', usersNumber);
+
+                saveToLocalStorage(usersNumber, 'phones');
             }
-
-            socket.current.emit('user', usersNumber);
-
-            saveToLocalStorage(usersNumber, 'phones');
-
             return usersNumber;
         });
     };
@@ -76,19 +77,19 @@ function UserContextProvider({ children }) {
     };
 
     const saveToLocalStorage = (phoneNumbers, name) => {
-        localStorage.setItem(name, JSON.stringify(phoneNumbers));
+        localStorage?.setItem(name, JSON.stringify(phoneNumbers));
     };
 
     const getFromLocalStorage = (name) => {
-        return JSON.parse(localStorage.getItem(name));
+        return JSON?.parse(localStorage.getItem(name));
     };
 
     const setActiveUser = (actor, isGroupChat) => {
         if (!isGroupChat) {
-            return usersActive.some((phone) => phone === (actor?.sender?.phoneNumber || actor?.phoneNumber));
+            return usersActive?.some((phone) => phone === (actor?.sender?.phoneNumber || actor?.phoneNumber));
         }
 
-        return usersActive.some((phone) => {
+        return usersActive?.some((phone) => {
             const actorInGroupChat = actor?.user?.filter((user) => user?.phoneNumber === phone);
             let phoneActor1 = user?.phoneNumber;
 
