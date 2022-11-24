@@ -30,7 +30,6 @@
     font-weight:600;
 }
 .info{
-    margin-left: 10;
     text-align: center;
     // margin-top: -70px;
     font-weight: 200;
@@ -45,6 +44,19 @@
     margin-left: 28px;
     height: 50;
     width: 250;
+    border-radius: 20px;
+    border-color: black;
+    border-width: 1px;
+    text-align: center;
+    font-size: 20;
+}
+.inputDate{
+    align-self: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 28px;
+    height: 55;
+    width: 350;
     border-radius: 20px;
     border-color: black;
     border-width: 1px;

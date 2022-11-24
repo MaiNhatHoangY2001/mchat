@@ -1,7 +1,8 @@
 import { ImageBackground,Alert, SafeAreaView, Text, TextInput, View ,Image, TouchableOpacity, Dimensions} from 'react-native';
 import styles from './Register.module.scss';
 import { Link, useNavigate } from 'react-router-native';
-import { useRef, useState } from 'react';
+import { useRef, useState,useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 // import { Icon } from 'react-native-vector-icons/icon';
 import PhoneInput from 'react-native-phone-number-input';
 import {FirebaseRecaptchaVerifierModal} from 'expo-firebase-recaptcha';
@@ -11,29 +12,74 @@ import firebase from 'firebase/compat/app';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useDispatch } from 'react-redux';
+
+import DatePicker from 'react-native-datepicker';
 
 const Tab = createBottomTabNavigator();
 
 const widthScreen = Dimensions.get('window').width
 
 function Register() {
+    // const user = useSelector((state) => state.auth.login?.currentUser)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const [flagTabNewUser, setFlagTabNewUser] = useState(false);
     const [FlagNewUser, setFlagNewUser] = useState(false)
-    function VerifyOtp(){
+    
+            
+    
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [date, setDate] = useState('10-07-2001');
+    
+    // const handleRegister = (e) => {
+    //     e.preventDefault();
+    //     // const validationForm = this.validationForm();
+    //     // if(validationForm.error){
+    //     //     alert(validationForm.msg);
+    //     // }
+    //     const newUser = {
+    //         phoneNumber: phoneNumber,
+    //         password: password,
+    //         profileName: name,
+    //         date: date,
+    //         refreshToken: '',
+    //     };
+    //     registerUser(newUser, dispatch, navigate, setIsLoading);
+    //     window.setTimeout(function () {
+    //         //login when sign up one second
+    //         handleLogin(phoneNumber, password);
+    //         navigate('/');
+    //     }, 1000);
+    // };
 
+    // const handleLogin = (phoneNumber, password) => {
+    //     const newUser = {
+    //         phoneNumber: phoneNumber,
+    //         password: password,
+    //         // phoneNumber: phoneNumberValue,
+    //         // password: pwValue,
+    //     };
+
+    //     loginUser(newUser, dispatch, navigate, setIsLoading);
+    // };
+
+    // useEffect(() => {
+    //     console.log('running');
+    //     if (user) {
+    //         navigate('/');
+    //     }
+    // });
+
+    function VerifyOtp(){
         const [Flag, setFlag] = useState(false)
-        
         const [phonenumber, setPhoneNumber] = useState('')
         const [otp, setOtp] = useState('');
         const [verificationId, setVerificationId] = useState(null);
         const recaptchaVerifier = useRef(null);        
         const phoneInput = useRef(PhoneInput);
-
         let phoneNumber = phonenumber.trim();
 
         const getOtp = () => {
@@ -118,6 +164,7 @@ function Register() {
                                                     withShadow
                                                     layout='first'
                                                     autoFocus
+                                                    // onChange={setPhoneNumber}
                                                     onChangeFormattedText={(text) => setPhoneNumber(text)}
                                                     placeholder='Số điện thoại'>
                                         </PhoneInput>
@@ -151,7 +198,7 @@ function Register() {
                                     }}>
                                         <Text style={styles.tittle}>     Vui lòng nhập mã OTP</Text>
                                         <Text style={[styles.info, {fontWeight:'300',marginBottom:20,opacity:0.6}]}> Hệ thống vừa gửi OTP đến số điện thoại {phonenumber}</Text>
-                                        <View style={{flexDirection:'row', alignItems:'space-around'} }>
+                                        <View style={{alignContent:'center', alignSelf:'center',marginTop:15, marginLeft:-28}}>
                                                 <TextInput  keyboardType='number-pad' 
                                                     maxLength={6} autoComplete='tel'
                                                     onChangeText={setOtp}
@@ -185,6 +232,7 @@ function Register() {
         );
     }
     function VerifyUser(){
+        
         return(
             <SafeAreaView style={{margin:0, padding:0}}>
                 <View
@@ -236,16 +284,15 @@ function Register() {
                                                 borderRadius:30
                                                 ,opacity:0.99999
                                 }}>
-                                    <Text style={[styles.tittle,{alignSelf:'center'}]}>Nhập tên của bạn</Text>
-                                    <Text style={styles.info}> Vui lòng nhập tên của bạn</Text>
+                                    <Text style={[styles.tittle,{alignSelf:'center'}]}>Nhập mật khảu của bạn</Text>
+                                    <Text style={styles.info}> Vui lòng nhập mật khẩu của bạn</Text>
                                     <View style={{alignContent:'center', alignSelf:'center',marginTop:15, marginLeft:-28}}>
-                                        <TextInput      numberOfLines={1}
-                                                        maxLength={15} autoComplete='cc-number'
-                                                        // blurOnSubmit='true'
-                                                        placeholderTextColor={'#a9a9a9'}
-                                                        textContentType='oneTimeCode'
-                                                        placeholder='Tên của bạn' style={styles.inputSDT}>
-                                                    </TextInput>
+                                        <TextInput
+                                            placeholderTextColor={'#a9a9a9'}
+                                            secureTextEntry={true}
+                                            onChange={setPassword}
+                                            placeholder='Mật khẩu của bạn' style={styles.inputSDT}>
+                                        </TextInput>
                                         <View style={{flexDirection:'row', alignSelf:'center'}}>
                                             <TouchableOpacity style={[styles.btnCon,{marginLeft:30}]} onPress={() => setFlagNewUser(true)}>
                                                 <Text style={styles.txtCon}> Tiếp tục </Text>
@@ -260,31 +307,68 @@ function Register() {
 
 
                             <View style={{display: !FlagNewUser ? 'none' : 'flex'}}>
-                                <View style={{  backgroundColor:'white',
-                                                    width:350,
-                                                    height:540,
-                                                    margin:30,
-                                                    marginTop:500,
-                                                    borderRadius:30,
-                                                    justifyContent:'center'
-                                    }}>
-                                        <Text style={[styles.tittle, {alignSelf:'center'}]}>Chọn ảnh đại diện</Text>
-                                        <View style={{alignSelf:'center'} }>
-                                            <TouchableOpacity style={styles.btnImgPicker}>
-                                                <Image source={require('../../../../assets/camera.png')}
-                                                style={styles.ImgPicker}/>
+                                         <View style={{  backgroundColor:'white',
+                                                width:350,
+                                                height:700,
+                                                margin:30,
+                                                justifyContent:'center',
+                                                marginTop:350,
+                                                borderRadius:30
+                                                ,opacity:0.99999
+                                }}>
+                                    <Text style={[styles.tittle,{alignSelf:'center'}]}>Nhập tên của bạn</Text>
+                                    <Text style={styles.info}> Vui lòng nhập tên của bạn</Text>
+                                    <View style={{alignContent:'center', alignSelf:'center',marginTop:15, marginLeft:-28}}>
+                                        <TextInput      numberOfLines={1}
+                                                        maxLength={15} autoComplete='cc-number'
+                                                        // onChange={setName}
+                                                        placeholderTextColor={'#a9a9a9'}
+                                                        textContentType='oneTimeCode'
+                                                        placeholder='Tên của bạn' style={styles.inputSDT}>
+                                        </TextInput>
+                                        <DatePicker style={styles.inputSDT} 
+                                            date={date} 
+                                            mode="date"
+                                            format="DD/MM/YYYY"
+                                            minDate="01-01-1900"
+                                            maxDate="01-01-2000"
+                                            confirmBtnText="Confirm"
+                                            cancelBtnText="Cancel"
+                                            customStyles={{
+                                                dateIcon: {
+                                                position: 'absolute',
+                                                right: -0,
+                                                top: 5,
+                                                marginLeft: 0,
+                                                },
+                                                dateInput: {
+                                                borderColor : "gray",
+                                                alignItems: "flex-start",
+                                                borderWidth: 0,
+                                                },
+                                                placeholderText: {
+                                                fontSize: 17,
+                                                color: "gray"
+                                                },
+                                                dateText: {
+                                                marginTop:3,
+                                                fontSize: 20,
+                                                alignSelf:'center'
+                                                }
+                                            }}
+                                            onDateChange={(date) => {
+                                                setDate(date);
+                                            }}>
+                                        </DatePicker>
+                                        <View style={{flexDirection:'row', alignSelf:'center'}}>
+                                            <TouchableOpacity 
+                                                style={[styles.btnCon,{marginLeft:30}]}  
+                                                onPress={[() => setFlagNewUser(true)]}>
+                                                <Text style={styles.txtCon}> Đăng ký </Text>
                                             </TouchableOpacity>
-                                            <View style={{flexDirection:'row', marginTop:10, marginBottom:70, alignSelf:'center'}}>
-                                                <Link to="/" style={styles.btnCon} onPress={() => setFlagNewUser(false)}>
-                                                    <Text style={styles.txtCon}> Xác nhận </Text>
-                                                </Link>
-                                                {/* <TouchableOpacity onPress={() => setFlagNewUser(false)}  style={styles.btnCon}>
-                                                    <Text style={styles.txtCon}>   Trở về </Text>
-                                                </TouchableOpacity> */}
                                             </View>
-                                        </View> 
+                                    </View>
                                 </View>
-                                
                             </View>
                             
 
