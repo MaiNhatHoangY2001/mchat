@@ -179,11 +179,16 @@ function Call() {
 
     //handle webcam
     const [webcam, setWebcam] = useState(true);
+    const [showVid, setShowVid] = useState(true);
     function checkWebcam() {
-        if (webcam === true)
+        if (webcam === true && showVid === true) {
             myVideo.current.srcObject.getVideoTracks().forEach(track => track.enabled = false);
-        if (webcam === false)
+            setShowVid(false);
+        }
+        if (webcam === false && showVid === false) {
             myVideo.current.srcObject.getVideoTracks().forEach(track => track.enabled = true);
+            setShowVid(true);
+        }
     }
 
     //handle test only your mic 
@@ -207,7 +212,15 @@ function Call() {
             </div>
             <div className={cx('container-center')} style={{ height: heightContainerCenter }}>
                 <div style={{ alignSelf: 'center' }}>
-                    <video className={cx('videoCaller')} playsInline ref={myVideo} autoPlay muted={muteVoice} />
+                    <video
+                        className={cx('videoCaller')}
+                        playsInline
+                        ref={myVideo}
+                        autoPlay
+                        muted={muteVoice}
+                        style={{ display: showVid ? 'flex' : 'none' }}
+                    />
+                    <div className={cx('avaVideoCaller')} style={{ display: showVid ? 'none' : 'flex' }}></div>
                 </div>
                 <div style={{ alignSelf: 'center' }}>
                     {callAccepted && !callEnded ? (

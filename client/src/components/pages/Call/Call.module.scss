@@ -63,13 +63,22 @@
     height: 100%;
 }
 
-.videoCaller {
+.videoCaller,
+.avaVideoCaller {
     margin-left: -2%;
     border: 1px solid red;
 }
 
 .videoReceiver {
     margin-left: 2%;
+}
+
+.avaVideoCaller {
+    background-image: url(../../../../public/assets/images/avata1.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 642px;
+    height: 482px;
 }
 
 .container-bottom {
@@ -266,6 +275,7 @@ screen and (max-height: 619px) {
         // padding: 5% 0 5% 0;
     }
     .videoCaller,
+    .avaVideoCaller,
     .videoReceiver {
         display: block;
         margin: 0 auto;
@@ -273,6 +283,9 @@ screen and (max-height: 619px) {
     }
     .videoReceiver {
         margin-top: 5%;
+    }
+    .avaVideoCaller {
+        height: 188px;
     }
     .container-bottom {
         // background-color: #303030;
