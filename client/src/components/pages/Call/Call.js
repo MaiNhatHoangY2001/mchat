@@ -280,7 +280,7 @@ function Call() {
                         />
 
                         {/* btn test voice */}
-                        {muteVoice ? (
+                        {/* {muteVoice ? (
                             <Tooltip title="Bật thử giọng" placement="top" disableInteractive arrow>
                                 <button className={cx('btnTestVoice')} onClick={() => setMuteVoice(false)}>
                                     <IconContext.Provider value={{ color: '#fff' }}>
@@ -300,7 +300,7 @@ function Call() {
                                     </IconContext.Provider>
                                 </button>
                             </Tooltip>
-                        )}
+                        )} */}
 
                         {/* btn micro */}
                         {mic ? (
