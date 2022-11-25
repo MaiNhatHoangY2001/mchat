@@ -13,7 +13,7 @@ export default function Item({ item, onPress, backgroundColor }) {
     const userContext = useContext(UserContext);
     const setActiveUser = userContext.setActiveUser;
 
-    const imgage = item.img;
+    // const imgage = item.img;
 
     const isActorSenderActive = currentSender?._id === (item?.sender?._id || item?._id);
     const isGroupChat = item?.sender?._id === undefined;
