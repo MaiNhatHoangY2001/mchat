@@ -30,7 +30,8 @@ function Register() {
     const [FlagNewUser, setFlagNewUser] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
             
-    const [numberphone, setNumberPhone] = useState('')  
+    const [numberphone, setNumberPhone] = useState('')
+    const [password, setPassword] = useState('')  
     
     
     // const handleRegister = (e) => {
@@ -233,11 +234,7 @@ function Register() {
     }
     function VerifyUser(){
 
-        const [password, setPassword] = useState('');
-        const [name, setName] = useState('');
-
         const [date, setDate] = useState('10-07-2001');
-        const [open, setOpen] = useState(false)
 
         const [isSecureNewPW, setIsSecureNewPW] = useState(true)
         const toggleNewPW = () => {
@@ -254,12 +251,14 @@ function Register() {
             if (passwordInputNewPW.trim().length < 6)
                 Alert.alert('Thông báo', 'Vui lòng nhập tối thiểu 6 ký tự mật khẩu!');
             else {
-                const phoneTabNewPW = '0' + numberphone.slice(3,12) //lấy chuỗi từ ký tự thứ 3 là 9, đến ký tự thứ 12 là sau số 0 cuối
-                console.log("SĐT từ verify ",numberphone)
-                console.log("SDT sau khi định dạng ",phoneTabNewPW)
-                setNumberPhone('0' + numberphone.slice(3,12))
-                console.log("SDT người dùng tổng bộ ",numberphone)
+                // console.log("SĐT từ verify ",numberphone)
+                // console.log("SDT sau khi định dạng ",phoneTabNewPW)
+                // setNumberPhone('0' + numberphone.slice(3,12))
+                // console.log("SDT người dùng tổng bộ ",numberphone)
                 setFlagNewUser(true)
+                setPassword(passwordInputNewPW)
+                console.log(passwordInputNewPW)
+                console.log(password)
             }
         }
         function checkDataInputsPassword() {
@@ -276,33 +275,36 @@ function Register() {
                 if (nameUserInput.trim().length < 1)
                 Alert.alert('Thông báo', 'Vui lòng nhập tối thiểu 2 ký tự!')
                 else{
+                    const phoneTabNewUser = '0' + numberphone.slice(3,12) 
                     const newUser = {
-                                phoneNumber: phoneNumber,
-                                password: password,
-                                profileName: name,
+                                phoneNumber: phoneTabNewUser.trim(),
+                                password: password.trim(),
+                                profileName: nameUserInput,
                                 date: date,
                                 refreshToken: '',
                     };
                     registerUser(newUser, dispatch, navigate, setIsLoading);
-                    window.setTimeout(function () {
-                        //login when sign up one second
-                        handleLogin(phoneNumber, password)
-                        navigate('/')
-                    }, 1000);
-                    const handleLogin = (phoneNumber, password) => {
-                        const newUser = {
-                            phoneNumber: phoneNumber,
-                            password: password,
-                        };
+                    console.log(newUser)
+                    if(newUser) navigate('/')
+                    // window.setTimeout(function () {
+                    //     //login when sign up one second
+                    //     handleLogin(phoneNumber, password)
+                    //     navigate('/')
+                    // }, 1000);
+                    // const handleLogin = (phoneNumber, password) => {
+                    //     const newUser = {
+                    //         phoneNumber: phoneNumber,
+                    //         password: password,
+                    //     };
                 
-                        loginUser(newUser, dispatch, navigate, setIsLoading);
-                    };
-                    useEffect(() => {
-                        console.log('running')
-                        if (user) {
-                            navigate('/')
-                        }
-                    });
+                    //     loginUser(newUser, dispatch, navigate, setIsLoading);
+                    // };
+                    // useEffect(() => {
+                    //     console.log('running')
+                    //     if (user) {
+                    //         navigate('/')
+                    //     }
+                    // });
                 }
             }
         }
