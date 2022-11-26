@@ -50,7 +50,6 @@ import { FontAwesome } from '@expo/vector-icons';
 export default function MessageChat({ navigation, route }) {
     const dataSender = route.params.item;
     const isUser = route.params.item.sender === undefined ? false : true;
-    console.log(dataSender);
 
     const user = useSelector((state) => state.auth.login?.currentUser);
     const sender = useSelector((state) => state.user.sender?.user);
@@ -308,7 +307,7 @@ export default function MessageChat({ navigation, route }) {
             <Text>{fileName}</Text>
             <Button
                 title="Download"
-                onPress={() => downloadFile(stringUrl)} />
+                onPress={() => makeDowload(stringUrl)} />
         </View>
     }
 
@@ -338,6 +337,11 @@ export default function MessageChat({ navigation, route }) {
             const asset = await MediaLibrary.createAssetAsync(fileUri)
             await MediaLibrary.createAlbumAsync("Download", asset, false)
         }
+    }
+
+    const actorImg = (isUser) => {
+
+        return isUser ? user?.profileImg : currentSender?.profileImg
     }
 
 
@@ -415,9 +419,7 @@ export default function MessageChat({ navigation, route }) {
                                             source={{
                                                 uri: isGroupChat
                                                     ? mess.message.userGroupChat?.profileImg
-                                                    : isUser
-                                                        ? currentSender?.profileImg
-                                                        : currentSender?.profileImg,
+                                                    : actorImg(isUser)
                                             }}
                                         />
                                         <View style={styles.contain}>
