@@ -15,10 +15,12 @@ import auth from '../../../firebase-config';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import styled from 'styled-components/macro';
 import PhoneInput from 'react-phone-input-2';
+import { getAllNumber } from '../../../redux/apiRequest/userApiRequest';
 
 const cx = classNames.bind(styles);
 function Register() {
     const user = useSelector((state) => state.auth.login?.currentUser);
+    const allNumber = useSelector((state) => state.user?.users?.allNumber);
 
     //    const [isOpen, setIsOpen] = useState(false);
     // bỏ username - email, gộp họ và tên, số dt đưa lên đầun
@@ -162,6 +164,11 @@ function Register() {
         setDisableTab1(true);
         setDisableTab2(false);
     };
+
+    useEffect(() => {
+        getAllNumber(dispatch);
+    }, [])
+
     return (
         // <body>
         <section className={cx('register-container')}>

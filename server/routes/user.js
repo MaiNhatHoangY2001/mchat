@@ -23,4 +23,7 @@ router.get('/search', middlewareController.verifyTokenAndUserAuth, userControlle
 //CHANGE USER PASSWORD
 router.post('/changePassword', userController.changePasswordWithPhoneNumber);
 
+//GET ALL NUMBER
+router.get('/phones', userController.getAllNumber);
+
 module.exports = router;
