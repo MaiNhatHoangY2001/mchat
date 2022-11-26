@@ -20,38 +20,27 @@ import { getAllNumber } from '../../../redux/apiRequest/userApiRequest';
 const cx = classNames.bind(styles);
 function Register() {
     const user = useSelector((state) => state.auth.login?.currentUser);
+
     const allNumber = useSelector((state) => state.user?.users?.allNumber);
 
-    //    const [isOpen, setIsOpen] = useState(false);
-    // bỏ username - email, gộp họ và tên, số dt đưa lên đầun
     const [isLoading, setIsLoading] = useState(false);
-    const [name, setName] = useState('');
-    //    const [emailID, setEmailID] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [date, setDate] = useState('');
-    const [password, setPassword] = useState('');
-    const [repass, setRePass] = useState('');
-
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleRegister = (e) => {
         e.preventDefault();
-        // const validationForm = this.validationForm();
-        // if(validationForm.error){
-        //     alert(validationForm.msg);
-        // }
         const newUser = {
             phoneNumber: phoneNumber,
-            password: password,
+            password: passwordInputNewPW,
             profileName: name,
-            date: date,
+            date: '',
             refreshToken: '',
         };
         registerUser(newUser, dispatch, navigate, setIsLoading);
         window.setTimeout(function () {
             //login when sign up one second
-            handleLogin(phoneNumber, password);
+            handleLogin(phoneNumber, passwordInputNewPW);
             navigate('/');
         }, 1000);
     };
@@ -158,18 +147,58 @@ function Register() {
         recaptchaVerifier.verify();
         return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
     }
-    const handleChangeTab = (e) => {
-        setActiveTab(2);
-        setActiveTab(2);
-        setDisableTab1(true);
-        setDisableTab2(false);
-    };
 
+    const [name, setName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    
+    const [errorMessNewPW1, setErrorMessNewPW1] = useState('');
+    const [errorMessNewPW2, setErrorMessNewPW2] = useState('');
+    const [errorMessNewPW3, setErrorMessNewPW3] = useState('');
+    const [errorMessNewPW4, setErrorMessNewPW4] = useState('');
+    let isNum = /^\d+$/.test(phoneNumber.trim());
+    let regexPhoneNumber = /\+?(0|84)\d{9}/.test(phoneNumber.trim());
+    function checkPhoneNumber() {
+        if (phoneNumber.trim() === '') setErrorMessNewPW1('Vui lòng nhập số điện thoại!');
+        else if (!isNum) setErrorMessNewPW1('Vui lòng nhập lại số điện thoại!');
+        else if (phoneNumber.trim().length !== 10) setErrorMessNewPW1('Vui lòng nhập đủ 10 ký tự số điện thoại!');
+        else if (!regexPhoneNumber) setErrorMessNewPW1('SĐT không hợp lệ!');
+        else setErrorMessNewPW1('');
+    }
+    function checkNewPW() {
+        if (passwordInputNewPW.trim() === '') setErrorMessNewPW2('Vui lòng nhập mật khẩu mới!');
+        else if (passwordInputNewPW.trim().length < 6) setErrorMessNewPW2('Vui lòng nhập tối thiểu 6 ký tự!');
+        else setErrorMessNewPW2('');
+    }
+    function checkConfirmNewPW() {
+        if (passwordInputConfirmNewPW.trim() === '') setErrorMessNewPW3('Vui lòng nhập mật khẩu mới!');
+        else if (passwordInputConfirmNewPW.trim().length < 6) setErrorMessNewPW3('Vui lòng nhập tối thiểu 6 ký tự!');
+        else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
+            setErrorMessNewPW3('Mật khẩu xác nhận không đúng, vui lòng nhập lại!');
+        else {
+            setErrorMessNewPW3('');
+        }
+    }
+    function checkName(e) {
+        e.preventDefault();
+        if (name.trim() === '') setErrorMessNewPW4('Vui lòng nhập tên của bạn!');
+        else if (name.trim().length < 1) setErrorMessNewPW2('Vui lòng nhập tối thiểu 2 ký tự!');
+        else {
+            setErrorMessNewPW4('');
+            handleRegister(e);
+        }
+    }
+    function checkDataInputs(e) {
+        e.preventDefault();
+        checkPhoneNumber();
+        checkNewPW();
+        checkConfirmNewPW();
+        checkName(e);
+    }
+    
     useEffect(() => {
         getAllNumber(dispatch);
     }, [])
-
-    return (
+return (
         // <body>
         <section className={cx('register-container')}>
             <div className={cx('boxTabs')}>
@@ -178,8 +207,7 @@ function Register() {
                     transition={false}
                     variant="pills"
                     fill
-                    onSelect={(key) => handleChangeTab(key)}
-                >
+                    >
                     <Tab eventKey={1} title="Xác thực SDT" className={cx('TabOTP')} disabled={disableTab1}>
                         <div>
                             <Form onSubmit={getOtp} style={{ display: !flag ? 'block' : 'none' }}>
@@ -282,23 +310,23 @@ function Register() {
                     </Tab>
                     <Tab eventKey={2} title="Đăng ký" disabled={disableTab2}>
                         <div>
-                            <form onSubmit={handleRegister} className={cx('register-form')}>
+                            <form onSubmit={checkDataInputs} className={cx('register-form')}>
                                 <h2 className={cx('info1')}> THÔNG TIN ĐĂNG KÝ </h2> <br />
                                 <div className="col-lg-6">
                                     <input
                                         type="text"
-                                        pattern="^(0[0-9]{9}$)"
+                                        // pattern="^(0[0-9]{9}$)"
                                         placeholder="Nhập số điện thoại"
                                         className={cx('inputRegister')}
                                         onChange={(e) => setPhoneNumber(e.target.value)}
                                     />
+                                    <p className={cx('errorMessNewPW')}>{errorMessNewPW1}</p>
                                     <input
                                         type={passwordType1}
                                         placeholder="Nhập mật khẩu"
-                                        pattern="^[a-zA-Z0-9 ]{5,}$"
+                                        // pattern="^[a-zA-Z0-9 ]{5,}$"
                                         className={cx('inputRegisterPass')}
                                         onChange={(e) => {
-                                            setPassword(e.target.value);
                                             setPasswordInputNewPW(e.target.value);
                                         }}
                                         value={passwordInputNewPW}
@@ -319,14 +347,14 @@ function Register() {
                                             </IconContext.Provider>
                                         </div>
                                     </span>
+                                    <p className={cx('errorMessNewPW')}>{errorMessNewPW2}</p>
                                     <input
                                         type={passwordType2}
                                         placeholder="Nhập lại mật khẩu"
                                         className={cx('inputRegisterPass')}
                                         onChange={(e) => {
-                                            setRePass(e.target.value);
                                             setPasswordInputConfirmNewPW(e.target.value);
-                                        }}
+                                            }}
                                         value={passwordInputConfirmNewPW}
                                         name="password"
                                     />
@@ -345,20 +373,15 @@ function Register() {
                                             </IconContext.Provider>
                                         </div>
                                     </span>
-                                    <br />
+                                    <p className={cx('errorMessNewPW')}>{errorMessNewPW3}</p>
                                     <input
                                         type="text"
                                         placeholder="Nhập họ và tên"
                                         className={cx('inputRegister')}
                                         onChange={(e) => setName(e.target.value)}
                                     />
-                                    <input
-                                        type="date"
-                                        className={cx('inputRegisterDate')}
-                                        onChange={(e) => setDate(e.target.value)}
-                                    />
-                                    <br />
-                                    <br />
+                                    <p className={cx('errorMessNewPW')}>{errorMessNewPW4}</p>
+                                      
                                     <label className={cx('marginbutton')}>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bạn đã có tài khoản?
                                     </label>

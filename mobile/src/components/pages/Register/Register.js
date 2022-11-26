@@ -3,8 +3,9 @@ import styles from './Register.module.scss';
 import { Link, useNavigate } from 'react-router-native';
 import { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { loginUser, registerUser } from '../../../redux/apiRequest/authApiRequest';
-// import { Icon } from 'react-native-vector-icons/icon';
+
 import PhoneInput from 'react-native-phone-number-input';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { firebaseConfig } from '../../../firebase-config-mobile';
@@ -14,9 +15,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import DatePicker from 'react-native-datepicker';
 import { getAllNumber } from '../../../redux/apiRequest/userApiRequest';
-
 const Tab = createBottomTabNavigator();
 
 const widthScreen = Dimensions.get('window').width
@@ -291,11 +290,11 @@ function Register() {
                 else {
                     const phoneTabNewUser = '0' + numberphone.slice(3, 12)
                     const newUser = {
-                        phoneNumber: phoneTabNewUser.trim(),
-                        password: password.trim(),
-                        profileName: nameUserInput,
-                        date: date,
-                        refreshToken: '',
+                                phoneNumber: phoneTabNewUser.trim(),
+                                password: password.trim(),
+                                profileName: nameUserInput,
+                                date: '',
+                                refreshToken: '',
                     };
                     registerUser(newUser, dispatch, navigate, setIsLoading);
                     console.log(newUser)
@@ -437,63 +436,6 @@ function Register() {
                                             placeholderTextColor={'#a9a9a9'}
                                             placeholder='Tên của bạn' style={styles.inputSDT}>
                                         </TextInput>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            {/* <TextInput      
-                                                numberOfLines={1}
-                                                maxLength={15} autoComplete='cc-number'
-                                                onChangeText={(txt) => setNameUserInput(txt)}
-                                                placeholderTextColor={'#a9a9a9'}
-                                                placeholder='' style={styles.inputSDT}>
-                                            </TextInput>
-                                            <TouchableOpacity 
-                                                style={{
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    alignSelf: 'center',
-                                                    height: 55,
-                                                    paddingLeft: 5,
-                                                    paddingRight: 5,
-                                                    marginLeft: -50,
-                                                    opacity:0.95
-                                                }}
-                                                onPress={() => setOpen(true)}>
-                                                <Icon size={30} name="calendar"/>
-                                            </TouchableOpacity> */}
-                                            <DatePicker style={styles.inputSDT}
-                                                date={date}
-                                                mode="date"
-                                                format="DD/MM/YYYY"
-                                                minDate="01-01-1900"
-                                                maxDate="01-01-2000"
-                                                confirmBtnText="Confirm"
-                                                cancelBtnText="Cancel"
-                                                customStyles={{
-                                                    dateIcon: {
-                                                        position: 'absolute',
-                                                        right: -0,
-                                                        top: 5,
-                                                        marginLeft: 0,
-                                                    },
-                                                    dateInput: {
-                                                        borderColor: "gray",
-                                                        alignItems: "flex-start",
-                                                        borderWidth: 0,
-                                                    },
-                                                    placeholderText: {
-                                                        fontSize: 17,
-                                                        color: "gray"
-                                                    },
-                                                    dateText: {
-                                                        marginTop: 3,
-                                                        fontSize: 20,
-                                                        alignSelf: 'center'
-                                                    }
-                                                }}
-                                                onDateChange={(date) => {
-                                                    setDate(date);
-                                                }}
-                                            />
-                                        </View>
                                         {isLoading ? (
                                             <Text>Đang tạo tài khoản, vui lòng chờ trong giây lát</Text>
                                         ) : (
