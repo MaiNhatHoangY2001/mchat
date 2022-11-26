@@ -65,6 +65,7 @@ function ChatContextProvider({ children }) {
                 userGroupChat: {
                     _id: currentUserId,
                     profileName: user.profileName,
+                    profileImg: user.profileImg
                 },
             },
             isNewChat: false,

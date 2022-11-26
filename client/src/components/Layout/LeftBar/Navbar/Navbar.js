@@ -35,7 +35,6 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 
 export default function Navbar({ setContainer }) {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
-
     const [select, setSelect] = useState(0);
     const [open, setOpen] = useState(false);
     const [inputName, setInputName] = useState(currentUser?.profileName);
