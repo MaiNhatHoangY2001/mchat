@@ -15,10 +15,14 @@ import auth from '../../../firebase-config';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import styled from 'styled-components/macro';
 import PhoneInput from 'react-phone-input-2';
+import { getAllNumber } from '../../../redux/apiRequest/userApiRequest';
 
 const cx = classNames.bind(styles);
 function Register() {
     const user = useSelector((state) => state.auth.login?.currentUser);
+
+    const allNumber = useSelector((state) => state.user?.users?.allNumber);
+
     const [isLoading, setIsLoading] = useState(false);
     
     const dispatch = useDispatch();
@@ -143,13 +147,14 @@ function Register() {
         recaptchaVerifier.verify();
         return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
     }
-    
+
     const [name, setName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     
     const [errorMessNewPW1, setErrorMessNewPW1] = useState('');
     const [errorMessNewPW2, setErrorMessNewPW2] = useState('');
     const [errorMessNewPW3, setErrorMessNewPW3] = useState('');
+    const [errorMessNewPW4, setErrorMessNewPW4] = useState('');
     let isNum = /^\d+$/.test(phoneNumber.trim());
     let regexPhoneNumber = /\+?(0|84)\d{9}/.test(phoneNumber.trim());
     function checkPhoneNumber() {
@@ -164,14 +169,21 @@ function Register() {
         else if (passwordInputNewPW.trim().length < 6) setErrorMessNewPW2('Vui lòng nhập tối thiểu 6 ký tự!');
         else setErrorMessNewPW2('');
     }
-    function checkConfirmNewPW(e) {
-        e.preventDefault();
+    function checkConfirmNewPW() {
         if (passwordInputConfirmNewPW.trim() === '') setErrorMessNewPW3('Vui lòng nhập mật khẩu mới!');
         else if (passwordInputConfirmNewPW.trim().length < 6) setErrorMessNewPW3('Vui lòng nhập tối thiểu 6 ký tự!');
         else if (!passwordInputNewPW.trim().includes(passwordInputConfirmNewPW.trim()))
             setErrorMessNewPW3('Mật khẩu xác nhận không đúng, vui lòng nhập lại!');
         else {
             setErrorMessNewPW3('');
+        }
+    }
+    function checkName(e) {
+        e.preventDefault();
+        if (name.trim() === '') setErrorMessNewPW4('Vui lòng nhập tên của bạn!');
+        else if (name.trim().length < 1) setErrorMessNewPW2('Vui lòng nhập tối thiểu 2 ký tự!');
+        else {
+            setErrorMessNewPW4('');
             handleRegister(e);
         }
     }
@@ -179,9 +191,14 @@ function Register() {
         e.preventDefault();
         checkPhoneNumber();
         checkNewPW();
-        checkConfirmNewPW(e);
+        checkConfirmNewPW();
+        checkName(e);
     }
-    return (
+    
+    useEffect(() => {
+        getAllNumber(dispatch);
+    }, [])
+return (
         // <body>
         <section className={cx('register-container')}>
             <div className={cx('boxTabs')}>
@@ -363,9 +380,8 @@ function Register() {
                                         className={cx('inputRegister')}
                                         onChange={(e) => setName(e.target.value)}
                                     />
-                                    <br />
-                                    <br />
-                                    <br />  
+                                    <p className={cx('errorMessNewPW')}>{errorMessNewPW4}</p>
+                                      
                                     <label className={cx('marginbutton')}>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bạn đã có tài khoản?
                                     </label>

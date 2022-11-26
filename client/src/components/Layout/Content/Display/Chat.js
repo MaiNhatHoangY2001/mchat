@@ -215,6 +215,13 @@ function Chat() {
         setShowPicker(false);
     };
 
+    const actorImg = (isUser) => {
+
+
+
+        return isUser ? user?.profileImg : currentSender?.profileImg
+    }
+
     const [isMessageQuestion, setMessageQuestion] = useState('');
 
     const typeChat = (type, mess) => {
@@ -594,7 +601,7 @@ function Chat() {
                                             src={
                                                 isGroupChat
                                                     ? mess.message.userGroupChat?.profileImg
-                                                    : currentSender?.profileImg
+                                                    : actorImg(mess.sender === currentUserId)
                                             }
                                             alt="avata"
                                         />

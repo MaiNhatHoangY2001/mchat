@@ -5,6 +5,9 @@ import {
     changePassFailed,
     changePassStart,
     changePassSuccess,
+    getAllNumberFailed,
+    getAllNumberStart,
+    getAllNumberSuccess,
     getUsersFailed,
     getUsersStart,
     getUsersSuccess,
@@ -47,5 +50,16 @@ export const updateUser = async (accessToken, dispatch, id, apiUpdate, axiosJWT)
         dispatch(updateUserSuccess());
     } catch (error) {
         dispatch(updateUserFailed());
+    }
+};
+
+
+export const getAllNumber = async (dispatch) => {
+    dispatch(getAllNumberStart());
+    try {
+        const res = await axios.get(`${url}/api/user/phones`);
+        dispatch(getAllNumberSuccess(res.data));
+    } catch (error) {
+        dispatch(getAllNumberFailed());
     }
 };

@@ -3,8 +3,9 @@ import styles from './Register.module.scss';
 import { Link, useNavigate } from 'react-router-native';
 import { useRef, useState,useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { loginUser, registerUser } from '../../../redux/apiRequest/authApiRequest';
-// import { Icon } from 'react-native-vector-icons/icon';
+
 import PhoneInput from 'react-native-phone-number-input';
 import {FirebaseRecaptchaVerifierModal} from 'expo-firebase-recaptcha';
 import { firebaseConfig } from '../../../firebase-config-mobile';
@@ -14,7 +15,6 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import DatePicker from 'react-native-datepicker';
 
 const Tab = createBottomTabNavigator();
 
