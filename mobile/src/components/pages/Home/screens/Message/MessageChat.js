@@ -6,17 +6,11 @@ import {
     Button,
     Image,
     ImageBackground,
-    Keyboard,
     KeyboardAvoidingView,
-    SafeAreaView,
     ScrollView,
-    ScrollViewBase,
-    ScrollViewComponent,
-    StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View,
 } from 'react-native';
 
@@ -25,10 +19,7 @@ import { uploadFile } from '../../../../../redux/apiRequest/fileApiRequest';
 import { UserContext } from '../../../../../context/UserContext';
 import { ChatContext } from '../../../../../context/ChatContext';
 import { TYPE_FILE, TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION, TYPE_REMOVE_MSG } from '../../../../../context/TypeChat';
-import { setSender } from '../../../../../redux/userSlice';
-import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
-import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,12 +27,7 @@ import { StorageAccessFramework } from 'expo-file-system';
 
 import {
     addUserGroupChat,
-    deleteGroupChat,
     getListGroupChat,
-    getMsgs,
-    getMsgsGroupChat,
-    removeUserGroupChat,
-    updateGroupChat,
     updateMsg,
 } from '../../../../../redux/apiRequest/chatApiRequest';
 import styles from './MessageChat_Styles';
@@ -68,22 +54,20 @@ export default function MessageChat({ navigation, route }) {
     const setIndividualChatId = chatContext.setIndividualChatId;
 
     const userContext = useContext(UserContext);
-    const setActiveUser = userContext.setActiveUser;
 
     const bottomRef = useRef(null);
 
     const [currentSender, setCurrentSender] = useState(sender);
 
+    const [downloadProgress, setDownloadProgress] = useState(0);
+    const downloadPath = FileSystem.documentDirectory + (Platform.OS == 'android' ? '' : '');
 
-
-    const [open, setOpen] = useState(false);
 
     const [message, setMessage] = useState('');
 
     const dispatch = useDispatch();
 
     const currentUserId = user?._id;
-    const currentSenderId = currentSender?._id;
     const accessToken = user?.accessToken;
 
     const scrollViewRef = useRef();
@@ -298,8 +282,7 @@ export default function MessageChat({ navigation, route }) {
             await addMsgFileWithInfo(uploadImage.url);
         }, 1000);
     };
-    const [downloadProgress, setDownloadProgress] = useState(0);
-    const downloadPath = FileSystem.documentDirectory + (Platform.OS == 'android' ? '' : '');
+
 
     const fileChat = (url) => {
         const stringUrl = `${url}`;
