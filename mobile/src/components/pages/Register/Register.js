@@ -280,7 +280,7 @@ function Register() {
                                 phoneNumber: phoneTabNewUser.trim(),
                                 password: password.trim(),
                                 profileName: nameUserInput,
-                                date: date,
+                                date: '',
                                 refreshToken: '',
                     };
                     registerUser(newUser, dispatch, navigate, setIsLoading);
@@ -421,63 +421,6 @@ function Register() {
                                                         placeholderTextColor={'#a9a9a9'}
                                                         placeholder='Tên của bạn' style={styles.inputSDT}>
                                         </TextInput>
-                                        <View style={{flexDirection:'row'}}>
-                                            {/* <TextInput      
-                                                numberOfLines={1}
-                                                maxLength={15} autoComplete='cc-number'
-                                                onChangeText={(txt) => setNameUserInput(txt)}
-                                                placeholderTextColor={'#a9a9a9'}
-                                                placeholder='' style={styles.inputSDT}>
-                                            </TextInput>
-                                            <TouchableOpacity 
-                                                style={{
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    alignSelf: 'center',
-                                                    height: 55,
-                                                    paddingLeft: 5,
-                                                    paddingRight: 5,
-                                                    marginLeft: -50,
-                                                    opacity:0.95
-                                                }}
-                                                onPress={() => setOpen(true)}>
-                                                <Icon size={30} name="calendar"/>
-                                            </TouchableOpacity> */}
-                                           <DatePicker style={styles.inputSDT} 
-                                            date={date} 
-                                            mode="date"
-                                            format="DD/MM/YYYY"
-                                            minDate="01-01-1900"
-                                            maxDate="01-01-2000"
-                                            confirmBtnText="Confirm"
-                                            cancelBtnText="Cancel"
-                                            customStyles={{
-                                                dateIcon: {
-                                                position: 'absolute',
-                                                right: -0,
-                                                top: 5,
-                                                marginLeft: 0,
-                                                },
-                                                dateInput: {
-                                                borderColor : "gray",
-                                                alignItems: "flex-start",
-                                                borderWidth: 0,
-                                                },
-                                                placeholderText: {
-                                                fontSize: 17,
-                                                color: "gray"
-                                                },
-                                                dateText: {
-                                                marginTop:3,
-                                                fontSize: 20,
-                                                alignSelf:'center'
-                                                }
-                                            }}
-                                            onDateChange={(date) => {
-                                                setDate(date);
-                                            }}
-                                            />
-                                        </View>
                                         {isLoading ? (
                                             <Text>Đang tạo tài khoản, vui lòng chờ trong giây lát</Text>
                                         ) : (
