@@ -3,6 +3,7 @@ import styles from './Register.module.scss';
 import { Link, useNavigate } from 'react-router-native';
 import { useRef, useState,useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, registerUser } from '../../../redux/apiRequest/authApiRequest';
 // import { Icon } from 'react-native-vector-icons/icon';
 import PhoneInput from 'react-native-phone-number-input';
 import {FirebaseRecaptchaVerifierModal} from 'expo-firebase-recaptcha';
@@ -20,19 +21,17 @@ const Tab = createBottomTabNavigator();
 const widthScreen = Dimensions.get('window').width
 
 function Register() {
-    // const user = useSelector((state) => state.auth.login?.currentUser)
+    const user = useSelector((state) => state.auth.login?.currentUser)
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const [flagTabNewUser, setFlagTabNewUser] = useState(false);
     const [FlagNewUser, setFlagNewUser] = useState(false)
-    
+    const [isLoading, setIsLoading] = useState(false);
             
+    const [numberphone, setNumberPhone] = useState('')  
     
-    const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
-    const [date, setDate] = useState('10-07-2001');
     
     // const handleRegister = (e) => {
     //     e.preventDefault();
@@ -66,12 +65,12 @@ function Register() {
     //     loginUser(newUser, dispatch, navigate, setIsLoading);
     // };
 
-    // useEffect(() => {
-    //     console.log('running');
-    //     if (user) {
-    //         navigate('/');
-    //     }
-    // });
+    useEffect(() => {
+        console.log('running');
+        if (user) {
+            navigate('/');
+        }
+    });
 
     function VerifyOtp(){
         const [Flag, setFlag] = useState(false)
@@ -117,6 +116,7 @@ function Register() {
                             alert('Xác thực không thành công!');
                         });
                     console.log(otp);
+                    setNumberPhone(phonenumber)
                 }
             };
 
@@ -232,7 +232,80 @@ function Register() {
         );
     }
     function VerifyUser(){
-        
+
+        const [password, setPassword] = useState('');
+        const [name, setName] = useState('');
+
+        const [date, setDate] = useState('10-07-2001');
+        const [open, setOpen] = useState(false)
+
+        const [isSecureNewPW, setIsSecureNewPW] = useState(true)
+        const toggleNewPW = () => {
+            if (isSecureNewPW) {
+                setIsSecureNewPW(false)
+                return
+            }
+            setIsSecureNewPW(true)
+        };
+        const [passwordInputNewPW, setPasswordInputNewPW] = useState('')
+        const [nameUserInput, setNameUserInput] = useState('')
+
+        function checkConfirmNewPW() {
+            if (passwordInputNewPW.trim().length < 6)
+                Alert.alert('Thông báo', 'Vui lòng nhập tối thiểu 6 ký tự mật khẩu!');
+            else {
+                const phoneTabNewPW = '0' + numberphone.slice(3,12) //lấy chuỗi từ ký tự thứ 3 là 9, đến ký tự thứ 12 là sau số 0 cuối
+                console.log("SĐT từ verify ",numberphone)
+                console.log("SDT sau khi định dạng ",phoneTabNewPW)
+                setNumberPhone('0' + numberphone.slice(3,12))
+                console.log("SDT người dùng tổng bộ ",numberphone)
+                setFlagNewUser(true)
+            }
+        }
+        function checkDataInputsPassword() {
+            if (passwordInputNewPW.trim() === '')
+                Alert.alert('Thông báo', 'Vui lòng nhập mật khẩu!')
+            else {
+                checkConfirmNewPW()
+            }
+        }
+        function checkDataInputInfo(){
+            if(nameUserInput.trim() === '')
+                Alert.alert('Thông báo', 'Vui lòng nhập tên của bạn')
+            else{
+                if (nameUserInput.trim().length < 1)
+                Alert.alert('Thông báo', 'Vui lòng nhập tối thiểu 2 ký tự!')
+                else{
+                    const newUser = {
+                                phoneNumber: phoneNumber,
+                                password: password,
+                                profileName: name,
+                                date: date,
+                                refreshToken: '',
+                    };
+                    registerUser(newUser, dispatch, navigate, setIsLoading);
+                    window.setTimeout(function () {
+                        //login when sign up one second
+                        handleLogin(phoneNumber, password)
+                        navigate('/')
+                    }, 1000);
+                    const handleLogin = (phoneNumber, password) => {
+                        const newUser = {
+                            phoneNumber: phoneNumber,
+                            password: password,
+                        };
+                
+                        loginUser(newUser, dispatch, navigate, setIsLoading);
+                    };
+                    useEffect(() => {
+                        console.log('running')
+                        if (user) {
+                            navigate('/')
+                        }
+                    });
+                }
+            }
+        }
         return(
             <SafeAreaView style={{margin:0, padding:0}}>
                 <View
@@ -284,17 +357,38 @@ function Register() {
                                                 borderRadius:30
                                                 ,opacity:0.99999
                                 }}>
-                                    <Text style={[styles.tittle,{alignSelf:'center'}]}>Nhập mật khảu của bạn</Text>
+                                    <Text style={[styles.tittle,{alignSelf:'center'}]}>Nhập mật khẩu của bạn</Text>
                                     <Text style={styles.info}> Vui lòng nhập mật khẩu của bạn</Text>
                                     <View style={{alignContent:'center', alignSelf:'center',marginTop:15, marginLeft:-28}}>
-                                        <TextInput
-                                            placeholderTextColor={'#a9a9a9'}
-                                            secureTextEntry={true}
-                                            onChange={setPassword}
-                                            placeholder='Mật khẩu của bạn' style={styles.inputSDT}>
-                                        </TextInput>
+                                        <View style={{flexDirection:'row'}}>
+                                            <TextInput
+                                                placeholderTextColor={'#a9a9a9'}
+                                                secureTextEntry={isSecureNewPW}
+                                                onChangeText={(txt) => setPasswordInputNewPW(txt)}
+                                                placeholder='Mật khẩu' style={styles.inputSDT}>
+                                            </TextInput>
+                                            <TouchableOpacity
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    alignSelf: 'center',
+                                                    height: 55,
+                                                    paddingLeft: 5,
+                                                    paddingRight: 5,
+                                                    marginLeft: -50,
+                                                    opacity:0.95
+                                                }}
+                                                onPress={toggleNewPW}
+                                            >
+                                                {isSecureNewPW ? (
+                                                    <Icon name="eye" size={30} color="rgb(250, 139, 158)" />
+                                                ) : (
+                                                    <Icon name="eye-slash" size={30} color="rgb(250, 139, 158)" />
+                                                )}
+                                            </TouchableOpacity>
+                                        </View>
                                         <View style={{flexDirection:'row', alignSelf:'center'}}>
-                                            <TouchableOpacity style={[styles.btnCon,{marginLeft:30}]} onPress={() => setFlagNewUser(true)}>
+                                            <TouchableOpacity style={[styles.btnCon,{marginLeft:30}]} onPress={checkDataInputsPassword}>
                                                 <Text style={styles.txtCon}> Tiếp tục </Text>
                                             </TouchableOpacity>
                                             {/* <Link to="/" style={styles.btnCon}>
@@ -321,12 +415,33 @@ function Register() {
                                     <View style={{alignContent:'center', alignSelf:'center',marginTop:15, marginLeft:-28}}>
                                         <TextInput      numberOfLines={1}
                                                         maxLength={15} autoComplete='cc-number'
-                                                        // onChange={setName}
+                                                        onChangeText={(txt) => setNameUserInput(txt)}
                                                         placeholderTextColor={'#a9a9a9'}
-                                                        textContentType='oneTimeCode'
                                                         placeholder='Tên của bạn' style={styles.inputSDT}>
                                         </TextInput>
-                                        <DatePicker style={styles.inputSDT} 
+                                        <View style={{flexDirection:'row'}}>
+                                            {/* <TextInput      
+                                                numberOfLines={1}
+                                                maxLength={15} autoComplete='cc-number'
+                                                onChangeText={(txt) => setNameUserInput(txt)}
+                                                placeholderTextColor={'#a9a9a9'}
+                                                placeholder='' style={styles.inputSDT}>
+                                            </TextInput>
+                                            <TouchableOpacity 
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    alignSelf: 'center',
+                                                    height: 55,
+                                                    paddingLeft: 5,
+                                                    paddingRight: 5,
+                                                    marginLeft: -50,
+                                                    opacity:0.95
+                                                }}
+                                                onPress={() => setOpen(true)}>
+                                                <Icon size={30} name="calendar"/>
+                                            </TouchableOpacity> */}
+                                           <DatePicker style={styles.inputSDT} 
                                             date={date} 
                                             mode="date"
                                             format="DD/MM/YYYY"
@@ -358,15 +473,20 @@ function Register() {
                                             }}
                                             onDateChange={(date) => {
                                                 setDate(date);
-                                            }}>
-                                        </DatePicker>
-                                        <View style={{flexDirection:'row', alignSelf:'center'}}>
-                                            <TouchableOpacity 
-                                                style={[styles.btnCon,{marginLeft:30}]}  
-                                                onPress={[() => setFlagNewUser(true)]}>
-                                                <Text style={styles.txtCon}> Đăng ký </Text>
-                                            </TouchableOpacity>
+                                            }}
+                                            />
+                                        </View>
+                                        {isLoading ? (
+                                            <Text>Đang tạo tài khoản, vui lòng chờ trong giây lát</Text>
+                                        ) : (
+                                            <View style={{flexDirection:'row', alignSelf:'center'}}>
+                                                <TouchableOpacity 
+                                                    style={[styles.btnCon,{marginLeft:30}]}  
+                                                    onPress={checkDataInputInfo}>
+                                                    <Text style={styles.txtCon}> Đăng ký </Text>
+                                                </TouchableOpacity>
                                             </View>
+                                        )}
                                     </View>
                                 </View>
                             </View>
