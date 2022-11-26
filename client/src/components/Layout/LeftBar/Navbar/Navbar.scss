@@ -96,4 +96,51 @@
         border: 1px solid #505050;
         border-radius: 10px;
     }
+
+    .bg-btn {
+        cursor: pointer;
+        padding: 4px 20px;
+        margin-top: 10px;
+
+        background-color: #faf4cf;
+        border-radius: 10px;
+
+        .tt-btn {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        &:hover {
+            background-color: #f2e696;
+        }
+    }
+
+    .contain-changePW {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        padding-bottom: 10;
+
+        .section {
+            padding-bottom: 10px;
+        }
+
+        .dialog {
+            padding: 4px;
+            font-size: 16px;
+            color: red;
+        }
+        .btn-submit {
+            padding: 6px;
+            margin: 0px 100px;
+            background-color: #bbfb7b;
+
+            border-width: 0;
+            border-radius: 10px;
+
+            &:hover {
+                background-color: #f3bba0;
+            }
+        }
+    }
 }
