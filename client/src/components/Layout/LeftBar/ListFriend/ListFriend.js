@@ -52,6 +52,7 @@ export default function ListFriend() {
     const [openModal, setOpenModal] = useState(false);
     const [searchGroup, setSearchGroup] = useState('');
     const [nameGroup, setNameGroup] = useState('');
+    const [sameGroupName, setSameGroupName] = useState(false);
 
     const dispatch = useDispatch();
     const accessToken = currentUser?.accessToken;
@@ -119,7 +120,7 @@ export default function ListFriend() {
 
             const isHaveGroupChat = currentGroupChat.some((group) => group.groupName === name);
             if (isHaveGroupChat) {
-                console.log('Đã tồn tại nhóm');
+                setSameGroupName(true);
             } else {
                 const apiNewGroupChat = {
                     groupName: name,
@@ -152,6 +153,7 @@ export default function ListFriend() {
                 sendText4JoinGroup(listFriend, name, newGroupChat._id);
                 dispatch(setIsGroupChat(true));
                 handleClickExit();
+                setSameGroupName(false);
             }
         }
     };
@@ -159,6 +161,7 @@ export default function ListFriend() {
     const handleClickExit = () => {
         setOpenModal(false);
         setSelectData([]);
+        setSameGroupName(false);
     };
 
     const newMessage = (mess) => {
@@ -256,8 +259,9 @@ export default function ListFriend() {
                                         placeholder="Nhập tên nhóm"
                                         onChange={(e) => setNameGroup(e.target.value)}
                                     />
+                                    {sameGroupName ? <span className={cx('dialog')}>Tên nhóm đã tồn tại!</span> : <></>}
                                     <TextField
-                                        className={cx('groupName')}
+                                        className={cx(['groupName', 'mt-10'])}
                                         id="standard-basic"
                                         label="Tìm kiếm bạn bè"
                                         size="small"
