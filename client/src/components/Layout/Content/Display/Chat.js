@@ -222,7 +222,7 @@ function Chat() {
         return isUser ? user?.profileImg : currentSender?.profileImg
     }
 
-    const [isMessageQuestion, setMessageQuestion] = useState('');
+    const [isMessageQuestion, setMessageQuestion] = useState({ id: '', answer: '' });
 
     const typeChat = (type, mess) => {
         switch (type) {
@@ -238,7 +238,7 @@ function Chat() {
                 else
                     return formQuestion(
                         question,
-                        isMessageQuestion === '' ? question[1] : isMessageQuestion,
+                        isMessageQuestion.id === mess.message._id ? isMessageQuestion.answer : question[1],
                         mess.message._id,
                     );
             case TYPE_REMOVE_MSG:
@@ -274,7 +274,7 @@ function Chat() {
     };
 
     const handleAnswer = async (question, answer, id) => {
-        setMessageQuestion(answer);
+        setMessageQuestion({ id, answer });
         const newAnswer = question[0] + '/' + answer + '/' + question[2];
         const content = {
             content: newAnswer,
@@ -288,7 +288,23 @@ function Chat() {
             await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         }
         updateMsg(accessToken, dispatch, id, content, axiosJWTLogin);
+        refreshMsg(isGroupChat);
     };
+
+    const refreshMsg = (isGroupChat) => {
+        if (!isGroupChat) {
+            const apiSent = {
+                sender: sender?._id,
+                user: currentUserId,
+            };
+            getMsgs(accessToken, dispatch, apiSent, axiosJWTLogin);
+        } else {
+            const apiSent = {
+                groupId: sender?._id,
+            };
+            getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWTLogin);
+        }
+    }
 
     const recallMsg = (id) => {
         const content = {
