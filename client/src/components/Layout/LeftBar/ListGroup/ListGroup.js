@@ -186,7 +186,7 @@ export default function ListGroup() {
 
     useEffect(() => {
         if (currentIndividualChat !== null) {
-            const listChat = currentIndividualChat?.concat(currentGroupChat);
+            const listChat = []?.concat(currentGroupChat);
             const listSort = listChat?.sort(function (a, b) {
                 return new Date(b?.message[0]?.time) - new Date(a?.message[0]?.time);
             });
@@ -207,6 +207,9 @@ export default function ListGroup() {
     return (
         <div className={cx('containerListFriend')}>
             <div className={cx('search')}>
+                <p className={cx('titleSearch')}>Tất cả nhóm chat</p>
+                </div>
+            {/* <div className={cx('search')}>
                 <p className={cx('titleSearch')}>Tìm kiếm người dùng</p>
                 <div className={cx('actionSearch')}>
                     <AutoComplete
@@ -358,7 +361,7 @@ export default function ListGroup() {
                         </div>
                     </Modal>
                 </div>
-            </div>
+            </div> */}
             <div className={cx('list-item')}>
                 {chatActors?.map((actor, index) => {
                     const isActorSenderActive = currentSender?._id === (actor?.sender?._id || actor?._id);
