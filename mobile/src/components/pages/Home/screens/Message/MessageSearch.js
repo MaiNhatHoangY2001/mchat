@@ -10,7 +10,7 @@ import { loginSuccess } from '../../../../../redux/authSlice';
 import { createAxios } from '../../../../../redux/createInstance';
 import { setSender } from '../../../../../redux/userSlice';
 import { setIsGroupChat } from '../../../../../redux/groupChatSlice';
-import { getMsgs } from '../../../../../redux/apiRequest/chatApiRequest';
+import { getMsgs, getMsgsGroupChat } from '../../../../../redux/apiRequest/chatApiRequest';
 
 
 
@@ -19,6 +19,7 @@ export default function MessageSearch({ navigation }) {
 
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
     const currentSearch = useSelector((state) => state.user.users?.allUsers);
+    const groupChats = useSelector((state) => state.groupChat.groupChat?.actor);
 
     const dispatch = useDispatch();
     const accessToken = currentUser?.accessToken;
@@ -31,12 +32,31 @@ export default function MessageSearch({ navigation }) {
 
 
     const handleGetUser = (sender) => {
-        const actor = { sender: currentUser._id, user: sender._id };
 
-        getMsgs(currentUser.accessToken, dispatch, actor, axiosJWT);
-        dispatch(setSender(sender));
-        dispatch(setIsGroupChat(false));
-        navigation.navigate('MessageChat', { item: { sender } });
+        const isGroupChat = sender?.profileName === undefined;
+
+
+
+
+        if (isGroupChat) {
+            const actor = {
+                groupId: sender?._id,
+            };
+            getMsgsGroupChat(accessToken, dispatch, actor, axiosJWT);
+            dispatch(setIsGroupChat(true));
+            dispatch(setSender(sender));
+            navigation.navigate('MessageChat', { item: sender });
+
+        }
+        else {
+            const actor = { sender: currentUser._id, user: sender._id };
+            getMsgs(currentUser.accessToken, dispatch, actor, axiosJWT);
+            dispatch(setIsGroupChat(false));
+            dispatch(setSender(sender));
+
+            navigation.navigate('MessageChat', { item: { sender } });
+        }
+
     };
 
     const Item = ({ item }) => (
@@ -45,11 +65,11 @@ export default function MessageSearch({ navigation }) {
                 <Image
                     style={styles.image}
                     source={{
-                        uri: item?.profileImg,
+                        uri: item?.profileImg || item?.groupImage,
                     }}
                 />
             </View>
-            <Text style={[styles.title]}>{item?.profileName}</Text>
+            <Text style={[styles.title]}>{item?.profileName || item?.groupName}</Text>
         </TouchableOpacity>
     );
 
@@ -71,7 +91,10 @@ export default function MessageSearch({ navigation }) {
         const search = textSearch === '' ? '@' : textSearch;
         searchUser(accessToken, dispatch, search, axiosJWT);
         if (currentSearch !== null) {
-            setUsersSearch(currentSearch?.filter((user) => user?.profileName !== currentUser?.profileName));
+            const userSearch = currentSearch?.filter((user) => user?.profileName !== currentUser?.profileName);
+            const groupChatSearch = groupChats?.filter((group) => group?.groupName.search(textSearch) > -1);
+            const result = [...userSearch, ...groupChatSearch];
+            setUsersSearch(result);
         }
     }, [textSearch]);
 
