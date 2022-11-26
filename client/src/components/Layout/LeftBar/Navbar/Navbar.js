@@ -6,40 +6,33 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from '../../../../redux/apiRequest/authApiRequest';
 import { useNavigate } from 'react-router-dom';
 import { createAxios } from '../../../../redux/createInstance';
-import { logoutSuccess } from '../../../../redux/authSlice';
+import { loginSuccess, logoutSuccess } from '../../../../redux/authSlice';
 import {
     Avatar,
     Badge,
     Button,
     FormControl,
-    FormControlLabel,
+    // FormControlLabel,
     FormLabel,
     Grid,
     IconButton,
-    InputLabel,
-    MenuItem,
+    // InputLabel,
+    // MenuItem,
     Modal,
-    Radio,
-    RadioGroup,
-    Select,
-    SelectChangeEvent,
+    // Radio,
+    // RadioGroup,
+    // Select,
+    // SelectChangeEvent,
     styled,
     TextField,
     Tooltip,
 } from '@mui/material';
 import { UserContext } from '../../../../context/UserContext';
 import EditIcon from '@mui/icons-material/Edit';
+import { updateUser } from '../../../../redux/apiRequest/userApiRequest';
+import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
 
 const cx = classNames.bind(styles);
-
-const data = {
-    id: 0,
-    name: 'Mai Ngoc Long',
-    phone: '0334172541',
-    birthDay: '04/11/2000',
-    gender: false,
-    uri: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1667672819/Avata/avata01_gqmzyq.png',
-};
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 26,
@@ -48,44 +41,46 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 export default function Navbar({ setContainer }) {
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
+
     const [select, setSelect] = useState(0);
     const [open, setOpen] = useState(false);
-    const [inputName, setInputName] = useState(data.name);
-    const [urlImage, setUrlImage] = useState(data.uri);
+    const [inputName, setInputName] = useState(currentUser?.profileName);
+    const [urlImage, setUrlImage] = useState(currentUser?.profileImg);
     const [image, setImage] = useState({});
-    const [years, setYears] = useState(+data.birthDay.split('/')[2]);
-    const [months, setMonths] = useState(+data.birthDay.split('/')[1]);
-    const [days, setDays] = useState(+data.birthDay.split('/')[0]);
+    // const [years, setYears] = useState(+data.birthDay.split('/')[2]);
+    // const [months, setMonths] = useState(+data.birthDay.split('/')[1]);
+    // const [days, setDays] = useState(+data.birthDay.split('/')[0]);
 
     const userContext = useContext(UserContext);
     const removeUserActive2Socket = userContext.removeUserActive2Socket;
 
-    const user = useSelector((state) => state.auth.login?.currentUser);
-    const userId = user?._id;
-    const accessToken = user?.accessToken;
+    const userId = currentUser?._id;
+    const accessToken = currentUser?.accessToken;
 
-    const today = new Date();
+    // const today = new Date();
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    let axiosJWTLogout = createAxios(user, dispatch, logoutSuccess);
+    let axiosJWTLogout = createAxios(currentUser, dispatch, logoutSuccess);
+    let axiosJWTLogin = createAxios(currentUser, dispatch, loginSuccess);
 
-    // create number in Array
-    const range = (start, end) => {
-        return Array(end - start + 1)
-            .fill()
-            .map((_, idx) => start + idx);
-    };
+    // // create number in Array
+    // const range = (start, end) => {
+    //     return Array(end - start + 1)
+    //         .fill()
+    //         .map((_, idx) => start + idx);
+    // };
 
     const handleLogout = () => {
-        removeUserActive2Socket(user?.phoneNumber);
+        removeUserActive2Socket(currentUser?.phoneNumber);
         localStorage.setItem("phones", JSON.stringify([]));
         logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
     };
     const handleCloseModal = () => {
         setOpen(false);
-        setInputName(data.name);
+        setInputName(currentUser?.profileName);
     };
     const handleOpenModal = () => setOpen(true);
     const handleInputName = (event) => {
@@ -97,22 +92,64 @@ export default function Navbar({ setContainer }) {
             setImage(event.target.files[0]);
         }
     };
-    const handleChangeYears = (event) => {
-        setYears(event.target.value);
-    };
-    const handleChangeMonths = (event) => {
-        setMonths(event.target.value);
-    };
-    const handleChangeDays = (event) => {
-        setDays(event.target.value);
+
+    // const handleChangeYears = (event) => {
+    //     setYears(event.target.value);
+    // };
+    // const handleChangeMonths = (event) => {
+    //     setMonths(event.target.value);
+    // };
+    // const handleChangeDays = (event) => {
+    //     setDays(event.target.value);
+    // };
+
+    const handleClickApply = async () => {
+        if (currentUser?.profileName !== inputName.trim()) {
+            const apiSetProfileName = {
+                profileName: inputName.trim(),
+            };
+
+            const currentLogin = { ...currentUser, profileName: inputName.trim() };
+
+            await updateUser(accessToken, dispatch, currentUser._id, apiSetProfileName, axiosJWTLogin);
+            dispatch(loginSuccess(currentLogin));
+        }
+
+        if (currentUser?.profileImg !== urlImage) {
+            //upload image to cloud
+            const bodyFormData = new FormData();
+            bodyFormData.append('file', image);
+            const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+
+            window.setTimeout(async function () {
+                //set group chat profile img
+                const apiSetGroupProfileImg = {
+                    profileImg: uploadImage.url[0],
+                };
+
+                setUrlImage(uploadImage.url[0]);
+                const currentLogin = { ...currentUser, profileImg: uploadImage.url[0] };
+
+
+                await updateUser(
+                    accessToken,
+                    dispatch,
+                    currentUser._id,
+                    apiSetGroupProfileImg,
+                    axiosJWTLogin,
+                );
+                dispatch(loginSuccess(currentLogin));
+            }, 1000);
+        }
+
     };
 
     return (
         <div className={cx('container')}>
             <div className={cx('avata')}>
-                <Tooltip title={user?.profileName} onClick={handleOpenModal} placement="right" disableInteractive arrow>
+                <Tooltip title={currentUser?.profileName} onClick={handleOpenModal} placement="right" disableInteractive arrow>
                     <div className={cx('contain-avata')}>
-                        <img className={cx('image-avata')} src={user?.profileImg} alt={'avata'} />
+                        <img className={cx('image-avata')} src={currentUser?.profileImg} alt={'avata'} />
                     </div>
                 </Tooltip>
             </div>
@@ -158,7 +195,6 @@ export default function Navbar({ setContainer }) {
                                                     hidden
                                                     onChange={handleChangeImageGroup}
                                                     accept="image/*"
-                                                    multiple
                                                     type="file"
                                                 />
                                             </IconButton>
@@ -172,7 +208,7 @@ export default function Navbar({ setContainer }) {
                         <Grid container direction={'column'} padding={1}>
                             <FormControl>
                                 <FormLabel>Số điện thoại</FormLabel>
-                                <TextField size="small" value={data.phone} disabled />
+                                <TextField size="small" value={currentUser?.phoneNumber} disabled />
                             </FormControl>
                         </Grid>
                         <Grid container direction={'column'} padding={1}>
@@ -186,7 +222,7 @@ export default function Navbar({ setContainer }) {
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid container direction={'column'} padding={1}>
+                        {/* <Grid container direction={'column'} padding={1}>
                             <FormControl>
                                 <FormLabel>Giới tính</FormLabel>
                                 <RadioGroup row defaultValue={data.gender ? 'female' : 'male'}>
@@ -194,8 +230,8 @@ export default function Navbar({ setContainer }) {
                                     <FormControlLabel value="male" control={<Radio size="small" />} label="Nữ" />
                                 </RadioGroup>
                             </FormControl>
-                        </Grid>
-                        <Grid container direction={'column'} padding={1}>
+                        </Grid> */}
+                        {/* <Grid container direction={'column'} padding={1}>
                             <FormControl>
                                 <FormLabel>Ngày sinh</FormLabel>
                                 <Grid container>
@@ -252,10 +288,10 @@ export default function Navbar({ setContainer }) {
                                     </FormControl>
                                 </Grid>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                     <Grid container justifyContent="flex-end" padding={1} borderTop={2} borderColor={'#c4c4c4'}>
-                        <Button>Xác Nhận</Button>
+                        <Button onClick={handleClickApply}>Xác Nhận</Button>
                         <Button color="error" onClick={handleCloseModal}>
                             Thoát
                         </Button>

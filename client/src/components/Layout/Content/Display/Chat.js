@@ -491,7 +491,6 @@ function Chat() {
                                             hidden
                                             onChange={handleChangeImageGroup}
                                             accept="image/*"
-                                            multiple
                                             type="file"
                                         />
                                     </Button>

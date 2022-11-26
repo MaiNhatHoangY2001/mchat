@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { loginFailed, loginStart, loginSuccess } from '../authSlice';
 import { url } from '../createInstance';
 import {
     changePassFailed,
@@ -7,6 +8,9 @@ import {
     getUsersFailed,
     getUsersStart,
     getUsersSuccess,
+    updateUserFailed,
+    updateUserStart,
+    updateUserSuccess,
 } from '../userSlice';
 
 export const searchUser = async (accessToken, dispatch, search, axiosJWT) => {
@@ -31,5 +35,17 @@ export const changePassword = async (account, dispatch, navigate) => {
         //navigate('/');
     } catch (error) {
         dispatch(changePassFailed());
+    }
+};
+
+export const updateUser = async (accessToken, dispatch, id, apiUpdate, axiosJWT) => {
+    dispatch(updateUserStart());
+    try {
+        const res = await axiosJWT.put(`${url}/api/user/${id}`, apiUpdate, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateUserSuccess());
+    } catch (error) {
+        dispatch(updateUserFailed());
     }
 };

@@ -50,6 +50,7 @@ import { FontAwesome } from '@expo/vector-icons';
 export default function MessageChat({ navigation, route }) {
     const dataSender = route.params.item;
     const isUser = route.params.item.sender === undefined ? false : true;
+    console.log(dataSender);
 
     const user = useSelector((state) => state.auth.login?.currentUser);
     const sender = useSelector((state) => state.user.sender?.user);

@@ -14,6 +14,9 @@ router.post('/', userController.addUser);
 //DELETE A USER
 //router.delete('/:id', middlewareController.verifyTokenAndAdminAuth, userController.deleteUser);
 
+//update user
+router.put('/:id', middlewareController.verifyTokenAndUserAuth, userController.updateUser);
+
 //SEARCH USER
 router.get('/search', middlewareController.verifyTokenAndUserAuth, userController.searchUser);
 

@@ -27,7 +27,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ChatContext } from '../../../../context/ChatContext';
-import { TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION } from '../../../../context/TypeChat';
+import { TYPE_FILE, TYPE_IMG, TYPE_MSG, TYPE_NOTIFICATION, TYPE_REMOVE_MSG } from '../../../../context/TypeChat';
 import { UserContext } from '../../../../context/UserContext';
 
 const cx = classNames.bind(styles);
@@ -172,6 +172,10 @@ export default function ListFriend() {
                 return `${profileName}: Gửi hình ảnh`;
             case TYPE_NOTIFICATION:
                 return `${profileName}: Gửi tin nhắn thông báo`;
+            case TYPE_REMOVE_MSG:
+                return `${profileName}: Tin nhắn này đã được thu hồi`;
+            case TYPE_FILE:
+                return `${profileName}: Đã gửi file`;
             default:
                 return `${profileName}: ${content}`;
         }
