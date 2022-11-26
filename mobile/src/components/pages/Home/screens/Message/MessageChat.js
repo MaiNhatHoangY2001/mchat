@@ -32,6 +32,7 @@ import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
+import { StorageAccessFramework } from 'expo-file-system';
 
 import {
     addUserGroupChat,
@@ -45,6 +46,8 @@ import {
 } from '../../../../../redux/apiRequest/chatApiRequest';
 import styles from './MessageChat_Styles';
 import { FontAwesome } from '@expo/vector-icons';
+import * as Progress from 'react-native-progress';
+
 // import LoadingChat from './LoadingChat';
 
 export default function MessageChat({ navigation, route }) {
@@ -295,6 +298,8 @@ export default function MessageChat({ navigation, route }) {
             await addMsgFileWithInfo(uploadImage.url);
         }, 1000);
     };
+    const [downloadProgress, setDownloadProgress] = useState(0);
+    const downloadPath = FileSystem.documentDirectory + (Platform.OS == 'android' ? '' : '');
 
     const fileChat = (url) => {
         const stringUrl = `${url}`;
@@ -305,39 +310,85 @@ export default function MessageChat({ navigation, route }) {
         return <View
         >
             <Text>{fileName}</Text>
+            <Progress.Bar progress={downloadProgress} width={210} />
             <Button
                 title="Download"
-                onPress={() => makeDowload(stringUrl)} />
+                onPress={() => downloadFile(stringUrl, fileName)} />
         </View>
     }
 
-    const makeDowload = async (url) => {
-        const downloadInstance = FileSystem.createDownloadResumable(
-            url,
-            FileSystem.documentDirectory + "file.pdf"
+
+
+
+    const ensureDirAsync = async (dir, intermediates = true) => {
+        const props = await FileSystem.getInfoAsync(dir)
+        if (props.exist && props.isDirectory) {
+            return props;
+        }
+        let _ = await FileSystem.makeDirectoryAsync(dir, { intermediates })
+        return await ensureDirAsync(dir, intermediates)
+    }
+
+    const downloadCallback = downloadProgress => {
+        const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
+        setDownloadProgress(progress);
+    };
+
+    const downloadFile = async (fileUrl, fileName) => {
+        if (Platform.OS == 'android') {
+            const dir = ensureDirAsync(downloadPath);
+        }
+
+        //alert(fileName)
+        const downloadResumable = FileSystem.createDownloadResumable(
+            fileUrl,
+            downloadPath + fileName,
+            {},
+            downloadCallback
         );
 
-        await downloadInstance.downloadAsync();
-    }
-
-    const downloadFile = (url) => {
-        let fileUri = FileSystem.documentDirectory + "small.mp4";
-        FileSystem.downloadAsync(url, fileUri)
-            .then(({ uri }) => {
-                saveFile(uri);
-            })
-            .catch(error => {
-                console.error(error);
-            })
-    }
-
-    const saveFile = async (fileUri) => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        if (status === "granted") {
-            const asset = await MediaLibrary.createAssetAsync(fileUri)
-            await MediaLibrary.createAlbumAsync("Download", asset, false)
+        try {
+            const { uri } = await downloadResumable.downloadAsync();
+            if (Platform.OS == 'android')
+                saveAndroidFile(uri, fileName)
+            else
+                saveIosFile(uri);
+        } catch (e) {
+            console.error('download error:', e);
         }
     }
+
+    const saveAndroidFile = async (fileUri, fileName = 'File') => {
+        try {
+            const fileString = await FileSystem.readAsStringAsync(fileUri, { encoding: FileSystem.EncodingType.Base64 });
+
+            const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
+            if (!permissions.granted) {
+                return;
+            }
+
+            try {
+                await StorageAccessFramework.createFileAsync(permissions.directoryUri, fileName, 'application/*')
+                    .then(async (uri) => {
+                        await FileSystem.writeAsStringAsync(uri, fileString, { encoding: FileSystem.EncodingType.Base64 });
+                        alert('Report Downloaded Successfully')
+                    })
+                    .catch((e) => {
+                    });
+            } catch (e) {
+                throw new Error(e);
+            }
+
+        } catch (err) {
+        }
+    }
+
+
+    const saveIosFile = (fileUri) => {
+        // your ios code
+        // i use expo share module to save ios file
+    }
+
 
     const actorImg = (isUser) => {
 

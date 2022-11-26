@@ -4,6 +4,9 @@ import {
     changePassFailed,
     changePassStart,
     changePassSuccess,
+    getAllNumberFailed,
+    getAllNumberStart,
+    getAllNumberSuccess,
     getUsersFailed,
     getUsersStart,
     getUsersSuccess,
@@ -31,5 +34,15 @@ export const changePassword = async (account, dispatch, navigate) => {
         navigate('/');
     } catch (error) {
         dispatch(changePassFailed());
+    }
+};
+
+export const getAllNumber = async (dispatch) => {
+    dispatch(getAllNumberStart());
+    try {
+        const res = await axios.get(`${url}/api/user/phones`);
+        dispatch(getAllNumberSuccess(res.data));
+    } catch (error) {
+        dispatch(getAllNumberFailed());
     }
 };
