@@ -14,13 +14,6 @@ const Data = [
         backgroundSelect: 'buttonSelect',
     },
     {
-        toolTip: 'Cloud của bạn',
-        urc: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666440003/samples/Icon/cloud2_nryfj6.png',
-        urcSelect: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666439927/samples/Icon/cloud_m7mndv.png',
-        background: 'button',
-        backgroundSelect: 'buttonSelect',
-    },
-    {
         toolTip: 'Đăng xuất',
         urc: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666440423/samples/Icon/logout_moxrsj.png',
         urcSelect: 'https://res.cloudinary.com/dpux6zwj3/image/upload/v1666440423/samples/Icon/logout2_imeebh.png',
