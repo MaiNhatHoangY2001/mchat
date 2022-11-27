@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FlatList, Modal, Pressable } from 'react-native';
+import { FlatList, Modal, Pressable, Touchable } from 'react-native';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 // IMPORT ICON LINK ==> https://icons.expo.fyi/
 import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../../../redux/createInstance';
 import { loginSuccess } from '../../../../../redux/authSlice';
@@ -42,6 +43,8 @@ export default function MessageInfoGroup({ navigation, route }) {
     // modal open and close
     const [modalRemoveGroup, setModalRemoveGroup] = useState(false);
     const [modalLeaveGroup, setModalLeaveGroup] = useState(false);
+
+    const [showFormEditName, SetFormEditName] = useState(false);
 
     const isAdmin = user._id === currentGroupChat.groupAdmin._id ? true : false;
 
@@ -114,7 +117,7 @@ export default function MessageInfoGroup({ navigation, route }) {
             }, 1000);
         }
 
-        handleClose();
+        // handleClose();
     };
 
     const handleChangeImageGroup = (event) => {
@@ -134,7 +137,7 @@ export default function MessageInfoGroup({ navigation, route }) {
         handleRemoveUser(userOutGroup);
         dispatch(setSender(null));
         await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        setModalLeaveGroup(!modalLeaveGroup)
+        setModalLeaveGroup(!modalLeaveGroup);
         navigation.navigate('MessagesScreen');
     };
 
@@ -143,7 +146,7 @@ export default function MessageInfoGroup({ navigation, route }) {
         await deleteGroupChat(accessToken, dispatch, currentGroupChat._id, axiosJWTLogin);
         dispatch(setSender(null));
         await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
-        setModalLeaveGroup(!modalLeaveGroup)
+        setModalLeaveGroup(!modalLeaveGroup);
         navigation.navigate('MessagesScreen');
     };
 
@@ -201,38 +204,66 @@ export default function MessageInfoGroup({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <View>
-                <ScrollView style={{ borderBottomWidth: 10, borderBottomColor: '#c4c4c4' }}>
-                    <View style={{ paddingVertical: 20, justifyContent: 'center', alignItems: 'center' }}>
-                        <View style={{ width: 100, height: 100 }}>
-                            <Image style={{ flex: 1 }} source={{ uri: currentGroupChat.groupImage }} />
-                        </View>
-                        <TouchableOpacity
-                            style={{
-                                backgroundColor: 'blue',
-                                padding: 10,
-                                paddingHorizontal: 20,
-                                marginTop: 20,
-                                borderRadius: 50,
-                            }}
-                        >
-                            <Text style={{ fontSize: 16, fontWeight: '600', color: 'white' }}>
-                                Cập nhật ảnh đại diện
+            <View style={{ borderBottomWidth: 10, borderBottomColor: '#c4c4c4', paddingTop: 20 }}>
+                <View style={{ ustifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ width: 100, height: 100 }}>
+                        <Image style={{ flex: 1 }} source={{ uri: currentGroupChat.groupImage }} />
+                    </View>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: 'blue',
+                            padding: 10,
+                            paddingHorizontal: 20,
+                            marginTop: 10,
+                            borderRadius: 50,
+                        }}
+                    >
+                        <Text style={{ fontSize: 16, fontWeight: '600', color: 'white' }}>Cập nhật ảnh đại diện</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20, paddingHorizontal: 20 }}>
+                    {showFormEditName ? (
+                        <>
+                            <TextInput
+                                style={{
+                                    flex: 1,
+                                    fontSize: 18,
+                                    borderWidth: 1,
+                                    paddingVertical: 4,
+                                    paddingHorizontal: 20,
+                                    borderRadius: 10,
+                                    marginRight: 10,
+                                }}
+                                value={groupName}
+                                onChangeText={setGroupName}
+                                placeholder="Nhập Tên Nhóm"
+                            />
+                            <TouchableOpacity>
+                                <Ionicons name="checkmark-circle" size={30} color="black" />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => SetFormEditName(!showFormEditName)}>
+                                <Ionicons name="close-circle" size={30} color="black" />
+                            </TouchableOpacity>
+                        </>
+                    ) : (
+                        <>
+                            <Text style={{ fontSize: 20, marginRight: 10 }} numberOfLines={1}>
+                                {groupName}
                             </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.bgInputText}>
-                        <TextInput
-                            value={groupName}
-                            onChangeText={setGroupName}
-                            style={styles.textInput}
-                            placeholder="Nhập Tên Nhóm"
-                        />
-                    </View>
-                </ScrollView>
+                            <TouchableOpacity onPress={() => SetFormEditName(!showFormEditName)}>
+                                <AntDesign name="edit" size={24} color="black" />
+                            </TouchableOpacity>
+                        </>
+                    )}
+                </View>
             </View>
             <View style={{ flex: 1, padding: 10 }}>
-                <Text style={styles.title}>{isListUser.length} Thành Viên</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={styles.title}>{isListUser.length} Thành Viên</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('AddUserToGroup')}>
+                        <AntDesign name="pluscircle" size={24} color="black" />
+                    </TouchableOpacity>
+                </View>
                 <FlatList data={isListUser} renderItem={renderItem} />
             </View>
             <View
@@ -243,7 +274,7 @@ export default function MessageInfoGroup({ navigation, route }) {
                         <TouchableOpacity
                             style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'red', borderRadius: 10 }}
                             onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
-                        // onPress={() => handleClickRemoveGroup()}
+                            // onPress={() => handleClickRemoveGroup()}
                         >
                             <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xóa nhóm</Text>
                         </TouchableOpacity>
@@ -334,20 +365,18 @@ const styles = StyleSheet.create({
     },
 
     bgInputText: {
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 10,
         paddingHorizontal: 20,
     },
     textInput: {
-        fontSize: 16,
+        fontSize: 20,
         paddingVertical: 4,
         paddingHorizontal: 20,
 
         width: '100%',
-
-        borderWidth: 1,
-        borderRadius: 50,
     },
 
     title: {

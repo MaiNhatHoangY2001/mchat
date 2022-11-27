@@ -45,7 +45,7 @@ const ItemChecked = ({ item, onPress }) => (
     </TouchableOpacity>
 );
 
-export default function MessageNewGroup({ navigation }) {
+export default function AddUserToGroup({ navigation }) {
     const chatContext = useContext(ChatContext);
     const { chatActors } = chatContext;
 
@@ -81,6 +81,10 @@ export default function MessageNewGroup({ navigation }) {
         return <ItemChecked item={item} onPress={() => handleRemove(item)} />;
     };
 
+    const handleSubmitAddUser = () => {
+        navigation.goBack();
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={[{ flex: 1, padding: 10 }, styles.borderBottom]}>
@@ -91,18 +95,11 @@ export default function MessageNewGroup({ navigation }) {
                 <Text style={styles.title}>Danh danh đã chọn {check.length}</Text>
                 <FlatList style={{ flex: 1 }} data={check} renderItem={renderItemChecked} />
             </View>
-            {check.length >= 2 ? (
-                <View style={styles.buttonBottom}>
-                    <TouchableOpacity
-                        style={styles.buttonNext}
-                        onPress={() => navigation.navigate('MessageNewInforGroup', { checked: check })}
-                    >
-                        <Text style={styles.titleNext}>Tiếp tục</Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <></>
-            )}
+            <View style={styles.buttonBottom}>
+                <TouchableOpacity style={styles.buttonNext} onPress={handleSubmitAddUser}>
+                    <Text style={styles.titleNext}>Xác nhận</Text>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 }

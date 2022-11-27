@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     // Styles profile Sender
     profileSender: {
-        flex: 1,
+        flex: 0.95,
         flexDirection: 'row',
         marginRight: 90,
     },

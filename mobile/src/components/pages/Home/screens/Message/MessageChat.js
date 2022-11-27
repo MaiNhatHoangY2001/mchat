@@ -25,11 +25,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { StorageAccessFramework } from 'expo-file-system';
 
-import {
-    addUserGroupChat,
-    getListGroupChat,
-    updateMsg,
-} from '../../../../../redux/apiRequest/chatApiRequest';
+import { addUserGroupChat, getListGroupChat, updateMsg } from '../../../../../redux/apiRequest/chatApiRequest';
 import styles from './MessageChat_Styles';
 import { FontAwesome } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress';
@@ -62,7 +58,6 @@ export default function MessageChat({ navigation, route }) {
     const [downloadProgress, setDownloadProgress] = useState(0);
     const downloadPath = FileSystem.documentDirectory + (Platform.OS == 'android' ? '' : '');
 
-
     const [message, setMessage] = useState('');
 
     const dispatch = useDispatch();
@@ -93,8 +88,6 @@ export default function MessageChat({ navigation, route }) {
             },
         });
     }, [navigation]);
-
-
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -217,8 +210,6 @@ export default function MessageChat({ navigation, route }) {
         } else return <Image alt="not fount" width={'20px'} source={''} />;
     };
 
-
-
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -264,17 +255,14 @@ export default function MessageChat({ navigation, route }) {
 
     const addMsgFileWithInfo = (url) => {
         createChat(TYPE_FILE, '', url);
-    }
-
+    };
 
     const pickFile = async () => {
         // No permissions request is necessary for launching the image library
         let result = await DocumentPicker.getDocumentAsync({});
 
-
         const bodyFormData = new FormData();
         bodyFormData.append('file', { type: result?.mimeType, uri: result?.uri, name: result?.name });
-
 
         const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
         window.setTimeout(async function () {
@@ -283,36 +271,30 @@ export default function MessageChat({ navigation, route }) {
         }, 1000);
     };
 
-
     const fileChat = (url) => {
         const stringUrl = `${url}`;
 
-        const fileName = stringUrl?.replace("https://storage.googleapis.com/cloud-storage-mchat/", "");
+        const fileName = stringUrl?.replace('https://storage.googleapis.com/cloud-storage-mchat/', '');
 
-
-        return <View
-        >
-            <Text>{fileName}</Text>
-            <Progress.Bar progress={downloadProgress} width={210} />
-            <Button
-                title="Download"
-                onPress={() => downloadFile(stringUrl, fileName)} />
-        </View>
-    }
-
-
-
+        return (
+            <View>
+                <Text>{fileName}</Text>
+                <Progress.Bar progress={downloadProgress} width={210} />
+                <Button title="Download" onPress={() => downloadFile(stringUrl, fileName)} />
+            </View>
+        );
+    };
 
     const ensureDirAsync = async (dir, intermediates = true) => {
-        const props = await FileSystem.getInfoAsync(dir)
+        const props = await FileSystem.getInfoAsync(dir);
         if (props.exist && props.isDirectory) {
             return props;
         }
-        let _ = await FileSystem.makeDirectoryAsync(dir, { intermediates })
-        return await ensureDirAsync(dir, intermediates)
-    }
+        let _ = await FileSystem.makeDirectoryAsync(dir, { intermediates });
+        return await ensureDirAsync(dir, intermediates);
+    };
 
-    const downloadCallback = downloadProgress => {
+    const downloadCallback = (downloadProgress) => {
         const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
         setDownloadProgress(progress);
     };
@@ -327,23 +309,23 @@ export default function MessageChat({ navigation, route }) {
             fileUrl,
             downloadPath + fileName,
             {},
-            downloadCallback
+            downloadCallback,
         );
 
         try {
             const { uri } = await downloadResumable.downloadAsync();
-            if (Platform.OS == 'android')
-                saveAndroidFile(uri, fileName)
-            else
-                saveIosFile(uri);
+            if (Platform.OS == 'android') saveAndroidFile(uri, fileName);
+            else saveIosFile(uri);
         } catch (e) {
             console.error('download error:', e);
         }
-    }
+    };
 
     const saveAndroidFile = async (fileUri, fileName = 'File') => {
         try {
-            const fileString = await FileSystem.readAsStringAsync(fileUri, { encoding: FileSystem.EncodingType.Base64 });
+            const fileString = await FileSystem.readAsStringAsync(fileUri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
 
             const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
             if (!permissions.granted) {
@@ -353,31 +335,26 @@ export default function MessageChat({ navigation, route }) {
             try {
                 await StorageAccessFramework.createFileAsync(permissions.directoryUri, fileName, 'application/*')
                     .then(async (uri) => {
-                        await FileSystem.writeAsStringAsync(uri, fileString, { encoding: FileSystem.EncodingType.Base64 });
-                        alert('Report Downloaded Successfully')
+                        await FileSystem.writeAsStringAsync(uri, fileString, {
+                            encoding: FileSystem.EncodingType.Base64,
+                        });
+                        alert('Report Downloaded Successfully');
                     })
-                    .catch((e) => {
-                    });
+                    .catch((e) => {});
             } catch (e) {
                 throw new Error(e);
             }
-
-        } catch (err) {
-        }
-    }
-
+        } catch (err) {}
+    };
 
     const saveIosFile = (fileUri) => {
         // your ios code
         // i use expo share module to save ios file
-    }
-
+    };
 
     const actorImg = (isUser) => {
-
-        return isUser ? user?.profileImg : currentSender?.profileImg
-    }
-
+        return isUser ? user?.profileImg : currentSender?.profileImg;
+    };
 
     useEffect(() => {
         setIndividualChatId(individualChat.idChat);
@@ -396,8 +373,6 @@ export default function MessageChat({ navigation, route }) {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [sendData]);
 
-
-
     useEffect(() => {
         navigation.setOptions({
             headerTitle: () => (
@@ -410,7 +385,9 @@ export default function MessageChat({ navigation, route }) {
                         )}
                     </View>
                     <View style={styles.textContent}>
-                        <Text style={styles.name}>{isUser ? dataSender.sender.profileName : dataSender.groupName}</Text>
+                        <Text style={styles.name} numberOfLines={1}>
+                            {isUser ? dataSender.sender.profileName : dataSender.groupName}
+                        </Text>
                         <Text style={styles.active}>Online</Text>
                     </View>
                 </View>
@@ -453,7 +430,7 @@ export default function MessageChat({ navigation, route }) {
                                             source={{
                                                 uri: isGroupChat
                                                     ? mess.message.userGroupChat?.profileImg
-                                                    : actorImg(isUser)
+                                                    : actorImg(isUser),
                                             }}
                                         />
                                         <View style={styles.contain}>
