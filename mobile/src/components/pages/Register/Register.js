@@ -23,9 +23,7 @@ const widthScreen = Dimensions.get('window').width
 function Register() {
     const user = useSelector((state) => state.auth.login?.currentUser)
     const allNumber = useSelector((state) => state.user?.users?.allNumber);
-
-
-
+    
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -93,6 +91,8 @@ function Register() {
             if (phoneNumber === '' || phoneNumber === undefined)
                 Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
             else if (phoneNumber.length !== 12) Alert.alert('Thông báo', 'Vui lòng nhập đủ 9 ký tự sau của số điện thoại!');
+            else if( allNumber.includes(('0' +phoneNumber.slice(3,12)))){
+                Alert.alert('Thông báo', 'Số điện thoại đã được đăng kí! Vui lòng dùng số khác.')}
             else {
                 console.log(phonenumber);
                 try {
