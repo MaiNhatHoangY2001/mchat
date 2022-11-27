@@ -13,7 +13,7 @@ import {
 } from '../authSlice';
 import { clearActor } from '../chatSlice';
 import { url } from '../createInstance';
-import { clearSender } from '../userSlice';
+import { changePassFailed, changePassStart, changePassSuccess, clearSender } from '../userSlice';
 
 export const loginUser = async (user, dispatch, navigate, setIsLoading) => {
     dispatch(loginStart());
@@ -57,5 +57,19 @@ export const logOut = async (dispatch, navigate, id, accessToken, axiosJWT) => {
         navigate('/login');
     } catch (error) {
         dispatch(logoutFailed());
+    }
+};
+
+export const comparePass = async (user, dispatch, accessToken, axiosJWT) => {
+    dispatch(changePassStart());
+    try {
+        const result = await axiosJWT.post(`${url}/api/comparePass`, user, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(changePassSuccess());
+
+        return result.data;
+    } catch (error) {
+        dispatch(changePassFailed());
     }
 };

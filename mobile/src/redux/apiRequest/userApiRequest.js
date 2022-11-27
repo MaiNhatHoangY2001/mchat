@@ -10,6 +10,9 @@ import {
     getUsersFailed,
     getUsersStart,
     getUsersSuccess,
+    updateUserFailed,
+    updateUserStart,
+    updateUserSuccess,
 } from '../userSlice';
 
 export const searchUser = async (accessToken, dispatch, search, axiosJWT) => {
@@ -24,14 +27,14 @@ export const searchUser = async (accessToken, dispatch, search, axiosJWT) => {
     }
 };
 
-export const changePassword = async (account, dispatch, navigate) => {
+export const changePassword = async (account, dispatch) => {
     dispatch(changePassStart());
     try {
         await axios.post(`${url}/api/user/changePassword`, account, {
             withCredentials: true,
         });
         dispatch(changePassSuccess());
-        navigate('/');
+        // navigate('/');
     } catch (error) {
         dispatch(changePassFailed());
     }
@@ -44,5 +47,17 @@ export const getAllNumber = async (dispatch) => {
         dispatch(getAllNumberSuccess(res.data));
     } catch (error) {
         dispatch(getAllNumberFailed());
+    }
+};
+
+export const updateUser = async (accessToken, dispatch, id, apiUpdate, axiosJWT) => {
+    dispatch(updateUserStart());
+    try {
+        const res = await axiosJWT.put(`${url}/api/user/${id}`, apiUpdate, {
+            headers: { token: `Bearer ${accessToken}` },
+        });
+        dispatch(updateUserSuccess());
+    } catch (error) {
+        dispatch(updateUserFailed());
     }
 };

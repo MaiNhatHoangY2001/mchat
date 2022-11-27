@@ -27,8 +27,8 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconFeather from 'react-native-vector-icons/Feather';
 
 import { createAxios } from '../../../../../redux/createInstance';
-import { logoutSuccess } from '../../../../../redux/authSlice';
-import { logOut } from '../../../../../redux/apiRequest/authApiRequest';
+import { loginSuccess, logoutSuccess } from '../../../../../redux/authSlice';
+import { comparePass, logOut } from '../../../../../redux/apiRequest/authApiRequest';
 
 import { NavigationContainer } from '@react-navigation/native';
 // import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -38,6 +38,8 @@ import { UserContext } from '../../../../../context/UserContext';
 import { useState } from 'react';
 
 import * as ImagePicker from 'expo-image-picker';
+import { changePassword, updateUser } from '../../../../../redux/apiRequest/userApiRequest';
+import { uploadFile } from '../../../../../redux/apiRequest/fileApiRequest';
 
 
 const widthScreen = Dimensions.get('window').width;
@@ -53,23 +55,96 @@ export default function ProfileScreen() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    let axiosJWTLogin = createAxios(currentUser, dispatch, loginSuccess);
     let axiosJWTLogout = createAxios(currentUser, dispatch, logoutSuccess);
 
     const [isShowFormInput, setShowFormInput] = useState(false);
     const [isShowFormChangePW, setShowFormChangePW] = useState(false);
     const [inputName, setInputName] = useState(currentUser?.profileName);
+    const [urlImage, setUrlImage] = useState(currentUser?.profileImg);
+    const [image, setImage] = useState({});
+    const [commentOldPass, setCommentOldPass] = useState(false);
+    const [commentConfirmPass, setCommentConfirmPass] = useState(false);
+    const [checkOldPass, setCheckOldPass] = useState(false);
+    const [passwordOld, setPasswordOld] = useState('');
+    const [passwordNew, setPasswordNew] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+
+
 
     const handleLogout = () => {
         logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
         removeUserActive2Socket(currentUser?.phoneNumber);
     };
 
-    const handleChangeImage = () => {
-        console.log('Change Image');
+
+
+    const checkPassword = async () => {
+        const pass = passwordOld.trim();
+
+        if (pass !== '') {
+            const user = {
+                phoneNumber: currentUser.phoneNumber,
+                password: pass
+            }
+            const isPassword = await comparePass(user, dispatch, accessToken, axiosJWTLogin);
+
+            setCommentOldPass(!isPassword);
+            setCheckOldPass(isPassword);
+
+        }
+    }
+    const handleSubmitChangePW = async () => {
+        if (passwordNew.trim() !== '' && passwordConfirm.trim() !== '') {
+            if (passwordNew !== passwordConfirm) {
+                setCommentConfirmPass(true);
+            } else {
+                handleChangePW(currentUser.phoneNumber.trim(), passwordNew);
+                setCheckOldPass(false);
+                setCommentConfirmPass(false);
+            }
+        }
+        setShowFormChangePW(!isShowFormChangePW)
     };
 
-    const handleChangeName = () => {
-        console.log('Change Name');
+    const handleChangePW = (phoneNumber, pass) => {
+        const account = {
+            phoneNumber: phoneNumber,
+            newPassword: pass
+        };
+        changePassword(account, dispatch);
+    }
+
+    const configImageToFile = (files) => {
+        let localUri = files.uri;
+        let filename = localUri.split('/').pop();
+
+        // Infer the type of the image
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        return { type: type, uri: localUri, name: filename };
+    };
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,
+            aspect: [4, 3],
+            base64: true,
+            quality: 1,
+        });
+
+        // console.log(result);
+
+        if (!result.cancelled) {
+            const files = result;
+            const file = configImageToFile(files);
+            setUrlImage(file.uri);
+            setImage(file);
+        }
     };
 
     const handleClickApply = async () => {
@@ -83,6 +158,7 @@ export default function ProfileScreen() {
             await updateUser(accessToken, dispatch, currentUser._id, apiSetProfileName, axiosJWTLogin);
             dispatch(loginSuccess(currentLogin));
         }
+
 
         if (currentUser?.profileImg !== urlImage) {
             //upload image to cloud
@@ -103,6 +179,7 @@ export default function ProfileScreen() {
                 dispatch(loginSuccess(currentLogin));
             }, 1000);
         }
+        // handleClose();
     };
 
     useEffect(() => {
@@ -116,11 +193,11 @@ export default function ProfileScreen() {
             <View style={{ alignItems: 'center', paddingVertical: 30 }}>
                 <View style={{ width: 120, height: 120 }}>
                     <Image
-                        source={{ uri: currentUser?.profileImg }}
+                        source={{ uri: urlImage }}
                         style={{ flex: 1, borderRadius: 100 }}
                         resizeMode="contain"
                     />
-                    <TouchableOpacity style={{ position: 'absolute', bottom: 0, right: 0 }} onPress={handleChangeImage}>
+                    <TouchableOpacity style={{ position: 'absolute', bottom: 0, right: 0 }} onPress={pickImage}>
                         <IconFeather name="edit-3" size={24} color="black" />
                     </TouchableOpacity>
                 </View>
@@ -137,12 +214,19 @@ export default function ProfileScreen() {
                                 borderBottomColor: '#c4c4c4',
                             }}
                         >
-                            <TextInput
-                                secureTextEntry={true}
-                                style={{ borderWidth: 1, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10 }}
-                                placeholder="Nhập Mật khẩu hiện tại"
-                            />
-                            <Text style={{ color: 'red', paddingTop: 4 }}>Mật khẩu không chính xác</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TextInput
+                                    secureTextEntry={true}
+                                    style={{ borderWidth: 1, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, width: 270, marginRight: 20 }}
+                                    placeholder="Nhập Mật khẩu hiện tại"
+                                    editable={!checkOldPass}
+                                    selectTextOnFocus={!checkOldPass}
+                                    onChangeText={setPasswordOld}
+                                />
+                                <Button title='Kiểm tra' onPress={checkPassword} />
+                            </View>
+
+                            {commentOldPass ? <Text style={{ color: 'red', paddingTop: 4 }}>Mật khẩu không chính xác</Text> : <></>}
                         </View>
                         <View
                             style={{
@@ -156,8 +240,10 @@ export default function ProfileScreen() {
                                 secureTextEntry={true}
                                 style={{ borderWidth: 1, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10 }}
                                 placeholder="Nhập Mật khẩu mới"
+                                editable={checkOldPass}
+                                selectTextOnFocus={checkOldPass}
+                                onChangeText={setPasswordNew}
                             />
-                            <Text style={{ color: 'red', paddingTop: 4 }}>Mật khẩu không chính xác</Text>
                         </View>
                         <View
                             style={{
@@ -169,11 +255,15 @@ export default function ProfileScreen() {
                                 secureTextEntry={true}
                                 style={{ borderWidth: 1, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10 }}
                                 placeholder="Nhập lại mật khẩu"
+                                editable={checkOldPass}
+                                selectTextOnFocus={checkOldPass}
+                                onChangeText={setPasswordConfirm}
                             />
-                            <Text style={{ color: 'red', paddingTop: 4 }}>Mật khẩu không chính xác</Text>
+                            {commentConfirmPass ? <Text style={{ color: 'red', paddingTop: 4 }}>Mật khẩu không chính xác</Text> : <></>}
+
                         </View>
                         <View style={{ paddingHorizontal: 50, paddingVertical: 10 }}>
-                            <Button title="Xác nhận" onPress={() => setShowFormChangePW(!isShowFormChangePW)} />
+                            <Button title="Xác nhận" onPress={handleSubmitChangePW} />
                         </View>
                     </View>
                 </>
@@ -199,9 +289,6 @@ export default function ProfileScreen() {
                                     />
                                 </View>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <TouchableOpacity style={{ marginRight: 10 }} onPress={handleChangeName}>
-                                        <Ionicons name="checkmark-circle" size={34} color="black" />
-                                    </TouchableOpacity>
                                     <TouchableOpacity onPress={() => setShowFormInput(!isShowFormInput)}>
                                         <Ionicons name="close-circle" size={34} color="black" />
                                     </TouchableOpacity>
@@ -252,7 +339,7 @@ export default function ProfileScreen() {
                                 paddingHorizontal: 20,
                                 borderRadius: 10,
                             }}
-                            // onPress={() => setShowFormChangePW(!isShowFormChangePW)}
+                            onPress={() => handleClickApply()}
                         >
                             <Text style={{ fontSize: 16, color: '#fff' }}>Xác nhận</Text>
                         </TouchableOpacity>

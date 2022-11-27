@@ -95,7 +95,6 @@ export default function MessageInfoGroup({ navigation, route }) {
         if (!result.cancelled) {
             const files = result;
             const file = configImageToFile(files);
-            console.log(file);
             setUrlImage(file.uri);
             setImage(file);
         }
