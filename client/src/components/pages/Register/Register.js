@@ -24,7 +24,7 @@ function Register() {
     const allNumber = useSelector((state) => state.user?.users?.allNumber)
 
     const [isLoading, setIsLoading] = useState(false)
-    
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -101,9 +101,10 @@ function Register() {
         let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNum);
         if (phoneNum === '' || phoneNum === undefined) return setErrorMess('Vui lòng nhập số điện thoại');
         else if (!regexPhoneNumberVN) setErrorMess('Số điện thoại không hợp lệ');
-        else if(phoneNumber === allNumber || ('0' +phoneNumber.slice(2,12)) === allNumber){
-            setErrorMess('Số điện thoại đã được đăng kí! Vui lòng dùng số khác.')}
-        else{
+        else if (phoneNumber === allNumber || ('0' + phoneNumber.slice(2, 12)) === allNumber) {
+            setErrorMess('Số điện thoại đã được đăng kí! Vui lòng dùng số khác.')
+        }
+        else {
             setErrorMess('');
             try {
                 const response = await setUpRecaptcha(phoneNum);
@@ -153,7 +154,7 @@ function Register() {
 
     const [name, setName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    
+
     const [errorMessNewUser1, setErrorMessNewUser1] = useState('');
     const [errorMessNewUser2, setErrorMessNewUser2] = useState('');
     const [errorMessNewUser3, setErrorMessNewUser3] = useState('');
@@ -197,12 +198,12 @@ function Register() {
         checkConfirmNewPW();
         checkName(e);
     }
-    
+
     useEffect(() => {
         getAllNumber(dispatch);
     }, [])
 
-return (
+    return (
         // <body>
         <section className={cx('register-container')}>
             <div className={cx('boxTabs')}>
@@ -211,7 +212,7 @@ return (
                     transition={false}
                     variant="pills"
                     fill
-                    >
+                >
                     <Tab eventKey={1} title="Xác thực SDT" className={cx('TabOTP')} disabled={disableTab1}>
                         <div>
                             <Form onSubmit={getOtp} style={{ display: !flag ? 'block' : 'none' }}>
@@ -320,7 +321,7 @@ return (
                                     <input
                                         type="text"
                                         disabled
-                                        value={'0' +phoneNumber.slice(2,12)}
+                                        value={'0' + phoneNumber.slice(2, 12)}
                                         className={cx('inputRegisterSDT')}
                                         onChange={(e) => setPhoneNumber(e.target.value)}
                                     />
@@ -358,7 +359,7 @@ return (
                                         className={cx('inputRegisterPass')}
                                         onChange={(e) => {
                                             setPasswordInputConfirmNewPW(e.target.value);
-                                            }}
+                                        }}
                                         value={passwordInputConfirmNewPW}
                                         name="password"
                                     />
@@ -385,7 +386,7 @@ return (
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                     <p className={cx('errorMessNewPW')}>{errorMessNewUser4}</p>
-                                      
+
                                     <label className={cx('marginbutton')}>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bạn đã có tài khoản?
                                     </label>
