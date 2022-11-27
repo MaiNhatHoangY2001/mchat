@@ -28,6 +28,7 @@ function Register() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
+    
     const handleRegister = (e) => {
         e.preventDefault()
         const newUser = {
@@ -49,8 +50,6 @@ function Register() {
         const newUser = {
             phoneNumber: phoneNumber,
             password: password,
-            // phoneNumber: phoneNumberValue,
-            // password: pwValue,
         };
 
         loginUser(newUser, dispatch, navigate, setIsLoading);
@@ -58,7 +57,6 @@ function Register() {
 
     useEffect(() => {
         console.log('running');
-        console.log(allNumber)
         if (user) {
             navigate('/');
         }
@@ -101,7 +99,7 @@ function Register() {
         let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNum);
         if (phoneNum === '' || phoneNum === undefined) return setErrorMess('Vui lòng nhập số điện thoại');
         else if (!regexPhoneNumberVN) setErrorMess('Số điện thoại không hợp lệ');
-        else if(phoneNumber === allNumber || ('0' +phoneNumber.slice(2,12)) === allNumber){
+        else if( allNumber.includes(('0' +phoneNumber.slice(2,12)))){
             setErrorMess('Số điện thoại đã được đăng kí! Vui lòng dùng số khác.')}
         else{
             setErrorMess('');
