@@ -1,0 +1,19 @@
+.contain {
+    display: flex;
+    flex-direction: row;
+    padding: 6px 10px;
+    gap: 10px;
+
+    border: solid 1px #c4c4c4;
+    border-radius: 10px;
+
+    .text-input {
+        flex: 1;
+        font-size: 18px;
+        border: none;
+        outline: none;
+    }
+    .btn-icon {
+        cursor: pointer;
+    }
+}

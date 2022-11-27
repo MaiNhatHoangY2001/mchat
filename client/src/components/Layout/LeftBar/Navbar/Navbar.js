@@ -24,6 +24,7 @@ import { UserContext } from '../../../../context/UserContext';
 import EditIcon from '@mui/icons-material/Edit';
 import { updateUser } from '../../../../redux/apiRequest/userApiRequest';
 import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
+import TextInputCustom from './InpuText/InputTextCustom';
 
 const cx = classNames.bind(styles);
 
@@ -40,6 +41,11 @@ export default function Navbar({ setContainer }) {
     const [inputName, setInputName] = useState(currentUser?.profileName);
     const [urlImage, setUrlImage] = useState(currentUser?.profileImg);
     const [image, setImage] = useState({});
+    const [uiChangePw, setUIChangePw] = useState(false);
+    const [passworldOld, setPasswordOld] = useState('');
+    const [passworldNew, setPasswordNew] = useState('');
+    const [passworldConfirm, setPasswordConfirm] = useState('');
+    const [dialogConfirm, setDialogConfirm] = useState('');
 
     const userContext = useContext(UserContext);
     const removeUserActive2Socket = userContext.removeUserActive2Socket;
@@ -106,6 +112,15 @@ export default function Navbar({ setContainer }) {
         }
     };
 
+    const handleSubmitChangePW = () => {
+        if (passworldNew !== passworldConfirm) {
+            setDialogConfirm('Mật khẩu không chính xác!');
+        } else {
+            setUIChangePw(false);
+            setDialogConfirm('');
+        }
+    };
+
     return (
         <div className={cx('container')}>
             <div className={cx('avata')}>
@@ -147,50 +162,84 @@ export default function Navbar({ setContainer }) {
             <Modal open={open} onClose={handleCloseModal}>
                 <Grid container width={500} borderRadius={2} direction="column" className={cx('modalMainProfile')}>
                     <Grid container padding={1} borderBottom={2} borderColor={'#c4c4c4'}>
-                        <span className={cx('title')}>Thông tin các nhân</span>
+                        <span className={cx('title')}>Thông tin cá nhân</span>
                     </Grid>
-                    <Grid container padding={4}>
-                        <Grid container justifyContent="center" marginBottom={4}>
-                            <Badge
-                                overlap="circular"
-                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                                badgeContent={
-                                    <Tooltip title="Cập nhật ảnh đại diện" placement="right" arrow>
-                                        <SmallAvatar className={cx('buttonEdit')} alt="Remy Sharp">
-                                            <IconButton size="small" component="label" variant="contained">
-                                                <EditIcon sx={{ fontSize: 16 }} />
-                                                <input
-                                                    hidden
-                                                    onChange={handleChangeImageGroup}
-                                                    accept="image/*"
-                                                    type="file"
-                                                />
-                                            </IconButton>
-                                        </SmallAvatar>
-                                    </Tooltip>
-                                }
+                    {uiChangePw ? (
+                        <div className={cx('contain-changePW')}>
+                            <div className={cx('section')}>
+                                <label>Mật khẩu hiện tại</label>
+                                <TextInputCustom placeholder="Nhập mật khẩu hiện tại" onChangeText={setPasswordOld} />
+                                <span className={cx('dialog')}>Nhập sai mật khẩu</span>
+                            </div>
+                            <div className={cx('section')}>
+                                <label>Mật khẩu mới</label>
+                                <TextInputCustom placeholder="Nhập mật mới" onChangeText={setPasswordNew} />
+                                <span className={cx('dialog')}>Nhập sai mật khẩu</span>
+                            </div>
+                            <div className={cx('section')}>
+                                <label>Nhập lại mật khẩu</label>
+                                <TextInputCustom placeholder="Nhập lại mật khẩu" onChangeText={setPasswordConfirm} />
+                                <span className={cx('dialog')}>{dialogConfirm}</span>
+                            </div>
+                            <button className={cx('btn-submit')} onClick={handleSubmitChangePW}>
+                                Xác nhận
+                            </button>
+                        </div>
+                    ) : (
+                        <Grid container padding={4}>
+                            <Grid container justifyContent="center" marginBottom={4}>
+                                <Badge
+                                    overlap="circular"
+                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                    badgeContent={
+                                        <Tooltip title="Cập nhật ảnh đại diện" placement="right" arrow>
+                                            <SmallAvatar className={cx('buttonEdit')} alt="Remy Sharp">
+                                                <IconButton size="small" component="label" variant="contained">
+                                                    <EditIcon sx={{ fontSize: 16 }} />
+                                                    <input
+                                                        hidden
+                                                        onChange={handleChangeImageGroup}
+                                                        accept="image/*"
+                                                        type="file"
+                                                    />
+                                                </IconButton>
+                                            </SmallAvatar>
+                                        </Tooltip>
+                                    }
+                                >
+                                    <Avatar sx={{ width: 80, height: 80 }} alt="Avata" src={urlImage} />
+                                </Badge>
+                            </Grid>
+                            <Grid container direction={'column'} padding={1}>
+                                <FormControl>
+                                    <FormLabel>Số điện thoại</FormLabel>
+                                    <TextField size="small" value={currentUser?.phoneNumber} disabled />
+                                </FormControl>
+                            </Grid>
+                            <Grid
+                                container
+                                direction={'column'}
+                                padding={1}
+                                paddingBottom={3}
+                                borderBottom={1}
+                                borderColor={'#c4c4c4'}
                             >
-                                <Avatar sx={{ width: 80, height: 80 }} alt="Avata" src={urlImage} />
-                            </Badge>
+                                <FormControl>
+                                    <FormLabel>Tên người dùng</FormLabel>
+                                    <TextField
+                                        size="small"
+                                        value={inputName}
+                                        onChange={handleInputName}
+                                        variant="outlined"
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <div className={cx('bg-btn')} onClick={() => setUIChangePw(true)}>
+                                <span className={cx('tt-btn')}>Thây đổi mật khẩu</span>
+                            </div>
                         </Grid>
-                        <Grid container direction={'column'} padding={1}>
-                            <FormControl>
-                                <FormLabel>Số điện thoại</FormLabel>
-                                <TextField size="small" value={currentUser?.phoneNumber} disabled />
-                            </FormControl>
-                        </Grid>
-                        <Grid container direction={'column'} padding={1}>
-                            <FormControl>
-                                <FormLabel>Tên người dùng</FormLabel>
-                                <TextField
-                                    size="small"
-                                    value={inputName}
-                                    onChange={handleInputName}
-                                    variant="outlined"
-                                />
-                            </FormControl>
-                        </Grid>
-                    </Grid>
+                    )}
+
                     <Grid container justifyContent="flex-end" padding={1} borderTop={2} borderColor={'#c4c4c4'}>
                         <Button onClick={handleClickApply}>Xác Nhận</Button>
                         <Button color="error" onClick={handleCloseModal}>
