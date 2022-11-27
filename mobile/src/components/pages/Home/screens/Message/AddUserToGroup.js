@@ -45,9 +45,12 @@ const ItemChecked = ({ item, onPress }) => (
     </TouchableOpacity>
 );
 
-export default function AddUserToGroup({ navigation }) {
+export default function AddUserToGroup({ navigation, route }) {
     const chatContext = useContext(ChatContext);
+    const { sendText4JoinGroup } = chatContext;
     const { chatActors } = chatContext;
+
+    const currentGroupChat = route.params.currentGroupChat;
 
     const [search, setSearch] = useState('');
     const [check, setCheck] = useState([]);
@@ -82,7 +85,10 @@ export default function AddUserToGroup({ navigation }) {
     };
 
     const handleSubmitAddUser = () => {
-        navigation.goBack();
+        if (check.length > 0) {
+            sendText4JoinGroup(check, currentGroupChat?.groupName, currentGroupChat?._id);
+            navigation.goBack();
+        }
     };
 
     return (

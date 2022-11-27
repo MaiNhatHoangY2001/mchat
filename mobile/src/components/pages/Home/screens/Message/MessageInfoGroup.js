@@ -260,7 +260,7 @@ export default function MessageInfoGroup({ navigation, route }) {
             <View style={{ flex: 1, padding: 10 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={styles.title}>{isListUser.length} Thành Viên</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('AddUserToGroup')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('AddUserToGroup', { currentGroupChat })}>
                         <AntDesign name="pluscircle" size={24} color="black" />
                     </TouchableOpacity>
                 </View>
@@ -274,7 +274,7 @@ export default function MessageInfoGroup({ navigation, route }) {
                         <TouchableOpacity
                             style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'red', borderRadius: 10 }}
                             onPress={() => setModalRemoveGroup(!modalRemoveGroup)}
-                            // onPress={() => handleClickRemoveGroup()}
+                        // onPress={() => handleClickRemoveGroup()}
                         >
                             <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xóa nhóm</Text>
                         </TouchableOpacity>
