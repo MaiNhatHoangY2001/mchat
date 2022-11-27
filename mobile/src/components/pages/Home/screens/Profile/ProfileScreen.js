@@ -85,7 +85,7 @@ export default function ProfileScreen() {
                         resizeMode="contain"
                     />
                     <TouchableOpacity style={{ position: 'absolute', bottom: 0, right: 0 }} onPress={handleChangeImage}>
-                        <IconFeather name="edit-3" size={26} color="black" />
+                        <IconFeather name="edit-3" size={24} color="black" />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -199,10 +199,26 @@ export default function ProfileScreen() {
                     </View>
                     <View style={[styles.viewInfoLine, { borderTopColor: 'lightgray', borderTopWidth: 1 }]}>
                         <TouchableOpacity
-                            style={{ borderWidth: 1, paddingVertical: 6, paddingHorizontal: 20, borderRadius: 10 }}
+                            style={{
+                                backgroundColor: '#f4cccc',
+                                paddingVertical: 6,
+                                paddingHorizontal: 20,
+                                borderRadius: 10,
+                            }}
                             onPress={() => setShowFormChangePW(!isShowFormChangePW)}
                         >
                             <Text style={{ fontSize: 16 }}>Đổi mật khẩu</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: '#305ee4',
+                                paddingVertical: 6,
+                                paddingHorizontal: 20,
+                                borderRadius: 10,
+                            }}
+                            // onPress={() => setShowFormChangePW(!isShowFormChangePW)}
+                        >
+                            <Text style={{ fontSize: 16, color: '#fff' }}>Xác nhận</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
