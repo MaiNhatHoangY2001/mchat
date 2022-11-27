@@ -24,8 +24,6 @@ import { UserContext } from '../../../../context/UserContext';
 import EditIcon from '@mui/icons-material/Edit';
 import { updateUser } from '../../../../redux/apiRequest/userApiRequest';
 import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import TextInputCustom from './InpuText/InputTextCustom';
 
 const cx = classNames.bind(styles);
