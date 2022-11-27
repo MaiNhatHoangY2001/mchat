@@ -23,7 +23,9 @@ export default function TextInputCustom({ placeholder, onChangeText }) {
                 type={typeInput}
                 placeholder={placeholder}
             />
-            <div onClick={handleShowPW}>{showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}</div>
+            <div className={cx('btn-icon')} onClick={handleShowPW}>
+                {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+            </div>
         </div>
     );
 }
