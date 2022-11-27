@@ -76,7 +76,7 @@ export default function ProfileScreen() {
     }, [currentUser]);
 
     return (
-        <ScrollView style={{ backgroundColor: '#fff', borderWidth: 1, margin: 10 }}>
+        <ScrollView style={{ backgroundColor: '#fff' }}>
             <View style={{ alignItems: 'center', paddingVertical: 30 }}>
                 <View style={{ width: 120, height: 120 }}>
                     <Image
