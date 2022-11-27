@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import Data from './Data';
 import styles from './Navbar.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { logOut } from '../../../../redux/apiRequest/authApiRequest';
+import { comparePass, logOut } from '../../../../redux/apiRequest/authApiRequest';
 import { useNavigate } from 'react-router-dom';
 import { createAxios } from '../../../../redux/createInstance';
 import { loginSuccess, logoutSuccess } from '../../../../redux/authSlice';
@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import { UserContext } from '../../../../context/UserContext';
 import EditIcon from '@mui/icons-material/Edit';
-import { updateUser } from '../../../../redux/apiRequest/userApiRequest';
+import { changePassword, updateUser } from '../../../../redux/apiRequest/userApiRequest';
 import { uploadFile } from '../../../../redux/apiRequest/fileApiRequest';
 import TextInputCustom from './InpuText/InputTextCustom';
 
@@ -42,10 +42,12 @@ export default function Navbar({ setContainer }) {
     const [urlImage, setUrlImage] = useState(currentUser?.profileImg);
     const [image, setImage] = useState({});
     const [uiChangePw, setUIChangePw] = useState(false);
-    const [passworldOld, setPasswordOld] = useState('');
-    const [passworldNew, setPasswordNew] = useState('');
-    const [passworldConfirm, setPasswordConfirm] = useState('');
-    const [dialogConfirm, setDialogConfirm] = useState('');
+    const [passwordOld, setPasswordOld] = useState('');
+    const [passwordNew, setPasswordNew] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [checkOldPass, setCheckOldPass] = useState(false);
+    const [commentOldPass, setCommentOldPass] = useState(false);
+    const [commentConfirmPass, setCommentConfirmPass] = useState(false);
 
     const userContext = useContext(UserContext);
     const removeUserActive2Socket = userContext.removeUserActive2Socket;
@@ -66,7 +68,9 @@ export default function Navbar({ setContainer }) {
     };
     const handleCloseModal = () => {
         setOpen(false);
+        setUIChangePw(false);
         setInputName(currentUser?.profileName);
+        setCheckOldPass(false);
     };
     const handleOpenModal = () => setOpen(true);
     const handleInputName = (event) => {
@@ -112,14 +116,42 @@ export default function Navbar({ setContainer }) {
         }
     };
 
-    const handleSubmitChangePW = () => {
-        if (passworldNew !== passworldConfirm) {
-            setDialogConfirm('Mật khẩu không chính xác!');
-        } else {
-            setUIChangePw(false);
-            setDialogConfirm('');
+    const handleSubmitChangePW = async () => {
+        if (passwordNew.trim() !== '' && passwordConfirm.trim() !== '') {
+            if (passwordNew !== passwordConfirm) {
+                setCommentConfirmPass(true);
+            } else {
+                handleChangePW(currentUser.phoneNumber.trim(), passwordNew);
+                setUIChangePw(false);
+                setCheckOldPass(false);
+                setCommentConfirmPass(false);
+            }
         }
     };
+
+    const handleChangePW = (phoneNumber, pass) => {
+        const account = {
+            phoneNumber: phoneNumber,
+            newPassword: pass
+        };
+        changePassword(account, dispatch);
+    }
+
+    const checkPassword = async () => {
+        const pass = passwordOld.trim();
+
+        if (pass !== '') {
+            const user = {
+                phoneNumber: currentUser.phoneNumber,
+                password: pass
+            }
+            const isPassword = await comparePass(user, dispatch, accessToken, axiosJWTLogin);
+
+            setCommentOldPass(!isPassword);
+            setCheckOldPass(isPassword);
+
+        }
+    }
 
     return (
         <div className={cx('container')}>
@@ -168,18 +200,20 @@ export default function Navbar({ setContainer }) {
                         <div className={cx('contain-changePW')}>
                             <div className={cx('section')}>
                                 <label>Mật khẩu hiện tại</label>
-                                <TextInputCustom placeholder="Nhập mật khẩu hiện tại" onChangeText={setPasswordOld} />
-                                <span className={cx('dialog')}>Nhập sai mật khẩu</span>
+
+                                <TextInputCustom placeholder="Nhập mật khẩu hiện tại" onChangeText={setPasswordOld} disabled={checkOldPass} />
+                                <button onClick={checkPassword}>Kiểm tra</button>
+                                {commentOldPass ? <span className={cx('dialog')}>Nhập sai mật khẩu</span> : <></>}
+
                             </div>
                             <div className={cx('section')}>
                                 <label>Mật khẩu mới</label>
-                                <TextInputCustom placeholder="Nhập mật mới" onChangeText={setPasswordNew} />
-                                <span className={cx('dialog')}>Nhập sai mật khẩu</span>
+                                <TextInputCustom placeholder="Nhập mật mới" onChangeText={setPasswordNew} disabled={!checkOldPass} />
                             </div>
                             <div className={cx('section')}>
                                 <label>Nhập lại mật khẩu</label>
-                                <TextInputCustom placeholder="Nhập lại mật khẩu" onChangeText={setPasswordConfirm} />
-                                <span className={cx('dialog')}>{dialogConfirm}</span>
+                                <TextInputCustom placeholder="Nhập lại mật khẩu" onChangeText={setPasswordConfirm} disabled={!checkOldPass} />
+                                {commentConfirmPass ? <span className={cx('dialog')}>Nhập sai mật khẩu</span> : <></>}
                             </div>
                             <button className={cx('btn-submit')} onClick={handleSubmitChangePW}>
                                 Xác nhận
@@ -235,13 +269,15 @@ export default function Navbar({ setContainer }) {
                                 </FormControl>
                             </Grid>
                             <div className={cx('bg-btn')} onClick={() => setUIChangePw(true)}>
-                                <span className={cx('tt-btn')}>Thây đổi mật khẩu</span>
+                                <span className={cx('tt-btn')}>Thay đổi mật khẩu</span>
                             </div>
                         </Grid>
                     )}
 
                     <Grid container justifyContent="flex-end" padding={1} borderTop={2} borderColor={'#c4c4c4'}>
-                        <Button onClick={handleClickApply}>Xác Nhận</Button>
+                        {uiChangePw ? <></>
+                            : <Button onClick={handleClickApply}>Xác Nhận</Button>
+                        }
                         <Button color="error" onClick={handleCloseModal}>
                             Thoát
                         </Button>

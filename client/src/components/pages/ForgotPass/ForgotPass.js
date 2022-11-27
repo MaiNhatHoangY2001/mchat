@@ -179,7 +179,7 @@ function ForgotPass() {
             phoneNumber: phoneTabNewPW.trim(),
             newPassword: passwordInputNewPW.trim(),
         };
-        changePassword(account, dispatch, navigate);
+        changePassword(account, dispatch);
         console.log(account);
         if(account) navigate('/');
     }

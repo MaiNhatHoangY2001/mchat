@@ -23,9 +23,7 @@ const widthScreen = Dimensions.get('window').width
 function Register() {
     const user = useSelector((state) => state.auth.login?.currentUser)
     const allNumber = useSelector((state) => state.user?.users?.allNumber);
-
-
-
+    
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -93,6 +91,8 @@ function Register() {
             if (phoneNumber === '' || phoneNumber === undefined)
                 Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại!');
             else if (phoneNumber.length !== 12) Alert.alert('Thông báo', 'Vui lòng nhập đủ 9 ký tự sau của số điện thoại!');
+            else if( allNumber.includes(('0' +phoneNumber.slice(3,12)))){
+                Alert.alert('Thông báo', 'Số điện thoại đã được đăng kí! Vui lòng dùng số khác.')}
             else {
                 console.log(phonenumber);
                 try {
@@ -290,37 +290,43 @@ function Register() {
                 else {
                     const phoneTabNewUser = '0' + numberphone.slice(3, 12)
                     const newUser = {
-                                phoneNumber: phoneTabNewUser.trim(),
-                                password: password.trim(),
-                                profileName: nameUserInput,
-                                date: '',
-                                refreshToken: '',
+                        phoneNumber: phoneTabNewUser.trim(),
+                        password: password.trim(),
+                        profileName: nameUserInput,
+                        date: '',
+                        refreshToken: '',
                     };
-                    registerUser(newUser, dispatch, navigate, setIsLoading);
-                    console.log(newUser)
-                    if (newUser) navigate('/')
-                    // window.setTimeout(function () {
-                    //     //login when sign up one second
-                    //     handleLogin(phoneNumber, password)
-                    //     navigate('/')
-                    // }, 1000);
-                    // const handleLogin = (phoneNumber, password) => {
-                    //     const newUser = {
-                    //         phoneNumber: phoneNumber,
-                    //         password: password,
-                    //     };
 
-                    //     loginUser(newUser, dispatch, navigate, setIsLoading);
-                    // };
-                    // useEffect(() => {
-                    //     console.log('running')
-                    //     if (user) {
-                    //         navigate('/')
-                    //     }
-                    // });
+
+
+                    registerUser(newUser, dispatch, navigate, setIsLoading);
+                    window.setTimeout(function () {
+                        //login when sign up one second
+                        handleLogin(phoneTabNewUser.trim(), password)
+                        navigate('/')
+                    }, 1000);
+
+
                 }
             }
         }
+
+
+        const handleLogin = (phoneNumber, password) => {
+            const newUser = {
+                phoneNumber: phoneNumber,
+                password: password,
+            };
+
+            loginUser(newUser, dispatch, navigate, setIsLoading);
+        };
+
+        useEffect(() => {
+            if (user) {
+                navigate('/')
+            }
+        });
+
         return (
             <SafeAreaView style={{ margin: 0, padding: 0 }}>
                 <View
