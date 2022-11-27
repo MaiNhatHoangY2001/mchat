@@ -15,6 +15,9 @@ import {
     updateGroupChat,
 } from '../../../../../redux/apiRequest/chatApiRequest';
 import { setSender } from '../../../../../redux/userSlice';
+import * as ImagePicker from 'expo-image-picker';
+import { uploadFile } from '../../../../../redux/apiRequest/fileApiRequest';
+
 
 export default function MessageInfoGroup({ navigation, route }) {
     const listGroupChat = useSelector((state) => state.groupChat?.groupChat.actor);
@@ -30,14 +33,13 @@ export default function MessageInfoGroup({ navigation, route }) {
     const [currentGroupChat, setCurrentGroupChat] = useState(
         currentListGroupChat.filter((groupChat) => groupChat.groupName === currentSender?.profileName)[0],
     );
-    const [changeNameGroup, setChangeNameGroup] = useState(currentGroupChat?.groupName);
     const [adminGroup, setAdminGroup] = useState(currentGroupChat?.groupAdmin._id);
     const [isListUser, setListUser] = useState(currentGroupChat?.user);
 
     const [groupName, setGroupName] = useState(currentGroupChat.groupName);
 
     // MODAL CHANGE IMAGE IN GROUP
-    const [urlImage, setUrlImage] = useState(currentGroupChat?.groupImage);
+    const [urlImage, setUrlImage] = useState("");
     const [image, setImage] = useState({});
 
     // modal open and close
@@ -57,9 +59,6 @@ export default function MessageInfoGroup({ navigation, route }) {
         await removeUserGroupChat(accessToken, dispatch, apiGroupChat, axiosJWTLogin);
     };
 
-    const setNameGroup = (event) => {
-        setChangeNameGroup(event.target.value);
-    };
 
     const handleSetKeyAdmin = async (userAdmin) => {
         setAdminGroup(userAdmin?._id);
@@ -69,41 +68,77 @@ export default function MessageInfoGroup({ navigation, route }) {
         await updateGroupChat(accessToken, dispatch, currentGroupChat._id, apiSetAdmin, axiosJWTLogin);
     };
 
+
+    const configImageToFile = (files) => {
+        let localUri = files.uri;
+        let filename = localUri.split('/').pop();
+
+        // Infer the type of the image
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        return { type: type, uri: localUri, name: filename };
+    };
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,
+            aspect: [4, 3],
+            base64: true,
+            quality: 1,
+        });
+
+        // console.log(result);
+
+        if (!result.cancelled) {
+            const files = result;
+            const file = configImageToFile(files);
+            console.log(file);
+            setUrlImage(file.uri);
+            setImage(file);
+        }
+    };
+
     const handleClickApply = async () => {
-        if (currentGroupChat.groupName !== changeNameGroup.trim()) {
+        if (currentGroupChat.groupName !== groupName.trim()) {
             const apiSetGroupName = {
-                groupName: changeNameGroup.trim(),
+                groupName: groupName.trim(),
             };
 
             //update group name in chat
             const updateSenderName = {
                 ...currentSender,
-                profileName: changeNameGroup.trim(),
+                profileName: groupName.trim(),
             };
-            setCurrentSender(updateSenderName);
+            await dispatch(setSender(updateSenderName))
             await updateGroupChat(accessToken, dispatch, currentGroupChat._id, apiSetGroupName, axiosJWTLogin);
             getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         }
+
 
         if (currentGroupChat?.groupImage !== urlImage) {
             //upload image to cloud
             const bodyFormData = new FormData();
             bodyFormData.append('file', image);
             const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
-            setUrlImage(uploadImage.url);
+            setUrlImage((uploadImage.url)[0]);
+
 
             window.setTimeout(async function () {
                 //set group chat profile img
                 const apiSetGroupProfileImg = {
-                    groupImage: uploadImage.url[0],
+                    groupImage: (uploadImage.url)[0],
                 };
 
                 //update group profile img in chat
                 const updateSenderProfileImg = {
                     ...currentSender,
-                    profileImg: uploadImage.url,
+                    profileImg: (uploadImage.url)[0],
                 };
-                await setCurrentSender(updateSenderProfileImg);
+                await dispatch(setSender(updateSenderProfileImg))
+
 
                 await updateGroupChat(
                     accessToken,
@@ -116,15 +151,8 @@ export default function MessageInfoGroup({ navigation, route }) {
                 getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
             }, 1000);
         }
-
+        navigation.goBack();
         // handleClose();
-    };
-
-    const handleChangeImageGroup = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setUrlImage(URL.createObjectURL(event.target.files[0]));
-            setImage(event.target.files[0]);
-        }
     };
 
     // EVENT OUT GROUP
@@ -186,28 +214,19 @@ export default function MessageInfoGroup({ navigation, route }) {
         setCurrentGroupChat(
             currentListGroupChat.filter((groupChat) => groupChat.groupName === currentSender?.profileName)[0],
         );
-        setChangeNameGroup(currentGroupChat?.groupName);
         setAdminGroup(currentGroupChat?.groupAdmin._id);
         setListUser(currentGroupChat?.user);
         setUrlImage(currentGroupChat?.groupImage);
-    }, [currentListGroupChat, currentGroupChat]);
+    }, [currentListGroupChat]);
 
-    useEffect(() => {
-        navigation.setOptions({
-            headerRight: () => (
-                <TouchableOpacity onPress={() => handleClickApply()}>
-                    <Ionicons name="checkmark" size={30} color="green" />
-                </TouchableOpacity>
-            ),
-        });
-    }, [navigation]);
+
 
     return (
         <View style={styles.container}>
             <View style={{ borderBottomWidth: 10, borderBottomColor: '#c4c4c4', paddingTop: 20 }}>
                 <View style={{ ustifyContent: 'center', alignItems: 'center' }}>
                     <View style={{ width: 100, height: 100 }}>
-                        <Image style={{ flex: 1 }} source={{ uri: currentGroupChat.groupImage }} />
+                        <Image style={{ flex: 1 }} source={{ uri: urlImage || currentGroupChat.groupImage }} />
                     </View>
                     <TouchableOpacity
                         style={{
@@ -218,7 +237,7 @@ export default function MessageInfoGroup({ navigation, route }) {
                             borderRadius: 50,
                         }}
                     >
-                        <Text style={{ fontSize: 16, fontWeight: '600', color: 'white' }}>Cập nhật ảnh đại diện</Text>
+                        <Text style={{ fontSize: 16, fontWeight: '600', color: 'white' }} onPress={pickImage}>Cập nhật ảnh đại diện</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20, paddingHorizontal: 20 }}>
@@ -238,9 +257,7 @@ export default function MessageInfoGroup({ navigation, route }) {
                                 onChangeText={setGroupName}
                                 placeholder="Nhập Tên Nhóm"
                             />
-                            <TouchableOpacity>
-                                <Ionicons name="checkmark-circle" size={30} color="black" />
-                            </TouchableOpacity>
+
                             <TouchableOpacity onPress={() => SetFormEditName(!showFormEditName)}>
                                 <Ionicons name="close-circle" size={30} color="black" />
                             </TouchableOpacity>
@@ -269,6 +286,14 @@ export default function MessageInfoGroup({ navigation, route }) {
             <View
                 style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginBottom: 10 }}
             >
+
+                <TouchableOpacity
+                    style={{ padding: 10, paddingHorizontal: 20, backgroundColor: 'green', borderRadius: 10 }}
+                    onPress={() =>
+                        handleClickApply()}
+                >
+                    <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xác nhận</Text>
+                </TouchableOpacity>
                 {isAdmin ? (
                     <>
                         <TouchableOpacity
@@ -278,6 +303,8 @@ export default function MessageInfoGroup({ navigation, route }) {
                         >
                             <Text style={{ fontSize: 18, fontWeight: '600', color: 'white' }}>Xóa nhóm</Text>
                         </TouchableOpacity>
+
+
                         <Modal
                             animationType="slide"
                             transparent={true}
@@ -348,6 +375,7 @@ export default function MessageInfoGroup({ navigation, route }) {
                                         >
                                             <Text style={[styles.textStyle, { marginHorizontal: 10 }]}>Xác nhận</Text>
                                         </Pressable>
+
                                     </View>
                                 </View>
                             </View>
@@ -358,6 +386,7 @@ export default function MessageInfoGroup({ navigation, route }) {
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {

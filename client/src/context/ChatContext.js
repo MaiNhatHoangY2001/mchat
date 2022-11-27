@@ -217,6 +217,7 @@ function ChatContextProvider({ children }) {
         };
         if (user?.accessToken) {
             socket.current = io(url, {
+                transports: ['websocket'],
                 'Access-Control-Allow-Credentials': true,
             });
 

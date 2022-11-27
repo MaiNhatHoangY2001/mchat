@@ -130,7 +130,7 @@ export default function MessageChat({ navigation, route }) {
                 else
                     return formQuestion(
                         question,
-                        isMessageQuestion === '' ? question[1] : isMessageQuestion,
+                        isMessageQuestion.id === mess.message._id ? isMessageQuestion.answer : question[1],
                         mess.message._id,
                     );
             case TYPE_REMOVE_MSG:
@@ -179,6 +179,22 @@ export default function MessageChat({ navigation, route }) {
             await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         }
         updateMsg(accessToken, dispatch, id, content, axiosJWTLogin);
+        refreshMsg(isGroupChat);
+    };
+
+    const refreshMsg = (isGroupChat) => {
+        if (!isGroupChat) {
+            const apiSent = {
+                sender: sender?._id,
+                user: currentUserId,
+            };
+            getMsgs(accessToken, dispatch, apiSent, axiosJWTLogin);
+        } else {
+            const apiSent = {
+                groupId: sender?._id,
+            };
+            getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWTLogin);
+        }
     };
 
     const imgChat = (length, images) => {
@@ -340,11 +356,11 @@ export default function MessageChat({ navigation, route }) {
                         });
                         alert('Report Downloaded Successfully');
                     })
-                    .catch((e) => {});
+                    .catch((e) => { });
             } catch (e) {
                 throw new Error(e);
             }
-        } catch (err) {}
+        } catch (err) { }
     };
 
     const saveIosFile = (fileUri) => {

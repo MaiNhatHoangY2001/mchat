@@ -105,7 +105,7 @@ export default function MessagesScreen({ navigation }) {
 
     // Get Item
     const renderItem = ({ item }) => {
-        const backgroundColor = item?._id === selectedId ? '#f9c2ff' : '#ffffff';
+        const backgroundColor = item?._id === selectedId ? '#ffff' : '#ffffff';
         const actorGroupChat = {
             _id: item?._id,
             profileName: item?.groupName,

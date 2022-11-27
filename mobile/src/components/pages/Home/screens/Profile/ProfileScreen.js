@@ -37,6 +37,9 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { UserContext } from '../../../../../context/UserContext';
 import { useState } from 'react';
 
+import * as ImagePicker from 'expo-image-picker';
+
+
 const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
 
@@ -54,7 +57,7 @@ export default function ProfileScreen() {
 
     const [isShowFormInput, setShowFormInput] = useState(false);
     const [isShowFormChangePW, setShowFormChangePW] = useState(false);
-    const [name, setName] = useState(currentUser?.profileName);
+    const [inputName, setInputName] = useState(currentUser?.profileName);
 
     const handleLogout = () => {
         logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
@@ -67,6 +70,39 @@ export default function ProfileScreen() {
 
     const handleChangeName = () => {
         console.log('Change Name');
+    };
+
+    const handleClickApply = async () => {
+        if (currentUser?.profileName !== inputName.trim()) {
+            const apiSetProfileName = {
+                profileName: inputName.trim(),
+            };
+
+            const currentLogin = { ...currentUser, profileName: inputName.trim() };
+
+            await updateUser(accessToken, dispatch, currentUser._id, apiSetProfileName, axiosJWTLogin);
+            dispatch(loginSuccess(currentLogin));
+        }
+
+        if (currentUser?.profileImg !== urlImage) {
+            //upload image to cloud
+            const bodyFormData = new FormData();
+            bodyFormData.append('file', image);
+            const uploadImage = await uploadFile(accessToken, dispatch, axiosJWTLogin, bodyFormData);
+
+            window.setTimeout(async function () {
+                //set group chat profile img
+                const apiSetGroupProfileImg = {
+                    profileImg: uploadImage.url[0],
+                };
+
+                setUrlImage(uploadImage.url[0]);
+                const currentLogin = { ...currentUser, profileImg: uploadImage.url[0] };
+
+                await updateUser(accessToken, dispatch, currentUser._id, apiSetGroupProfileImg, axiosJWTLogin);
+                dispatch(loginSuccess(currentLogin));
+            }, 1000);
+        }
     };
 
     useEffect(() => {
@@ -156,8 +192,8 @@ export default function ProfileScreen() {
                                     }}
                                 >
                                     <TextInput
-                                        value={name}
-                                        onChangeText={setName}
+                                        value={inputName}
+                                        onChangeText={setInputName}
                                         style={{ flex: 1, fontSize: 18, paddingVertical: 4, paddingHorizontal: 10 }}
                                         placeholder="Nhập tên người dùng"
                                     />
@@ -181,7 +217,7 @@ export default function ProfileScreen() {
                                         marginRight: '5%',
                                     }}
                                 >
-                                    <Text style={styles.txtInfo}>{name}</Text>
+                                    <Text style={styles.txtInfo}>{inputName}</Text>
                                     <Text style={styles.txtSystem}>Tên của bạn</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => setShowFormInput(!isShowFormInput)}>

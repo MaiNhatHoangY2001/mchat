@@ -40,7 +40,10 @@ const cx = classNames.bind(styles);
 //link stack: https://github.com/NikValdez/VideoChatTut
 //link doc socket: https://socket.io/docs/v3/client-socket-instance
 // const socket = io('http://localhost:8000');
-const socket = io(url);
+const socket = io(url, {
+    transports: ['websocket'],
+    'Access-Control-Allow-Credentials': true,
+});
 function Call() {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
 
@@ -67,7 +70,7 @@ function Call() {
 
         socket.on('me', (id) => {
             setMe(id);
-            console.log('current socket id: ' +id);
+            console.log('current socket id: ' + id);
         });
 
         socket.on('callUser', (data) => {
@@ -154,7 +157,7 @@ function Call() {
     const [mesSystem, setMessSystem] = useState('');
     const [copied, setCopied] = useState('');
     function checkShowId() {
-        if(clickShowId.trim() === null || clickShowId.trim().length === 0 ) {
+        if (clickShowId.trim() === null || clickShowId.trim().length === 0) {
             setCopied('Không tìm thấy mã để sao chép!');
             setMessSystem('rgb(255, 50, 50)');
         } else {
@@ -171,9 +174,9 @@ function Call() {
     //handle micro
     const [mic, setMic] = useState(true);
     function checkMic() {
-        if(mic === true)
-            myVideo.current.srcObject.getAudioTracks().forEach(track => track.enabled = false);       
-        if(mic === false)
+        if (mic === true)
+            myVideo.current.srcObject.getAudioTracks().forEach(track => track.enabled = false);
+        if (mic === false)
             myVideo.current.srcObject.getAudioTracks().forEach(track => track.enabled = true);
     }
 
@@ -197,12 +200,12 @@ function Call() {
     const widthBrowser = window.innerWidth
         ? window.innerWidth
         : document.documentElement.clientWidth
-        ? document.documentElement.clientWidth
-        : Screen.width;
+            ? document.documentElement.clientWidth
+            : Screen.width;
     const systemZoom = widthBrowser / window.screen.availWidth;
     const widthPopupCeter = 500 / systemZoom;
 
-    const isFullScreenDevice = useMediaQuery({query: 'max-width: 100%'});
+    const isFullScreenDevice = useMediaQuery({ query: 'max-width: 100%' });
 
     return (
         <div className={cx('container-call')}>

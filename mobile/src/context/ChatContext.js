@@ -71,6 +71,7 @@ function ChatContextProvider({ children }) {
                 userGroupChat: {
                     _id: currentUserId,
                     profileName: user.profileName,
+                    profileImg: user.profileImg
                 },
             },
             isNewChat: false,
@@ -228,23 +229,29 @@ function ChatContextProvider({ children }) {
                 }
             }
 
-            // //displaying a notification
-            // if (chatMessage.receiver === currentUserId) {
-            //     Push.create(chatMessage.senderName, {
-            //         body: chatMessage.message.content,
-            //         silent: true,
-            //     });
-            //     Push.clear();
-            // }
+
+
+
+            //displaying a notification
+            if (chatMessage.receiver === currentUserId) {
+                Push.create(chatMessage.senderName, {
+                    body: chatMessage.message.content,
+                    silent: true,
+                });
+                Push.clear();
+            }
         };
         if (user?.accessToken) {
             socket.current = io(url, {
+                transports: ['websocket'],
                 'Access-Control-Allow-Credentials': true,
             });
 
             socket.current.on('user-chat', handler);
             return () => socket.current.off('user-chat', handler);
         }
+
+
     }, [sendData]);
 
     const sendText4JoinGroup = (listFriend, nameGroup, idGroup) => {
