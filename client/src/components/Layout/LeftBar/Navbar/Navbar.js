@@ -47,6 +47,7 @@ export default function Navbar({ setContainer }) {
     const [passworldOld, setPasswordOld] = useState('');
     const [passworldNew, setPasswordNew] = useState('');
     const [passworldConfirm, setPasswordConfirm] = useState('');
+    const [dialogConfirm, setDialogConfirm] = useState('');
 
     const userContext = useContext(UserContext);
     const removeUserActive2Socket = userContext.removeUserActive2Socket;
@@ -114,9 +115,12 @@ export default function Navbar({ setContainer }) {
     };
 
     const handleSubmitChangePW = () => {
-        console.log(passworldNew);
-        console.log(passworldConfirm);
-        // setUIChangePw(false);
+        if (passworldNew !== passworldConfirm) {
+            setDialogConfirm('Mật khẩu không chính xác!');
+        } else {
+            setUIChangePw(false);
+            setDialogConfirm('');
+        }
     };
 
     return (
@@ -177,7 +181,7 @@ export default function Navbar({ setContainer }) {
                             <div className={cx('section')}>
                                 <label>Nhập lại mật khẩu</label>
                                 <TextInputCustom placeholder="Nhập lại mật khẩu" onChangeText={setPasswordConfirm} />
-                                <span className={cx('dialog')}>Nhập sai mật khẩu</span>
+                                <span className={cx('dialog')}>{dialogConfirm}</span>
                             </div>
                             <button className={cx('btn-submit')} onClick={handleSubmitChangePW}>
                                 Xác nhận
