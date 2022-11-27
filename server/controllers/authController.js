@@ -29,6 +29,20 @@ const authController = {
     );
   },
 
+  //COMPARE PASSWORD
+  comparePassword: async (req, res) => {
+    try {
+      const user = await User.findOne({ phoneNumber: req.body.phoneNumber });
+      const validPassword = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      res.json(validPassword);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
   //LOGIN
   loginUser: async (req, res) => {
     try {

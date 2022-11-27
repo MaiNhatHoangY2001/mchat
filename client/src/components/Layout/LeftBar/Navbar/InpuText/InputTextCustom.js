@@ -6,7 +6,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const cx = classNames.bind(styles);
 
-export default function TextInputCustom({ placeholder, onChangeText }) {
+export default function TextInputCustom({ placeholder, onChangeText, disabled }) {
     const [showPassword, setShowPassword] = useState(true);
     const [typeInput, setTypeInput] = useState('password');
 
@@ -22,6 +22,7 @@ export default function TextInputCustom({ placeholder, onChangeText }) {
                 className={cx('text-input')}
                 type={typeInput}
                 placeholder={placeholder}
+                disabled= {disabled}
             />
             <div className={cx('btn-icon')} onClick={handleShowPW}>
                 {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}

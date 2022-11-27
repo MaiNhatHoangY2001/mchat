@@ -13,7 +13,11 @@ router.post("/login", authController.loginUser);
 //REFRESH
 router.post("/refresh", authController.requestRefreshToken);
 
+//COMPARE PASS
+router.post("/comparePass", middlewareController.verifyToken, authController.comparePassword);
+
+
 //LOGOUT
-router.post("/logout",middlewareController.verifyToken, authController.userLogout);
+router.post("/logout", middlewareController.verifyToken, authController.userLogout);
 
 module.exports = router;
