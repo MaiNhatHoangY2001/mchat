@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Navbar from './Navbar/Navbar';
 import ListFriend from './ListFriend/ListFriend';
+import ListGroup from './ListGroup/ListGroup';
 
 const cx = classNames.bind(styles);
 
@@ -15,7 +16,7 @@ function LeftBar() {
             case 0:
                 return <ListFriend />;
             case 1:
-                return <></>;
+                return <ListGroup />;
             case 2:
                 return <></>;
             case 3:

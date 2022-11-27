@@ -54,8 +54,8 @@ import ModalOutGroup from '../Modal/ModalOutGroup/ModalOutGroup';
 import { setSender } from '../../../../redux/userSlice';
 import ModalRemoveGroup from '../Modal/ModalRemoveGroup/ModalRemoveGroup';
 import { UserContext } from '../../../../context/UserContext';
-import FilePreview from "react-file-preview-latest";
-
+import FilePreview from 'react-file-preview-latest';
+import SendIcon from '@mui/icons-material/Send';
 
 const cx = classNames.bind(styles);
 
@@ -200,7 +200,7 @@ function Chat() {
     };
     const addMsgFileWithInfo = (url) => {
         createChat(TYPE_FILE, '', url);
-    }
+    };
 
     const convertTime = (time) => {
         const formattedDate = moment(time).utcOffset('+0700').format('HH:mm DD [tháng] MM, YYYY');
@@ -216,13 +216,10 @@ function Chat() {
     };
 
     const actorImg = (isUser) => {
+        return isUser ? user?.profileImg : currentSender?.profileImg;
+    };
 
-
-
-        return isUser ? user?.profileImg : currentSender?.profileImg
-    }
-
-    const [isMessageQuestion, setMessageQuestion] = useState('');
+    const [isMessageQuestion, setMessageQuestion] = useState({ id: '', answer: '' });
 
     const typeChat = (type, mess) => {
         switch (type) {
@@ -238,11 +235,15 @@ function Chat() {
                 else
                     return formQuestion(
                         question,
-                        isMessageQuestion === '' ? question[1] : isMessageQuestion,
+                        isMessageQuestion.id === mess.message._id ? isMessageQuestion.answer : question[1],
                         mess.message._id,
                     );
             case TYPE_REMOVE_MSG:
-                return <p className={cx('textChat')} style={{ opacity: 0.4 }}>{mess.message.content}</p>;
+                return (
+                    <p className={cx('textChat')} style={{ opacity: 0.4 }}>
+                        {mess.message.content}
+                    </p>
+                );
             case TYPE_FILE:
                 return fileChat(mess?.message?.imageContent);
             default:
@@ -274,7 +275,7 @@ function Chat() {
     };
 
     const handleAnswer = async (question, answer, id) => {
-        setMessageQuestion(answer);
+        setMessageQuestion({ id, answer });
         const newAnswer = question[0] + '/' + answer + '/' + question[2];
         const content = {
             content: newAnswer,
@@ -288,19 +289,34 @@ function Chat() {
             await getListGroupChat(accessToken, currentUserId, dispatch, axiosJWTLogin);
         }
         updateMsg(accessToken, dispatch, id, content, axiosJWTLogin);
+        refreshMsg(isGroupChat);
+    };
+
+    const refreshMsg = (isGroupChat) => {
+        if (!isGroupChat) {
+            const apiSent = {
+                sender: sender?._id,
+                user: currentUserId,
+            };
+            getMsgs(accessToken, dispatch, apiSent, axiosJWTLogin);
+        } else {
+            const apiSent = {
+                groupId: sender?._id,
+            };
+            getMsgsGroupChat(accessToken, dispatch, apiSent, axiosJWTLogin);
+        }
     };
 
     const recallMsg = (id) => {
         const content = {
-            content: "Đã thu hồi tin nhắn này",
+            content: 'Đã thu hồi tin nhắn này',
             type_Msg: TYPE_REMOVE_MSG,
-            imageContent: []
+            imageContent: [],
         };
 
         updateMsg(accessToken, dispatch, id, content, axiosJWTLogin);
 
-
-        const newSendData = sendData.map(item => {
+        const newSendData = sendData.map((item) => {
             if (item?.message?._id === id) {
                 const newMsg = { ...item.message, ...content };
                 const newItem = { message: newMsg, sender: item.sender };
@@ -309,22 +325,16 @@ function Chat() {
             return item;
         });
         setSendData(newSendData);
-    }
+    };
 
     const fileChat = (url) => {
-        return <FilePreview
-            type={"url"}
-            url={url}
-        />
-    }
+        return <FilePreview type={'url'} url={url} />;
+    };
 
     const imgChat = (length, images) => {
         const chatImage = (srcGroup) =>
             images?.map((img, index) => {
-                return (
-                    <img key={index} alt="not fount" width={'20px'} src={img + srcGroup} />
-
-                );
+                return <img key={index} alt="not fount" width={'20px'} src={img + srcGroup} />;
             });
 
         if (length > 0) {
@@ -374,11 +384,8 @@ function Chat() {
     };
 
     const isCurrentUserAndTypeRemoved = (typeChat, user) => {
-
-
-        return ((typeChat !== TYPE_REMOVE_MSG) && (user === currentUserId))
-
-    }
+        return typeChat !== TYPE_REMOVE_MSG && user === currentUserId;
+    };
 
     //SAVE MSG WHEN RELOAD PAGE
     useEffect(() => {
@@ -494,12 +501,7 @@ function Chat() {
                                         startIcon={<CameraAltIcon />}
                                     >
                                         Cập nhật ảnh đại diện
-                                        <input
-                                            hidden
-                                            onChange={handleChangeImageGroup}
-                                            accept="image/*"
-                                            type="file"
-                                        />
+                                        <input hidden onChange={handleChangeImageGroup} accept="image/*" type="file" />
                                     </Button>
                                     <TextField
                                         className={cx('updateNameGroup')}
@@ -616,25 +618,25 @@ function Chat() {
                                                     {mess.sender === currentUserId ? nameUser : nameSender}
                                                 </p>
                                                 {typeChat(mess.message?.type_Msg, mess)}
-
                                             </div>
                                         </Tooltip>
 
-
-
-                                        {isCurrentUserAndTypeRemoved(mess?.message?.type_Msg, mess.sender) ? (<div className={cx('boxEdite')}>
-                                            <Tooltip title="Thu hồi tin nhắn" placement="top" arrow>
-                                                <IconButton onClick={() => recallMsg(mess?.message?._id)}>
-                                                    <DeleteIcon sx={{ fontSize: 24 }} />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title="Chuyển tiếp" placement="top" arrow>
-                                                <IconButton>
-                                                    <ReplyIcon sx={{ fontSize: 24 }} />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </div>) : <></>}
-
+                                        {isCurrentUserAndTypeRemoved(mess?.message?.type_Msg, mess.sender) ? (
+                                            <div className={cx('boxEdite')}>
+                                                <Tooltip title="Thu hồi tin nhắn" placement="top" arrow>
+                                                    <IconButton onClick={() => recallMsg(mess?.message?._id)}>
+                                                        <DeleteIcon sx={{ fontSize: 24 }} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="Chuyển tiếp" placement="top" arrow>
+                                                    <IconButton>
+                                                        <ReplyIcon sx={{ fontSize: 24 }} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        )}
                                     </div>
                                 </React.Fragment>
                             );
@@ -700,8 +702,11 @@ function Chat() {
                     }}
                     style={{ display: 'none' }}
                 />
-                <div className={cx('buttonInput')} type="button" onClick={() => document.getElementById('selectedFile').click()}>
-
+                <div
+                    className={cx('buttonInput')}
+                    type="button"
+                    onClick={() => document.getElementById('selectedFile').click()}
+                >
                     <img
                         src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666602452/samples/Icon/document_mzbsif.png`}
                         alt="file"
@@ -718,18 +723,8 @@ function Chat() {
                         </div>
                     )}
                 </div>
-                <div type="submit" className={cx('buttonInput')}>
-                    {message === '' ? (
-                        <img
-                            src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666528392/samples/Icon/like1_tz3tql.png`}
-                            alt="like and send"
-                        />
-                    ) : (
-                        <img
-                            src={`https://res.cloudinary.com/dpux6zwj3/image/upload/v1666602121/samples/Icon/send2_llk6si.png`}
-                            alt="like and send"
-                        />
-                    )}
+                <div type="submit" className={cx('buttonInput')} onClick={handleSubmit}>
+                    <SendIcon />
                 </div>
             </form>
         </>

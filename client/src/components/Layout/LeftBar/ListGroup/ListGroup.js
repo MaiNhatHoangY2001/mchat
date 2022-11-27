@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import styles from './ListFriend.scss';
+import styles from './StylesListGroup.scss';
 import React, { useContext, useEffect, useState } from 'react';
 import AutoComplete from '../AutoComplete';
 import TextField from '@mui/material/TextField';
@@ -32,7 +32,7 @@ import { UserContext } from '../../../../context/UserContext';
 
 const cx = classNames.bind(styles);
 
-export default function ListFriend() {
+export default function ListGroup() {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
     const currentIndividualChat = useSelector((state) => state.chat.individualChat?.actor);
     const currentGroupChat = useSelector((state) => state.groupChat.groupChat?.actor);
@@ -186,7 +186,7 @@ export default function ListFriend() {
 
     useEffect(() => {
         if (currentIndividualChat !== null) {
-            const listChat = currentIndividualChat?.concat(currentGroupChat);
+            const listChat = []?.concat(currentGroupChat);
             const listSort = listChat?.sort(function (a, b) {
                 return new Date(b?.message[0]?.time) - new Date(a?.message[0]?.time);
             });
@@ -207,6 +207,9 @@ export default function ListFriend() {
     return (
         <div className={cx('containerListFriend')}>
             <div className={cx('search')}>
+                <p className={cx('titleSearch')}>Tất cả nhóm chat</p>
+                </div>
+            {/* <div className={cx('search')}>
                 <p className={cx('titleSearch')}>Tìm kiếm người dùng</p>
                 <div className={cx('actionSearch')}>
                     <AutoComplete
@@ -358,7 +361,7 @@ export default function ListFriend() {
                         </div>
                     </Modal>
                 </div>
-            </div>
+            </div> */}
             <div className={cx('list-item')}>
                 {chatActors?.map((actor, index) => {
                     const isActorSenderActive = currentSender?._id === (actor?.sender?._id || actor?._id);

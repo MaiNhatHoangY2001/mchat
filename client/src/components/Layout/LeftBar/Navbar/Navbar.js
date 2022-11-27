@@ -12,17 +12,10 @@ import {
     Badge,
     Button,
     FormControl,
-    // FormControlLabel,
     FormLabel,
     Grid,
     IconButton,
-    // InputLabel,
-    // MenuItem,
     Modal,
-    // Radio,
-    // RadioGroup,
-    // Select,
-    // SelectChangeEvent,
     styled,
     TextField,
     Tooltip,
@@ -42,15 +35,11 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 
 export default function Navbar({ setContainer }) {
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
-
     const [select, setSelect] = useState(0);
     const [open, setOpen] = useState(false);
     const [inputName, setInputName] = useState(currentUser?.profileName);
     const [urlImage, setUrlImage] = useState(currentUser?.profileImg);
     const [image, setImage] = useState({});
-    // const [years, setYears] = useState(+data.birthDay.split('/')[2]);
-    // const [months, setMonths] = useState(+data.birthDay.split('/')[1]);
-    // const [days, setDays] = useState(+data.birthDay.split('/')[0]);
 
     const userContext = useContext(UserContext);
     const removeUserActive2Socket = userContext.removeUserActive2Socket;
@@ -58,24 +47,15 @@ export default function Navbar({ setContainer }) {
     const userId = currentUser?._id;
     const accessToken = currentUser?.accessToken;
 
-    // const today = new Date();
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     let axiosJWTLogout = createAxios(currentUser, dispatch, logoutSuccess);
     let axiosJWTLogin = createAxios(currentUser, dispatch, loginSuccess);
 
-    // // create number in Array
-    // const range = (start, end) => {
-    //     return Array(end - start + 1)
-    //         .fill()
-    //         .map((_, idx) => start + idx);
-    // };
-
     const handleLogout = () => {
         removeUserActive2Socket(currentUser?.phoneNumber);
-        localStorage.setItem("phones", JSON.stringify([]));
+        localStorage.setItem('phones', JSON.stringify([]));
         logOut(dispatch, navigate, userId, accessToken, axiosJWTLogout);
     };
     const handleCloseModal = () => {
@@ -92,16 +72,6 @@ export default function Navbar({ setContainer }) {
             setImage(event.target.files[0]);
         }
     };
-
-    // const handleChangeYears = (event) => {
-    //     setYears(event.target.value);
-    // };
-    // const handleChangeMonths = (event) => {
-    //     setMonths(event.target.value);
-    // };
-    // const handleChangeDays = (event) => {
-    //     setDays(event.target.value);
-    // };
 
     const handleClickApply = async () => {
         if (currentUser?.profileName !== inputName.trim()) {
@@ -130,24 +100,22 @@ export default function Navbar({ setContainer }) {
                 setUrlImage(uploadImage.url[0]);
                 const currentLogin = { ...currentUser, profileImg: uploadImage.url[0] };
 
-
-                await updateUser(
-                    accessToken,
-                    dispatch,
-                    currentUser._id,
-                    apiSetGroupProfileImg,
-                    axiosJWTLogin,
-                );
+                await updateUser(accessToken, dispatch, currentUser._id, apiSetGroupProfileImg, axiosJWTLogin);
                 dispatch(loginSuccess(currentLogin));
             }, 1000);
         }
-
     };
 
     return (
         <div className={cx('container')}>
             <div className={cx('avata')}>
-                <Tooltip title={currentUser?.profileName} onClick={handleOpenModal} placement="right" disableInteractive arrow>
+                <Tooltip
+                    title={currentUser?.profileName}
+                    onClick={handleOpenModal}
+                    placement="right"
+                    disableInteractive
+                    arrow
+                >
                     <div className={cx('contain-avata')}>
                         <img className={cx('image-avata')} src={currentUser?.profileImg} alt={'avata'} />
                     </div>
@@ -166,7 +134,7 @@ export default function Navbar({ setContainer }) {
                                 onClick={() => {
                                     setSelect(index);
                                     setContainer(index);
-                                    if (index === 3) handleLogout();
+                                    if (index === 2) handleLogout();
                                 }}
                             >
                                 <img className={cx('iconButon')} src={image} alt={'icon-message'} />
@@ -222,73 +190,6 @@ export default function Navbar({ setContainer }) {
                                 />
                             </FormControl>
                         </Grid>
-                        {/* <Grid container direction={'column'} padding={1}>
-                            <FormControl>
-                                <FormLabel>Giới tính</FormLabel>
-                                <RadioGroup row defaultValue={data.gender ? 'female' : 'male'}>
-                                    <FormControlLabel value="female" control={<Radio size="small" />} label="Nam" />
-                                    <FormControlLabel value="male" control={<Radio size="small" />} label="Nữ" />
-                                </RadioGroup>
-                            </FormControl>
-                        </Grid> */}
-                        {/* <Grid container direction={'column'} padding={1}>
-                            <FormControl>
-                                <FormLabel>Ngày sinh</FormLabel>
-                                <Grid container>
-                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                                        <InputLabel>Ngày</InputLabel>
-                                        <Select
-                                            MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
-                                            value={days}
-                                            label="Ngày"
-                                            onChange={handleChangeDays}
-                                        >
-                                            {range(1, new Date(years, months, 0).getDate()).map((item, index) => {
-                                                return (
-                                                    <MenuItem key={index} value={item}>
-                                                        {item}
-                                                    </MenuItem>
-                                                );
-                                            })}
-                                        </Select>
-                                    </FormControl>
-                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                                        <InputLabel>Tháng</InputLabel>
-                                        <Select
-                                            MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
-                                            value={months}
-                                            label="Tháng"
-                                            onChange={handleChangeMonths}
-                                        >
-                                            {range(1, 12).map((item, index) => {
-                                                return (
-                                                    <MenuItem key={index} value={item}>
-                                                        {item}
-                                                    </MenuItem>
-                                                );
-                                            })}
-                                        </Select>
-                                    </FormControl>
-                                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                                        <InputLabel>Năm</InputLabel>
-                                        <Select
-                                            MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
-                                            value={years}
-                                            label="Năm"
-                                            onChange={handleChangeYears}
-                                        >
-                                            {range(1950, today.getFullYear()).map((item, index) => {
-                                                return (
-                                                    <MenuItem key={index} value={item}>
-                                                        {item}
-                                                    </MenuItem>
-                                                );
-                                            })}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            </FormControl>
-                        </Grid> */}
                     </Grid>
                     <Grid container justifyContent="flex-end" padding={1} borderTop={2} borderColor={'#c4c4c4'}>
                         <Button onClick={handleClickApply}>Xác Nhận</Button>
