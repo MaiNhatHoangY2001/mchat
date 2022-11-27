@@ -99,16 +99,10 @@ function Register() {
         let regexPhoneNumberVN = /\+?(0|84)\d{9}/.test(phoneNum);
         if (phoneNum === '' || phoneNum === undefined) return setErrorMess('Vui lòng nhập số điện thoại');
         else if (!regexPhoneNumberVN) setErrorMess('Số điện thoại không hợp lệ');
-<<<<<<< HEAD
+
         else if( allNumber.includes(('0' +phoneNumber.slice(2,12)))){
             setErrorMess('Số điện thoại đã được đăng kí! Vui lòng dùng số khác.')}
-        else{
-=======
-        else if (phoneNumber === allNumber || ('0' + phoneNumber.slice(2, 12)) === allNumber) {
-            setErrorMess('Số điện thoại đã được đăng kí! Vui lòng dùng số khác.')
-        }
         else {
->>>>>>> 3b56fbeab0da823a1dfd95b4c2901b191d94b97d
             setErrorMess('');
             try {
                 const response = await setUpRecaptcha(phoneNum);
