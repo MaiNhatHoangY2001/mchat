@@ -27,14 +27,16 @@ export const searchUser = async (accessToken, dispatch, search, axiosJWT) => {
     }
 };
 
-export const changePassword = async (account, dispatch) => {
+export const changePassword = async (account, dispatch, navigate) => {
     dispatch(changePassStart());
     try {
         await axios.post(`${url}/api/user/changePassword`, account, {
             withCredentials: true,
         });
         dispatch(changePassSuccess());
-        // navigate('/');
+        if (navigate)
+            navigate('/');
+
     } catch (error) {
         dispatch(changePassFailed());
     }
