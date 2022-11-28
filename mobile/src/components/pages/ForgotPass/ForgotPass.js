@@ -121,7 +121,7 @@ function ForgotPass() {
                     })
                     .catch((error) => {
                         console.log(error);
-                        alert('Xác thực không thành công!');
+                        Alert.alert('Thông báo', 'Xác thực không thành công!');
                     });
                 console.log(otp);
             }
