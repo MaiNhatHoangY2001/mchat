@@ -32,7 +32,7 @@ function Register() {
     const handleRegister = (e) => {
         e.preventDefault()
         const newUser = {
-            phoneNumber: phoneNumber,
+            phoneNumber: '0' + phoneNumber.slice(2, 12),
             password: passwordInputNewPW,
             profileName: name,
             date: '',
